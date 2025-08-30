@@ -22,8 +22,8 @@ const MJS_DATE_LIMIT = 1262304000000; // 2010-01-01 in milliseconds
 async function initializeDatabase() {
     const db = mysql.createPool({
         host: process.env.DB_HOST || "localhost",
-        user: process.env.DB_USER || "mahjong",
-        password: process.env.DB_PASS || "strongpassword",
+        user: process.env.DB_USER || "root",
+        password: process.env.DB_PASS || "rootpass",
         database: process.env.DB_NAME || "mahjong_stats",
     });
 
