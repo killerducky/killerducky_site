@@ -1,19 +1,18 @@
 ---
 layout: default
-title: Home
 ---
 
 [Back to Shogi top](intro)
 
 Join [Shogi Harbour's Discord](https://discord.gg/wggn65v)
 
-- [Introduction](#introduction)
-- [The Plan](#the-plan)
-  - [Your first three games](#your-first-three-games)
-  - [Time for some study](#time-for-some-study)
-  - [Playing your first human opponent](#playing-your-first-human-opponent)
-  - [The long haul](#the-long-haul)
-- [Just the links](#just-the-links)
+-   [Introduction](#introduction)
+-   [The Plan](#the-plan)
+    -   [Your first three games](#your-first-three-games)
+    -   [Time for some study](#time-for-some-study)
+    -   [Playing your first human opponent](#playing-your-first-human-opponent)
+    -   [The long haul](#the-long-haul)
+-   [Just the links](#just-the-links)
 
 # Introduction
 

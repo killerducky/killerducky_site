@@ -1,6 +1,5 @@
 ---
 layout: default
-title: Home
 ---
 
 These charts show average [Naga](https://naga.dmv.nico/naga_report/top/) scores for various Ranks on MJS and Tenhou. [Naga](https://naga.dmv.nico/naga_report/top/) is a paid service that can analyze your Mahjong games. It provides statistics that grade how well you played. See my [advanced resources](https://killerducky.github.io/mahjong/intro#advanced-resources) section for more information.

@@ -1,6 +1,5 @@
 ---
 layout: default
-title: Home
 ---
 
 [Back to Shogi top](intro)
