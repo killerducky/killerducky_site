@@ -3,18 +3,15 @@ layout: default
 title: Home
 ---
 
-test
-
 <p>
-My favorite part of playing games is those "Aha!" moments when something clicks...
+    My favorite part of playing games is those "Aha!" moments when something clicks. I've tried lots of games because those moments come more
+    often when you're just starting. But before you can enjoy learning cool concepts, you have to get past the initial wall:
 </p>
-
 <blockquote>"What am I even supposed to do?"</blockquote>
-
 <p>
-This site helps beginners get over that wall...
+    This site helps beginners get over that wall, enjoy discovering the game, and learn in the best order with carefully selected resources
+    &mdash even for those approaching intermediate level.
 </p>
-
 <div class="cards">
   <div class="card">
     <h3><a href="{{ site.url }}/go/intro">Go</a></h3>
@@ -55,5 +52,6 @@ This site helps beginners get over that wall...
   <p>
     Shoutout to my dad's site,
     <a href="https://professionalexplainer.com/pe_main_page.html">Professional Explainer</a>.
+    I inherited his love of learning things, and combined it with my mom's love of games.
   </p>
 </div>
