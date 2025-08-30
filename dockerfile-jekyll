@@ -18,4 +18,5 @@ COPY . .
 EXPOSE 4000
 
 # Use bundle exec to run Jekyll
-CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
+# CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
+CMD ["bundle", "exec", "jekyll", "build", "--destination", "/srv/jekyll/_site"]
