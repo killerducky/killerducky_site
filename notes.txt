@@ -1,0 +1,97 @@
+    // A couple examples how to seed the players key:
+    if (false) {
+        localStorage.setItem(
+            "players",
+            JSON.stringify([
+                ["KillerDucky", 0],
+                ["navitas", 1],
+                ["Xsin", 1],
+                ["mort", 2],
+                ["Altaccz", 0],
+                ["StickThief", 0],
+            ])
+        );
+    }
+    if (false) {
+        localStorage.setItem("players", '[["KillerDucky",0],["KillerTroll",0],["Navitas",1],["Xsin",1],["IcyPhoenix",0],["MrFeng",0],["socculta",0],["Bamwempan",0],["Altaccz",0],["StickThief",0],["",0]]')
+    }
+
+docker build -t myapp .
+docker run -d -p 3000:3000 --name myapp --rm myapp
+docker down myapp
+docker-compose down myapp
+
+docker exec -it mahjong-app sh
+
+droplet init:
+            ssh root@your_droplet_ip
+
+            # Install Docker
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+
+            # Install Docker Compose (v2)
+            sudo apt install -y docker-compose
+            docker --version
+            docker-compose --version
+
+            git clone https://github.com/killerducky/mahjong_stats
+            cd mahjong_stats
+            docker-compose up --build
+
+            apt install nginx
+            vi /etc/nginx/sites-available/mahjong
+                server {
+                    listen 80;
+                    # server_name 137.184.48.185;
+                    server_name killerducky.com www.killerducky.com;
+
+                    location / {
+                        proxy_pass http://127.0.0.1:4000;
+                        proxy_http_version 1.1;
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection 'upgrade';
+                        proxy_set_header Host $host;
+                        proxy_cache_bypass $http_upgrade;
+                    }
+    
+                    # Reverse proxy /player requests to Node
+                    location /player/ {
+                        proxy_pass http://127.0.0.1:3000/player/;
+                        proxy_http_version 1.1;
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection 'upgrade';
+                        proxy_set_header Host $host;
+                        proxy_cache_bypass $http_upgrade;
+                    }
+
+                }
+            ln -s /etc/nginx/sites-available/mahjong /etc/nginx/sites-enabled
+            nginx -t
+                    2025/08/25 01:25:00 [warn] 8473#8473: conflicting server name "_" on 0.0.0.0:80, ignored
+            systemctl restart nginx
+
+            apt install certbot python3-certbot-nginx -y
+            certbot --nginx -d killerducky.com -d www.killerducky.com
+            certbot renew --dry-run
+            systemctl reload nginx
+            systemctl list-timers | grep certbot
+
+            docker full loop (sql and node)
+                docker compose down --volumes
+                docker compose build --no-cache
+                docker compose up -d
+
+            docker node only loop
+                docker compose up -d --no-deps --build nodeapp
+                docker compose logs -ft nodeapp
+
+helpful sql stuff:
+        docker exec -it mahjong-mysql sh
+        mysql -u root -pstrongpass mahjong_stats
+        SHOW DATABASES;
+        USE mahjong_stats;
+        SHOW TABLES;
+        DESCRIBE player_stats;
+        SELECT * FROM player_stats LIMIT 5;
+        SELECT nickname FROM player_stats;
