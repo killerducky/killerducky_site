@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-[Back to Shogi top](intro.md)
+[Back to Shogi top](intro)
 
 Join [Shogi Harbour's Discord](https://discord.gg/wggn65v)
 
@@ -31,7 +31,7 @@ At the end there are links to many other good resources [Just the links](#just-t
 ## Your first three games
 
 -   Register on [Lishogi](https://lishogi.org)
--   Pick your favorite [piece set style](lishogi_pieces.md)
+-   Pick your favorite [piece set style](lishogi_pieces)
     -   Click your username in the upper right, and Piece Set
     -   I recommend Engraved_cz because it has the traditional Kanji on top and shows how the piece moves on the bottom.
         You will naturally start to recognize the Kanji alone (important for sites that only have the Kanji).

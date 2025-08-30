@@ -39,7 +39,7 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
 ## Lishogi
 
 -   [Lishogi](https://lishogi.org) is a clone of lichess, and has a modern interface. But as of 2022 there are not many humans playing there.
--   Pick your favorite [piece set style](lishogi_pieces.md)
+-   Pick your favorite [piece set style](lishogi_pieces)
 -   Click your username in the upper right, and Piece Set
 -   I recommend Engraved_cz because it has the traditional Kanji on top and shows how the piece moves on the bottom.
     You will naturally start to recognize the Kanji alone (important for sites that only have the Kanji).
@@ -91,7 +91,7 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
 # Ranks and Ratings
 
 -   Traditional ranks start at 9-kyu (or lower e.g. 15-kyu) and work up to 1-kyu. Then dan (black belt) ranks start from 1-dan and go up.
--   Each site's ranks/ratings will vary in how hard they are, see e.g. [Lishogi vs 81dojo](ratings.md)
+-   Each site's ranks/ratings will vary in how hard they are, see e.g. [Lishogi vs 81dojo](ratings)
 -   Professionals have a different system
     -   Apprentice professionals (shoreikai) go from 6-kyu up to 3-dan
     -   Professionals start from 4-dan and go up

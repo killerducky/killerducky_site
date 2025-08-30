@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-[Back to Shogi top](intro.md)
+[Back to Shogi top](intro)
 
 Here is a sample of 11 players that are active on both lishogi and 81dojo, to compare ratings:
 
