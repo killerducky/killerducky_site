@@ -20,7 +20,7 @@ title: Home
   <div class="card">
     <h3><a href="{{ site.url }}/mahjong/intro">Riichi Mahjong</a></h3>
     A combination of gin rummy and poker
-    <p><a href="{{ '/mjs_stats.html' | relative_url }}">MJS graphs</a> (Gold room+ only).</p>
+    <p><a href="{{ site.url }}/mahjong/mjs_stats.html}}">MJS graphs</a> (Gold room+ only).</p>
   </div>
   <div class="card">
     <h3><a href="{{ site.url }}/shogi/intro">Shogi</a></h3>

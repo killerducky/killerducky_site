@@ -135,7 +135,7 @@ function calcMovingAverage(data, windowSize, lambdaAvg) {
 
 async function loadPlayerData(pname, pidx) {
     let res, data;
-    res = await fetch(`http://localhost:3000/player/${pname}/${pidx}`);
+    res = await fetch(`/player/${pname}/${pidx}`);
     if (!res.ok) {
         return null;
     }
