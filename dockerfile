@@ -1,22 +1,21 @@
-# Use official Ruby image
-FROM ruby:3.2
+FROM ruby:3.2.2
 
-# Install dependencies for Jekyll
-RUN apt-get update && \
-    apt-get install -y build-essential nodejs npm && \
-    gem install bundler jekyll
+# Install dependencies
+RUN apt-get update && apt-get install -y build-essential nodejs npm git
 
 # Set working directory
-WORKDIR /srv/jekyll
+WORKDIR /usr/src/app
 
-# Copy site files
-COPY . .
+# Copy Gemfile and Gemfile.lock first
+COPY Gemfile Gemfile.lock ./
 
 # Install gems
-RUN bundle install || true
+RUN bundle install
 
-# Expose Jekyll default port
+# Copy rest of the site
+COPY . .
+
 EXPOSE 4000
 
-# Serve the site with live reload
-CMD ["jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
+# Use bundle exec to run Jekyll
+CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
