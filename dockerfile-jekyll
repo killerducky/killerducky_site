@@ -17,7 +17,15 @@ COPY . .
 
 EXPOSE 4000
 
+# TODO: Why copy there? Didn't the COPY . . above already copy everything?
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+
+# CMD ["sh", "-c", "while true; do sleep 1000; done"]
 # Use bundle exec to run Jekyll
 # CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
-CMD ["bundle", "exec", "jekyll", "build", "--config" "_config.yml,_config_dev.yml", "--destination", "/srv/jekyll/_site"]
-# CMD ["sh", "-c", "while true; do sleep 1000; done"]
+# CMD ["bundle", "exec", "jekyll", "build", "--config" "_config.yml,_config_dev.yml", "--destination", "/srv/jekyll/_site"]
+# CMD ["sh", "-c", "bundle exec jekyll build --config _config.yml${JEKYLL_ENV:+,_config_dev.yml} --destination /srv/jekyll/_site"]
+CMD ["sh"]

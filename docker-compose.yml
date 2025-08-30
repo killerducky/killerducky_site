@@ -38,7 +38,9 @@ services:
             - "4000:4000"
         volumes:
             - ./site:/srv/jekyll
-        restart: unless-stopped
+        environment:
+            JEKYLL_ENV: ${JEKYLL_ENV:-production}
+        # restart: unless-stopped
 
     nginx:
         image: nginx:latest
