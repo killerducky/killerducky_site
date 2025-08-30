@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import fs from "fs/promises";
 import mysql from "mysql2/promise";
 import compression from "compression";
+import cors from "cors";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,6 +73,7 @@ async function getPlayer(nickname, pidx) {
 }
 
 app.use(compression());
+app.use(cors());
 app.use(express.static(__dirname));
 // app.use((req, res, next) => {
 //     res.setHeader("Cache-Control", "no-store");
