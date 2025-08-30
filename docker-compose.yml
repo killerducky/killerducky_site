@@ -49,6 +49,8 @@ services:
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
             - ./site/_site:/usr/share/nginx/html:ro # use Jekyll output
+            # TODO: dev server this doesn't exist?
+            - /etc/letsencrypt:/etc/letsencrypt
         ports:
             - "80:80"
             - "443:443"
