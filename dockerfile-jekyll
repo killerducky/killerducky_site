@@ -19,4 +19,5 @@ EXPOSE 4000
 
 # Use bundle exec to run Jekyll
 # CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
-CMD ["bundle", "exec", "jekyll", "build", "--destination", "/srv/jekyll/_site"]
+CMD ["bundle", "exec", "jekyll", "build", "--config" "_config.yml,_config_dev.yml", "--destination", "/srv/jekyll/_site"]
+# CMD ["sh", "-c", "while true; do sleep 1000; done"]
