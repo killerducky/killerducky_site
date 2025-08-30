@@ -21,10 +21,10 @@ const MJS_DATE_LIMIT = 1262304000000; // 2010-01-01 in milliseconds
 
 async function initializeDatabase() {
     const db = mysql.createPool({
-        host: process.env.DB_HOST || "localhost",
+        host: process.env.DB_HOST || "mahjong-mysql",
         user: process.env.DB_USER || "root",
         password: process.env.DB_PASS || "rootpass",
-        database: process.env.DB_NAME || "mahjong_stats",
+        database: process.env.DB_NAME || "mahjong",
     });
 
     await db.execute("CREATE DATABASE IF NOT EXISTS mahjong_stats");
@@ -166,6 +166,7 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
     }
 });
 
+// Do I still need this? Jekyll/nginx is serving the static files
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
