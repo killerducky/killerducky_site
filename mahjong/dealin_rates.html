@@ -205,6 +205,75 @@
                     points: { Riichi: arr[6], Dama: arr[7], Diff: arr[6] - arr[7] },
                 };
             }
+            function riichi_dama_display(headers, handValues, waitType) {
+                const table = document.createElement("table");
+                const thead = document.createElement("thead");
+                const tbody = document.createElement("tbody");
+
+                const headerRow = document.createElement("tr");
+                headers.forEach((key) => {
+                    const th = document.createElement("th");
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+
+                for (const [key, row] of Object.entries(handValues[waitType])) {
+                    const tr = document.createElement("tr");
+                    // console.log(key, row);
+                    // Well this is kinda weird and verbose but copilot suggested it
+                    const fullRow = [
+                        key,
+                        row.turn[5].Riichi,
+                        row.turn[5].Dama,
+                        row.turn[5].Diff,
+                        row.turn[8].Riichi,
+                        row.turn[8].Dama,
+                        row.turn[8].Diff,
+                        row.turn[12].Riichi,
+                        row.turn[12].Dama,
+                        row.turn[12].Diff,
+                        row.points.Riichi,
+                        row.points.Dama,
+                        row.points.Diff,
+                    ];
+                    fullRow.forEach((cell, index) => {
+                        const td = document.createElement("td");
+                        td.textContent = cell !== null ? cell : "";
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                }
+
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                // document.body.appendChild(table);
+
+                let trace_y_values = [[], [], []];
+                for (const [key, dict] of Object.entries(handValues[waitType])) {
+                    if (key.includes("nomi")) continue;
+                    for (let [idx, turn] of [5, 8, 12].entries()) {
+                        trace_y_values[idx].push(dict.turn[turn].Diff);
+                    }
+                }
+                const traces = [5, 8, 12].map((turn, idx) => ({
+                    x: Object.keys(handValues[waitType])
+                        .filter((k) => k !== "Riichi nomi")
+                        .map((r) => shorten(r)),
+                    y: trace_y_values[idx],
+                    type: "scatter",
+                    mode: "lines+markers",
+                    name: `T${turn}`,
+                }));
+                const layout = {
+                    title: { text: `Riichi vs Dama difference for: ${waitType}` },
+                };
+                console.log(traces);
+                let chartEl = document.createElement("div");
+                chartEl.id = "chart-" + waitType.replace(/\s+/g, "-").toLowerCase();
+                document.body.appendChild(chartEl);
+                Plotly.newPlot(chartEl, traces, layout);
+            }
             function riichi_dama_ev() {
                 const headers = [
                     "Hand name",
@@ -272,18 +341,6 @@
                     "Dama 6 han, Riichi 7 han": [9300, 8700, 7000, 6200, 4500, 4000, 14600, 12000],
                 };
 
-                const table = document.createElement("table");
-                const thead = document.createElement("thead");
-                const tbody = document.createElement("tbody");
-
-                const headerRow = document.createElement("tr");
-                headers.forEach((key) => {
-                    const th = document.createElement("th");
-                    th.textContent = key;
-                    headerRow.appendChild(th);
-                });
-                thead.appendChild(headerRow);
-
                 // Convert from flat rows to dict
                 for (let [waitType, dict] of Object.entries(handValues)) {
                     for (let [value, row] of Object.entries(dict)) {
@@ -291,58 +348,9 @@
                     }
                 }
 
-                for (const [key, row] of Object.entries(handValues["Head start ryanmen"])) {
-                    const tr = document.createElement("tr");
-                    // console.log(key, row);
-                    // Well this is kinda weird and verbose but copilot suggested it
-                    const fullRow = [
-                        key,
-                        row.turn[5].Riichi,
-                        row.turn[5].Dama,
-                        row.turn[5].Diff,
-                        row.turn[8].Riichi,
-                        row.turn[8].Dama,
-                        row.turn[8].Diff,
-                        row.turn[12].Riichi,
-                        row.turn[12].Dama,
-                        row.turn[12].Diff,
-                        row.points.Riichi,
-                        row.points.Dama,
-                        row.points.Diff,
-                    ];
-                    fullRow.forEach((cell, index) => {
-                        const td = document.createElement("td");
-                        td.textContent = cell !== null ? cell : "";
-                        tr.appendChild(td);
-                    });
-                    tbody.appendChild(tr);
-                }
-
-                table.appendChild(thead);
-                table.appendChild(tbody);
-                document.body.appendChild(table);
-
-                let trace_y_values = [[], [], []];
-                for (const [key, dict] of Object.entries(handValues["Head start ryanmen"])) {
-                    if (key.includes("Riichi nomi")) continue;
-                    for (let [idx, turn] of [5, 8, 12].entries()) {
-                        trace_y_values[idx].push(dict.turn[turn].Diff);
-                    }
-                }
-                const traces = [5, 8, 12].map((turn, idx) => ({
-                    x: Object.keys(handValues["Head start ryanmen"])
-                        .filter((k) => k !== "Riichi nomi")
-                        .map((r) => shorten(r)),
-                    y: trace_y_values[idx],
-                    type: "scatter",
-                    mode: "lines+markers",
-                    name: `T${turn}`,
-                }));
-                console.log(traces);
-                let chartEl = document.createElement("div");
-                chartEl.id = "chart";
-                document.body.appendChild(chartEl);
-                Plotly.newPlot("chart", traces, { title: "Riichi vs Dama Expected Value" });
+                riichi_dama_display(headers, handValues, "Head start ryanmen");
+                riichi_dama_display(headers, handValues, "Head start bad shape");
+                // riichi_dama_display(headers, handValues, "Head start honor wait");
             }
 
             function push_fold_ev(h_dealer, v_dealer) {
