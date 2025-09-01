@@ -176,15 +176,14 @@
             function shorten(label) {
                 label = label.replace("Dama", "D").replace("Riichi", "R").replace(" pt", "").replace(",", "/");
                 const lookup = {
-                    "D 700": "pinfu nomi",
-                    "D 1000": "+1",
-                    "D 1300": "pinfu +1",
-                    "D 2000": "+2",
-                    "D 2600": "pinfu +2",
-                    "D 3900": "+3",
-                    "D 5200": "pinfu +3",
+                    "D 1000": "pinfu nomi",
+                    "D 1300": "+1",
+                    "D 2000": "pinfu +1",
+                    "D 2600": "+2",
+                    "D 3900": "pinfu +2",
+                    "D 5200": "+3",
                     "D 6400": "40fu +3",
-                    "D 7700": "+4",
+                    "D 7700": "pinfu +3",
                 };
                 let extra = "";
                 for (const [key, val] of Object.entries(lookup)) {
@@ -296,7 +295,6 @@
                 // analysis results tabluated in 1.2. Expected round balance values are rounded to the nearest 10.
                 handValues["Head start ryanmen"] = {
                     "Riichi nomi": [1300, null, 600, null, -100, null, 2800, null],
-                    "Dama 700 pt, Riichi 1300 pt": [1500, 300, 800, -100, 0, -400, 3200, 900],
                     "Dama 1000 pt, Riichi 2000 pt": [1900, 600, 1100, 200, 300, -300, 3700, 1100],
                     "Dama 1300 pt, Riichi 2600 pt": [2800, 1000, 1900, 500, 900, 0, 5000, 1500],
                     "Dama 2000 pt, Riichi 3900 pt": [3600, 1600, 2600, 1000, 1400, 400, 6300, 2200],
