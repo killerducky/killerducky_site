@@ -97,6 +97,8 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
 <div id="chart-riichi-dama-head-start-ryanmen"></div>
 <br />
 <div id="chart-riichi-dama-head-start-bad-shape"></div>
+<br />
+<div id="chart-riichi-dama-head-start-honor-wait"></div>
 
 <script>
     const dealin_rates = {
@@ -185,16 +187,16 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         }
     }
     function shorten(label) {
-        label = label.replace("Dama", "D").replace("Riichi", "R").replace(" pt", "").replace(",", "/");
+        label = label.replaceAll("Dama", "D").replaceAll("Riichi", "R").replaceAll(",", "/").replaceAll("00", "");
         const lookup = {
-            "D 1000": "pinfu nomi",
-            "D 1300": "+1",
-            "D 2000": "pinfu +1",
-            "D 2600": "+2",
-            "D 3900": "pinfu +2",
-            "D 5200": "+3",
-            "D 6400": "40fu +3",
-            "D 7700": "pinfu +3",
+            "D 10": "pinfu nomi",
+            "D 13": "+1",
+            "D 20": "pinfu +1",
+            "D 26": "+2",
+            "D 39": "pinfu +2",
+            "D 52": "+3",
+            "D 64": "12fu +3",
+            "D 77": "pinfu +3",
         };
         let extra = "";
         for (const [key, val] of Object.entries(lookup)) {
@@ -259,12 +261,13 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         table.appendChild(tbody);
         // document.body.appendChild(table);
 
-        let trace_y_values = [[], [], []];
+        let trace_y_values = [[], [], [], []];
         for (const [key, dict] of Object.entries(handValues[waitType])) {
             if (key.includes("nomi")) continue;
             for (let [idx, turn] of [5, 8, 12].entries()) {
                 trace_y_values[idx].push(dict.turn[turn].Diff);
             }
+            trace_y_values[3].push(dict.points.Diff);
         }
         const traces = [5, 8, 12].map((turn, idx) => ({
             x: Object.keys(handValues[waitType])
@@ -275,14 +278,23 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
             mode: "lines+markers",
             name: `T${turn}`,
         }));
+        traces.push({
+            x: Object.keys(handValues[waitType])
+                .filter((k) => k !== "Riichi nomi")
+                .map((r) => shorten(r)),
+            y: trace_y_values[3],
+            type: "scatter",
+            mode: "lines+markers",
+            name: `Win`,
+        });
+        console.log("trace_y_values", trace_y_values);
+        console.log("traces", traces);
         const layout = {
             title: { text: `Riichi vs Dama difference for: ${waitType}` },
+            yaxis: { range: [-1500, 5500] },
         };
-        console.log(traces);
         let chartid = "chart-riichi-dama-" + waitType.replace(/\s+/g, "-").toLowerCase();
         console.log(chartid);
-        // <table id="riichi-dama-head-start-ryanmen"></table>
-        // <table id="riichi-dama-head-start-bad-shape"></table>
         Plotly.newPlot(chartid, traces, layout);
     }
     function riichi_dama_ev() {
@@ -307,17 +319,17 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         // analysis results tabluated in 1.2. Expected round balance values are rounded to the nearest 10.
         handValues["Head start ryanmen"] = {
             "Riichi nomi": [1300, null, 600, null, -100, null, 2800, null],
-            "Dama 1000 pt, Riichi 2000 pt": [1900, 600, 1100, 200, 300, -300, 3700, 1100],
-            "Dama 1300 pt, Riichi 2600 pt": [2800, 1000, 1900, 500, 900, 0, 5000, 1500],
-            "Dama 2000 pt, Riichi 3900 pt": [3600, 1600, 2600, 1000, 1400, 400, 6300, 2200],
-            "Dama 2600 pt, Riichi 5200 pt": [4500, 2300, 3400, 1600, 1900, 800, 7600, 3000],
-            "Dama 3900 pt, Riichi 7700 pt": [5500, 3400, 4200, 2600, 2600, 1600, 9100, 4300],
-            "Dama 5200 pt, Riichi 4 han": [5600, 4800, 4300, 3800, 2600, 2500, 9200, 6000],
-            "Dama 6400 pt, Riichi 4 han": [5600, 5600, 4300, 4500, 2600, 3000, 9200, 6900],
-            "Dama 7700 pt, Riichi 5 han": [7000, 6300, 5500, 5100, 3500, 3600, 11300, 7800],
-            "Dama 4 han, Riichi 5 han": [7000, 6500, 5500, 5300, 3500, 3700, 11300, 8000],
-            "Dama 5 han, Riichi 6 han": [8300, 7500, 6500, 6100, 4300, 4400, 13100, 9200],
-            "Dama 6 han, Riichi 7 han": [9600, 9900, 7600, 8200, 5100, 5900, 15100, 12000],
+            "Dama 1000, Riichi 2000": [1900, 600, 1100, 200, 300, -300, 3700, 1100],
+            "Dama 1300, Riichi 2600": [2800, 1000, 1900, 500, 900, 0, 5000, 1500],
+            "Dama 2000, Riichi 3900": [3600, 1600, 2600, 1000, 1400, 400, 6300, 2200],
+            "Dama 2600, Riichi 5200": [4500, 2300, 3400, 1600, 1900, 800, 7600, 3000],
+            "Dama 3900, Riichi 7700": [5500, 3400, 4200, 2600, 2600, 1600, 9100, 4300],
+            "Dama 5200, Riichi 4han": [5600, 4800, 4300, 3800, 2600, 2500, 9200, 6000],
+            "Dama 6400, Riichi 4han": [5600, 5600, 4300, 4500, 2600, 3000, 9200, 6900],
+            "Dama 7700, Riichi 5han": [7000, 6300, 5500, 5100, 3500, 3600, 11300, 7800],
+            "Dama 4han, Riichi 5han": [7000, 6500, 5500, 5300, 3500, 3700, 11300, 8000],
+            "Dama 5han, Riichi 6han": [8300, 7500, 6500, 6100, 4300, 4400, 13100, 9200],
+            "Dama 6han, Riichi 7han": [9600, 9900, 7600, 8200, 5100, 5900, 15100, 12000],
         };
 
         // Table 1.3: Head start bad shape riichi/dama round balance. Round balance values are computed from data
@@ -327,13 +339,13 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         // Riichi Dama Riichi Dama Riichi Dama Riichi Dama
         handValues["Head start bad shape"] = {
             "Riichi nomi": [500, null, -100, null, -600, null, 2600, null],
-            "Dama 1300 pt, Riichi 2600 pt": [1600, 500, 800, 0, 0, -500, 4700, 1500],
-            "Dama 2600 pt, Riichi 5200 pt": [2900, 1600, 1900, 900, 800, 100, 7300, 3000],
-            "Dama 5200 pt, Riichi 4 han": [3800, 3800, 2700, 2600, 1400, 1300, 9000, 6000],
-            "Dama 6400 pt, Riichi 4 han": [3800, 4500, 2700, 3100, 1400, 1700, 9000, 6900],
-            "Dama 4 han, Riichi 5 han": [4800, 5300, 3500, 3700, 1900, 2100, 10900, 8000],
-            "Dama 5 han, Riichi 6 han": [5900, 6100, 4300, 4400, 2600, 2600, 12900, 9200],
-            "Dama 6 han, Riichi 7 han": [6900, 8200, 5200, 6000, 3100, 3700, 14800, 12000],
+            "Dama 1300, Riichi 2600": [1600, 500, 800, 0, 0, -500, 4700, 1500],
+            "Dama 2600, Riichi 5200": [2900, 1600, 1900, 900, 800, 100, 7300, 3000],
+            "Dama 5200, Riichi 4han": [3800, 3800, 2700, 2600, 1400, 1300, 9000, 6000],
+            "Dama 6400, Riichi 4han": [3800, 4500, 2700, 3100, 1400, 1700, 9000, 6900],
+            "Dama 4han, Riichi 5han": [4800, 5300, 3500, 3700, 1900, 2100, 10900, 8000],
+            "Dama 5han, Riichi 6han": [5900, 6100, 4300, 4400, 2600, 2600, 12900, 9200],
+            "Dama 6han, Riichi 7han": [6900, 8200, 5200, 6000, 3100, 3700, 14800, 12000],
         };
 
         // Table 1.6: Head start honor wait riichi/dama round balance. Round balance values are computed from data
@@ -342,13 +354,13 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         // Riichi Dama Riichi Dama Riichi Dama Riichi Dama
         handValues["Head start honor wait"] = {
             "Riichi nomi": [1100, null, 400, null, -300, null, 2600, null],
-            "Dama 1300 pt, Riichi 2600 pt": [2400, 700, 1500, 100, 500, -400, 4600, 1500],
-            "Dama 2600 pt, Riichi 5200 pt": [4200, 1800, 2900, 1000, 1500, 200, 7100, 3000],
-            "Dama 5200 pt, Riichi 4 han": [5400, 4100, 3900, 2700, 2300, 1500, 8900, 6000],
-            "Dama 6400 pt, Riichi 4 han": [5400, 4800, 3900, 3200, 2900, 1900, 8900, 6900],
-            "Dama 4 han, Riichi 5 han": [6600, 5700, 4900, 3900, 3000, 2300, 10700, 8000],
-            "Dama 5 han, Riichi 6 han": [8100, 6600, 6100, 4600, 3900, 2800, 12900, 9200],
-            "Dama 6 han, Riichi 7 han": [9300, 8700, 7000, 6200, 4500, 4000, 14600, 12000],
+            "Dama 1300, Riichi 2600": [2400, 700, 1500, 100, 500, -400, 4600, 1500],
+            "Dama 2600, Riichi 5200": [4200, 1800, 2900, 1000, 1500, 200, 7100, 3000],
+            "Dama 5200, Riichi 4han": [5400, 4100, 3900, 2700, 2300, 1500, 8900, 6000],
+            "Dama 6400, Riichi 4han": [5400, 4800, 3900, 3200, 2900, 1900, 8900, 6900],
+            "Dama 4han, Riichi 5han": [6600, 5700, 4900, 3900, 3000, 2300, 10700, 8000],
+            "Dama 5han, Riichi 6han": [8100, 6600, 6100, 4600, 3900, 2800, 12900, 9200],
+            "Dama 6han, Riichi 7han": [9300, 8700, 7000, 6200, 4500, 4000, 14600, 12000],
         };
 
         // Convert from flat rows to dict
@@ -357,10 +369,9 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
                 dict[value] = flat2dict(row);
             }
         }
-
         riichi_dama_display(headers, handValues, "Head start ryanmen");
         riichi_dama_display(headers, handValues, "Head start bad shape");
-        // riichi_dama_display(headers, handValues, "Head start honor wait");
+        riichi_dama_display(headers, handValues, "Head start honor wait");
     }
 
     function push_fold_ev(h_dealer, v_dealer) {
