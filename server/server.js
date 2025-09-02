@@ -95,6 +95,10 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
             return;
         }
         const result = data1[pidx];
+        if (!result) {
+            res.status(404).json({ error: "Player index not found" });
+            return;
+        }
 
         let dbPlayerData = await getPlayer(pname, pidx);
         if (dbPlayerData) {
@@ -135,12 +139,11 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
             // so the date_limit is exclusive -- does not include games that start on this timestamp
         }
         for (let i = 0; i < 20; i++) {
-            console.log("start", start);
             // testing shows ${start}000 will work, but just leave it as is
             let s1 = `${s0}player_records/${result.id}/${start}999/${date_limit}000?limit=500&mode=${mode}&descending=true&tag=`;
             const res2 = await fetch(s1);
             const these_games = await res2.json();
-            console.log(these_games.length, s1);
+            console.log(these_games.length);
             // these_games.slice(0, 5).forEach((g) => {
             //     console.log(g.uuid, start - g.startTime, date_limit - g.startTime);
             // });

@@ -95,3 +95,16 @@ helpful sql stuff:
         DESCRIBE player_stats;
         SELECT * FROM player_stats LIMIT 5;
         SELECT nickname FROM player_stats;
+
+
+nginx problem:
+    nginx.conf temporary patch:
+            proxy_pass         http://172.18.0.3:3000/player/;   # "node" is the docker-compose service name
+            #proxy_pass         http://nodeapp:3000/player/;   # "node" is the docker-compose service name
+    docker exec -it killerducky-nginx sh
+    ping nodeapp (shows correct IP -- did it do that before? not sure)
+    edit locally to put back nodeapp:3000
+    docker restart killerducky-nginx
+    nginx seems working now
+    
+
