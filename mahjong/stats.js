@@ -184,14 +184,11 @@ function riichi_dama_display(headers, handValues, waitType) {
         mode: "lines+markers",
         name: `Win`,
     });
-    console.log("trace_y_values", trace_y_values);
-    console.log("traces", traces);
     const layout = {
         title: { text: `Riichi vs Dama difference for: ${waitType}` },
         yaxis: { range: [-1500, 5500] },
     };
     let chartid = "chart-riichi-dama-" + waitType.replace(/\s+/g, "-").toLowerCase();
-    console.log(chartid);
     Plotly.newPlot(chartid, traces, layout);
 }
 function riichi_dama_ev() {
