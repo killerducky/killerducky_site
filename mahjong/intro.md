@@ -91,10 +91,8 @@ layout: default
 -   [Naga Stats](naga_stats) Charts showing average Naga scores for various Ranks on MJS or Tenhou.
 -   [Random Walk](random_walk.html) Simulates random walks of Mahjong Sould rating
 -   [MJS Gacha notes](mjs_gacha_notes) How to get stuff in MJS
--   [Discard reading](https://rentry.co/8gmub) rough notes by Twitch user Xomnom
--   [Early discards](https://rentry.co/shha7) rough notes by Twitch user Xomnom
 -   [Push or Fold judgement](https://youtu.be/XvCAmf4KCBk?t=377)
--   [Rough notes](rough_notes) Some rough personal notes for my own use
+-   [Stats](stats) Some reference tables and charts, mostly from SMS
 
 # Longer resource list
 

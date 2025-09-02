@@ -1,3 +1,6 @@
+/* * {
+    outline: red solid 1px;
+} */
 html {
     background-color: hsl(210, 100%, 90%);
 }
@@ -26,6 +29,17 @@ header {
     gap: 1rem;
     padding: 1rem;
 }
+@media (max-width: 767px) {
+    ul {
+        padding-left: 1em;
+    }
+    ul ul {
+        padding-left: 0.7em;
+    }
+    ul ul ul {
+        padding-left: 0.4em;
+    }
+}
 @media (min-width: 768px) {
     .container {
         flex-direction: row;
@@ -40,6 +54,15 @@ header {
         flex: 1;
         padding: 1rem;
     }
+    /* ul {
+        padding-left: 2em;
+    }
+    ul ul {
+        padding-left: 1.7em;
+    }
+    ul ul ul {
+        padding-left: 1.4em;
+    } */
 }
 .nav a {
     display: block;
