@@ -113,5 +113,10 @@ nginx problem:
 +                     'upstream: $upstream_addr, status: $upstream_status';
 +    access_log /var/log/nginx/access.log debug;
 
+rebuild jekyll only:
+docker compose --env-file .dev-env up --build jekyll
 
 docker compose --env-file .dev-env up -d --build
+docker exec -it killerducky-nginx sh
+nginx -s reload
+
