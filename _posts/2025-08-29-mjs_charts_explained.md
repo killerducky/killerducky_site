@@ -33,6 +33,10 @@ The second chart is simpler. Above you can see my early quick rise through Exper
 
 Zoom out by double clicking. Zoom in with click+drag. Change the last N games to change the zoom to the end. Turn trend lines on/off by clicking in the legend.
 
+## Related links
+
+Checkout the [Random Walk](random_walk.html) simulator to get a sense of the randomness in trying to climb the MJS ladder.
+
 ## Credits
 
 Rank chart based on [Original collab script](https://colab.research.google.com/drive/1puwnp-_k3aHV8trHYInX9HGsBgnJ-hYY#scrollTo=Uoyjy8mCJ21c) (In Japanese)
