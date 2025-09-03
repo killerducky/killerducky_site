@@ -31,10 +31,25 @@ layout: default
     }
 </style>
 
-<h2>Dealin Rates</h2>
-Data from Statistical Mahjong Strategy<br />
-Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that is half suji by 37.<br />
-<br />
+# Table of Contents
+
+-   [Table of Contents](#table-of-contents)
+    -   [Dealin Rates](#dealin-rates)
+        -   [Early/Late turn only](#earlylate-turn-only)
+        -   [Full chart](#full-chart)
+    -   [Riichi vs Dama Round balance](#riichi-vs-dama-round-balance)
+        -   [Head start ryanmen](#head-start-ryanmen)
+        -   [Head start bad shape](#head-start-bad-shape)
+        -   [Head start honor wait](#head-start-honor-wait)
+
+## Dealin Rates
+
+Data from Statistical Mahjong Strategy
+
+Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that is half suji by 37.
+
+### Early/Late turn only
+
 <form id="plotForm">
     <label for="earlyTurn">Early Turn:</label>
     <input type="number" id="earlyTurn" name="earlyTurn" value="9" min="1" max="19" />
@@ -64,6 +79,7 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         <tbody></tbody>
     </table>
 </div>
+### Full chart
 <div style="display: flex; justify-content: flex-start">
     <table id="full-dealin-table" style="margin: 10px">
         <thead>
@@ -77,18 +93,18 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         <tbody></tbody>
     </table>
 </div>
-<br />
-<h2>Riichi vs Dama Round balance</h2>
+## Riichi vs Dama Round balance
 <ul>
     <li>These charts show average score difference between Riichi and Dama (positive means Riichi scores more).</li>
     <li>Trend lines for deciding on Turns 5, 8, and 12.</li>
     <li>Another trend line for the difference assuming the hand actually wins.</li>
     <li>Data from Statistical Mahjong Strategy, error around 400 points.</li>
 </ul>
+### Head start ryanmen
 <div id="chart-riichi-dama-head-start-ryanmen"></div>
-<br />
+### Head start bad shape
 <div id="chart-riichi-dama-head-start-bad-shape"></div>
-<br />
+### Head start honor wait
 <div id="chart-riichi-dama-head-start-honor-wait"></div>
 
 <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
