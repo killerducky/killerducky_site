@@ -19,6 +19,7 @@ const dealin_rates = {
     "Non suji 5": [5.7, 6.6, 7.7, 8.5, 9.4, 10.2, 11.0, 11.9, 12.8, 13.8, 14.9, 16.0, 17.2, 18.5, 19.9, 21.3, 22.9, 24.7, 27.5],
     "Non suji 46": [5.7, 6.9, 8.0, 8.9, 9.7, 10.5, 11.3, 12.2, 13.1, 14.1, 15.1, 16.3, 17.5, 18.8, 20.1, 21.7, 23.2, 24.9, 27.8],
 };
+let simple_dealin_rates;
 
 const passed_suji = {
     "Passed suji": [1.0, 1.7, 2.5, 3.2, 4.0, 4.8, 5.6, 6.3, 7.1, 7.8, 8.5, 9.2, 9.8, 10.5, 11.1, 11.6, 12.2, 12.7, 13.3],
@@ -31,16 +32,32 @@ tables.push(document.querySelector("#short-table-2"));
 
 function simplify_types() {
     const keyPairs = [
-        [["Half suji 46A", "Half suji 46B"], "Half suji 46"],
+        [["Non suji 46", "Non suji 5"], "Non suji 456"],
+        [["Half suji 46A", "Half suji 46B", "Half suji 5"], "Half suji 456"],
+        [["Full suji 46", "Full suji 5"], "Full suji 456"],
         [["Yakuhai 0 seen", "Guest wind 0 seen"], "Honor 0 seen"],
         [["Yakuhai 1 seen", "Guest wind 1 seen"], "Honor 1 seen"],
         [["Yakuhai 2 seen", "Guest wind 2 seen"], "Honor 2 seen"],
     ];
     simple_dealin_rates = structuredClone(dealin_rates);
-    for (const [[keyA, keyB], newKey] of keyPairs) {
-        simple_dealin_rates[newKey] = simple_dealin_rates[keyA].map((val, i) => (val + simple_dealin_rates[keyB][i]) / 2);
-        delete simple_dealin_rates[keyA];
-        delete simple_dealin_rates[keyB];
+    for (const [oldKeys, newKey] of keyPairs) {
+        simple_dealin_rates[newKey] = [];
+        for (let turn = 0; turn < dealin_rates[oldKeys[0]].length; turn++) {
+            // console.log(turn);
+            let sum = 0;
+            let count = 0;
+            for (const key of oldKeys) {
+                if (simple_dealin_rates[key][turn] === 0) {
+                    continue;
+                }
+                sum += simple_dealin_rates[key][turn];
+                count++;
+            }
+            simple_dealin_rates[newKey].push(count ? sum / count : 0);
+        }
+        for (const key of oldKeys) {
+            delete simple_dealin_rates[key];
+        }
     }
 }
 function updateTable(earlyTurn, lateTurn, simple) {
@@ -330,7 +347,6 @@ document
             const earlyTurn = parseInt(document.getElementById("earlyTurn").value);
             const lateTurn = parseInt(document.getElementById("lateTurn").value);
             const simple = document.getElementById("simple").checked;
-            console.log(simple);
             updateTable(earlyTurn, lateTurn, simple);
         });
     });
