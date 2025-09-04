@@ -1,8 +1,9 @@
 ---
 layout: default
+title: Shogi resources
 ---
 
-# Introduction
+# Shogi resources
 
 Shogi is Japanese chess, similar to Crazyhouse -- every captured piece can be placed on the board as your own!
 
@@ -10,7 +11,7 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
 
 # Table of Contents
 
--   [Introduction](#introduction)
+-   [Shogi resources](#shogi-resources)
 -   [Table of Contents](#table-of-contents)
 -   [Connecting with the Shogi community](#connecting-with-the-shogi-community)
 -   [Places to Play](#places-to-play)

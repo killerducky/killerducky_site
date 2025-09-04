@@ -1,13 +1,9 @@
 ---
 layout: default
+title: Tenhou Rank Charts
 ---
 
-# Table of Contents
-
--   [Table of Contents](#table-of-contents)
-    -   [Tenhou rank progression](#tenhou-rank-progression)
-
-## Tenhou rank progression
+# Tenhou Rank Charts
 
 <div id="chart-tenhou-rank"></div>
 

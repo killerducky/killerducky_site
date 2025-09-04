@@ -1,9 +1,13 @@
 ---
 layout: default
+title: Go resources
 ---
+
+# Learn Go!
 
 # Table of Contents
 
+-   [Learn Go!](#learn-go)
 -   [Table of Contents](#table-of-contents)
 -   [Learning Go from scratch](#learning-go-from-scratch)
 -   [Playing on OGS](#playing-on-ogs)

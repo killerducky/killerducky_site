@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Mahjong stats
 ---
 
 <style>
@@ -31,8 +32,13 @@ layout: default
     }
 </style>
 
+# Mahjong stats
+
+A collection of reference charts and tables for Mahjong.
+
 # Table of Contents
 
+-   [Mahjong stats](#mahjong-stats)
 -   [Table of Contents](#table-of-contents)
     -   [Dealin Rates](#dealin-rates)
         -   [Early/Late turn only](#earlylate-turn-only)
