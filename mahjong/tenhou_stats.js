@@ -1,11 +1,14 @@
 // import fs from "fs/promises";
 
-const url = "https://nodocchi.moe/";
-async function getJson() {
-    //  https://nodocchi.moe/api/listuser.php?name=KillerD
-    let res = await fetch(`${url}api/listuser.php?name=KillerD`);
+async function getJson(pname) {
+    let res = await fetch(`/api/tenhou/nodocchi_listuser/${pname}`);
+    if (!res.ok) {
+        return null;
+    }
     let data = await res.json();
-    console.log(JSON.stringify(data, null, 2));
+    console.log(data);
+    return data;
+    // console.log(JSON.stringify(data, null, 2));
 }
 
 function cleanQuotes(s) {
@@ -95,13 +98,30 @@ function demoteRank(currRank) {
     }
     return ladderOrder[idx - 1];
 }
-async function main() {
-    let pname = "KillerD";
+
+class Player {
+    constructor(chartContainerEl, pname) {
+        this.chartContainerEl = chartContainerEl;
+        this.generateBtn = this.chartContainerEl.querySelector(".generate");
+        this.pnameBtn = this.chartContainerEl.querySelector(".pname");
+        this.pnameBtn.value = pname;
+        this.generateBtn.addEventListener("click", async () => {
+            document.documentElement.style.cursor = "wait";
+            this.generateBtn.disabled = true;
+            await generate(this.pnameBtn.value);
+            document.documentElement.style.cursor = "default";
+            this.generateBtn.disabled = false;
+        });
+    }
+}
+
+async function generate(pname) {
     // let jsonData = JSON.parse(await fs.readFile("tenhou_KillerD.json", "utf-8"));
     // let jsonData = JSON.parse(await fetch("tenhou_KillerD.json"));
     let jsonData;
-    jsonData = await fetch("tmp/tenhou_KillerD.json");
-    jsonData = await jsonData.json();
+    // jsonData = await fetch("tmp/tenhou_KillerD.json");
+    // jsonData = await jsonData.json();
+    jsonData = await getJson(pname);
     // let csvData = await fs.readFile("tenhou_KillerD.csv", "utf-8");
     let csvData = await fetch("tmp/tenhou_KillerD.csv");
     csvData = await csvData.text();
@@ -327,5 +347,21 @@ async function main() {
 // K = Kuitan (Open tanyao)
 // A = Aka 5s
 // - = no special rule?
+async function main() {
+    let players = JSON.parse(localStorage.getItem("tenhou_players") || '[""]');
+    // console.log(JSON.stringify(players))
+    let charts = [];
+    for (let p of players) {
+        let chart;
+        if (charts.length == 0) {
+            chart = document.querySelector(".chart-container");
+        } else {
+            chart = charts[0].cloneNode(true);
+            document.body.appendChild(chart);
+        }
+        charts.push(chart);
+        new Player(chart, p);
+    }
+}
 
 main();

@@ -113,12 +113,6 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
         }
         dbPlayerData.info = result; // update info
 
-        // for debug write to file
-        // await fs.writeFile(`${JSON_DATA_BASE_FILENAME}_${pname}_${pidx}.json`, JSON.stringify(dbPlayerData, null, 2));
-        // dbPlayerData.games.slice(0, 2).forEach((g) => {
-        //     console.log("db:", g.uuid);
-        // });
-
         // let latest_timestamp = dbPlayerData.info.latest_timestamp * 1000;
         // let now = new Date();
         // console.log(latest_timestamp, now.getTime(), now - latest_timestamp, (now - latest_timestamp) / 1000 / 60 / 60);
@@ -169,10 +163,28 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
     }
 });
 
-// Do I still need this? Jekyll/nginx is serving the static files
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+app.get("/api/tenhou/nodocchi_listuser/:nickname", async (req, res) => {
+    try {
+        const pname = req.params.nickname;
+        const url = "https://nodocchi.moe";
+        const s1 = `${url}/api/listuser.php?name=${pname}`;
+        console.log(`server fetch ${s1}`);
+        let res1 = await fetch(s1);
+        let data = await res1.json();
+        // console.log(data);
+        // console.log(JSON.stringify(data, null, 2));
+        res.json(data);
+    } catch (err) {
+        console.log("Error caught");
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
 });
+
+// Do I still need this? Jekyll/nginx is serving the static files
+// app.get("/", (req, res) => {
+//     res.sendFile(path.join(__dirname, "index.html"));
+// });
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running at http://localhost:${PORT}`);
