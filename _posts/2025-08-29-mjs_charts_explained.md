@@ -9,7 +9,7 @@ categories: blog
 
 Sometimes I think half the reason I play Mahjong is to generate statitics that I can analyze and chart! Now you too can enjoy watching lines go up and to the right (I hope your lines go up?). Below I will explain in more detail what the charts are showing. You can see your own graphs here:
 
-[MJS Charts](/mahjong/mjs_stats.html)
+[MJS Charts](/mahjong/mjs_stats)
 
 ## Example
 
