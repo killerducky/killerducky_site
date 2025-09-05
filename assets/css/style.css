@@ -6,7 +6,7 @@ html {
 }
 body {
     max-width: 1200px;
-    margin: 20px auto 150px auto;
+    margin: 0px auto 150px auto;
     line-height: 1.5;
     font-family: "Segoe UI";
     display: block;
@@ -18,13 +18,17 @@ header {
     text-align: center;
     font-size: 1.5em;
 }
+/* This isn't really needed now that Nav is always horizontal */
 .container {
     display: flex;
     flex-direction: column;
 }
 .nav {
+    background: hsl(210, 70%, 40%);
+    color: hsl(0, 0%, 95%);
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
     padding: 1rem;
@@ -41,32 +45,14 @@ header {
     }
 }
 @media (min-width: 768px) {
-    .container {
-        flex-direction: row;
-    }
-    .nav {
-        flex-direction: column;
-        width: 150px;
-        padding: 15px;
-        justify-content: flex-start;
-    }
     main {
         flex: 1;
         padding: 1rem;
     }
-    /* ul {
-        padding-left: 2em;
-    }
-    ul ul {
-        padding-left: 1.7em;
-    }
-    ul ul ul {
-        padding-left: 1.4em;
-    } */
 }
 .nav a {
     display: block;
-    color: hsl(313, 74%, 21%);
+    color: hsl(313, 0%, 100%);
     text-decoration: none;
     margin: 10px 0;
 }

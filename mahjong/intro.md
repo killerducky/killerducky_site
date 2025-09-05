@@ -93,7 +93,7 @@ title: Mahjong
 -   [Random Walk](random_walk.html) Simulates random walks of Mahjong Sould rating
 -   [MJS Gacha notes](mjs_gacha_notes) How to get stuff in MJS
 -   [Push or Fold judgement](https://youtu.be/XvCAmf4KCBk?t=377)
--   [Stats](stats) Some reference tables and charts, mostly from SMS
+-   [Stats](reference_stats) Some reference tables and charts, mostly from SMS
 
 # Longer resource list
 

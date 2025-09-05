@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Mahjong stats
+title: Mahjong reference stats
 ---
 
 <style>
