@@ -24,7 +24,6 @@ export function exponential_moving_average(data, half_life) {
     }
     return ema;
 }
-
 export function slidingWindowAverage(data, halfLife) {
     const n = data.length;
     const initialSMA = data.slice(0, halfLife).reduce((sum, val) => sum + val, 0) / Math.min(halfLife, n);
@@ -39,4 +38,22 @@ export function slidingWindowAverage(data, halfLife) {
     }
 
     return result;
+}
+export function calcMovingAverage(data, windowSize, lambdaAvg) {
+    const filtered = data.filter((v) => v !== null);
+    if (filtered.length == 0) {
+        return Array(data.length).fill(null);
+    }
+    const averaged = lambdaAvg(filtered, windowSize);
+    const finalResult = [];
+    let i = 0;
+    for (const value of data) {
+        if (value === null) {
+            finalResult.push(null);
+        } else {
+            finalResult.push(averaged[i]);
+            i++;
+        }
+    }
+    return finalResult;
 }

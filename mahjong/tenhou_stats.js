@@ -15,10 +15,10 @@ function cleanQuotes(s) {
     return s.replace(/^"=""(.*)?"""$/, "$1");
 }
 
-let rooms = {
-    N: "ippan",
-    A: "joukyu",
-    E: "tokujou",
+let jsonPlayerlevel2RoomLong = {
+    0: "ippan",
+    1: "joukyu",
+    2: "tokujou",
 };
 let jsonPlayerlevel2Room = {
     0: "N",
@@ -114,6 +114,7 @@ class Player {
         this.generateBtn = this.chartContainerEl.querySelector(".generate");
         this.pnameBtn = this.chartContainerEl.querySelector(".pname");
         this.pnameBtn.value = pname;
+        this.ESChart = this.chartContainerEl.querySelector(".chart-tenhou-es");
         this.RankPointChart = this.chartContainerEl.querySelector(".chart-tenhou-rank");
         this.lastN = this.chartContainerEl.querySelector(".lastN");
         this.lastN.addEventListener("change", () => this.relayout());
@@ -125,10 +126,12 @@ class Player {
             this.generateBtn.disabled = false;
         });
     }
-
     relayout() {
         let xMax = this.RankPointChart.data[0].x.length + 1;
         let xMin = Math.max(0, xMax - this.lastN.value);
+        Plotly.relayout(this.ESChart, {
+            "xaxis.range": [xMin, xMax],
+        });
         Plotly.relayout(this.RankPointChart, {
             "xaxis.range": [xMin, xMax],
         });
@@ -228,7 +231,69 @@ class Player {
         }
 
         Plotly.newPlot(this.RankPointChart, traces, layout);
-        this.relayout();
+        // TODO: This is conflicting with double click (and also ugly alert right now)
+        // this.RankPointChart.on("plotly_click", function (data) {
+        //     if (data.points.length > 0) {
+        //         let game = games[data.points[0].x];
+        //         alert(`${game.postRank}, ${game.postRankPoints}, ${game.datestring}`);
+        //     }
+        // });
+    }
+
+    chartES(games) {
+        let pname = this.pnameBtn.value;
+        let traces = [];
+        let windowSizes = [100, 400];
+        const x = games.map((_, i) => i + 1); // x-axis: game numbers
+        for (let [lambdaStr, lambdaFunc] of [["EMA", utils.exponential_moving_average]]) {
+            for (const [key, value] of Object.entries(jsonPlayerlevel2RoomLong)) {
+                let numMatch = games.filter((game) => game.playerlevel == key).length;
+                let attr = games.map((game) => (game.playerlevel == key ? game.playerPlace : null));
+                // let gameDur = games.map((game) => (game.endTime - game.startTime) / 60);
+                if (numMatch / games.length < 0.05) {
+                    continue;
+                }
+                for (let windowSize of windowSizes) {
+                    let ema = utils.calcMovingAverage(attr, windowSize, lambdaFunc);
+                    traces.push({
+                        x: x,
+                        y: ema,
+                        mode: "lines",
+                        name: `${value} ${lambdaStr} ${windowSize}`,
+                    });
+                }
+            }
+        }
+        let layout = {
+            title: {
+                // text: `Expected Rank Point Change per Match for ${pname}`,
+                text: `Expected Average Placement for ${pname}`,
+            },
+            margin: { t: 50, b: 50, l: 60, r: 60 },
+            xaxis: {
+                title: { text: "Game #", standoff: 10 },
+                // linecolor: "black",
+                // mirror: true,
+            },
+            yaxis: {
+                // title: { text: "Rank Points", standoff: 10 },
+                title: { text: "Average Placement", standoff: 10 },
+                // linecolor: "black",
+                // mirror: true,
+            },
+            legend: {
+                x: 0.5,
+                y: -0.15,
+                xanchor: "center",
+                yanchor: "top",
+                orientation: "h",
+            },
+            hovermode: "x",
+            shapes: [],
+            annotations: [],
+        };
+        console.log(traces);
+        Plotly.newPlot(this.ESChart, traces, layout);
         // TODO: This is conflicting with double click (and also ugly alert right now)
         // this.RankPointChart.on("plotly_click", function (data) {
         //     if (data.points.length > 0) {
@@ -243,10 +308,9 @@ class Player {
         let currRank = "N";
         let currRankPoints = 0;
         for (const [i, jsonGame] of games.entries()) {
-            let playerPlace;
             for (let p = 1; p <= 4; p++) {
                 if (jsonGame[`player${p}`] == pname) {
-                    playerPlace = p;
+                    jsonGame.playerPlace = p;
                 }
             }
 
@@ -257,8 +321,8 @@ class Player {
             jsonGame.currRankPoints = currRankPoints;
             jsonGame.currSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
 
-            let rankPointChange = deltaPoints[jsonGame.playerlevel][playerPlace];
-            if (playerPlace == 4) {
+            let rankPointChange = deltaPoints[jsonGame.playerlevel][jsonGame.playerPlace];
+            if (jsonGame.playerPlace == 4) {
                 rankPointChange = ladderInfo[currRank].last;
             }
             // East games are worth 2/3
@@ -327,7 +391,9 @@ class Player {
         console.log(jsonData);
         console.log(filteredGames);
 
+        this.chartES(filteredGames);
         this.chartRankPoints(filteredGames);
+        this.relayout();
     }
 }
 

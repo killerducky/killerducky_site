@@ -3,6 +3,22 @@ layout: default
 title: Tenhou Rank Charts
 ---
 
+<style>
+    .chart-tenhou-es,
+    .chart-tenhou-rank {
+        padding: 10px;
+    }
+    .custom-tooltip {
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.8em;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+</style>
+
 # Tenhou Rank Charts
 
 <div class="chart-container">
@@ -14,6 +30,7 @@ title: Tenhou Rank Charts
         <button class="generate btn">Generate graph</button>
     </div>
     <br>
+    <div class="chart-tenhou-es"></div>
     <div class="chart-tenhou-rank"></div>
 </div>
 
