@@ -1,4 +1,5 @@
 // import fs from "fs/promises";
+import * as utils from "./utils.js";
 
 async function getJson(pname) {
     let res = await fetch(`/api/tenhou/nodocchi_listuser/${pname}`);
@@ -14,14 +15,6 @@ function cleanQuotes(s) {
     return s.replace(/^"=""(.*)?"""$/, "$1");
 }
 
-// Room codes:
-// 4NEKA-
-// 4 = 4 player
-// N = ippan
-// E = East only
-// K = Kuitan (Open tanyao)
-// A = Aka 5s
-// - = no special rule?
 let rooms = {
     N: "ippan",
     A: "joukyu",
@@ -96,6 +89,14 @@ function demoteRank(currRank) {
     }
     return ladderOrder[idx - 1];
 }
+// Room codes:
+// 4NEKA-
+// 4 = 4 player
+// N = ippan
+// E = East only
+// K = Kuitan (Open tanyao)
+// A = Aka 5s
+// - = no special rule?
 function getTypeStr(game) {
     let typeStr = "";
     typeStr += `${game.playernum}`;
@@ -133,96 +134,7 @@ class Player {
         });
     }
 
-    async generate() {
-        let pname = this.pnameBtn.value.trim();
-        localStorage.setItem(`tenhou_players`, `["${pname}"]`);
-        let jsonData;
-        // for now don't cache
-        // jsonData = JSON.parse(localStorage.getItem(`tenhou_${pname}`)) || (await getJson(pname));
-        jsonData = await getJson(pname);
-        // localStorage.setItem(`tenhou_${pname}`, JSON.stringify(jsonData));
-        let games;
-
-        if (!jsonData || jsonData.list.length == 0) {
-            alert(`Zero 4 player games for Name:${pname}`);
-            return;
-        }
-
-        // let noddochi_doc = new DOMParser().parseFromString(jsonData.html, "text/html");
-        // console.log(noddochi_doc);
-        // let table = noddochi_doc.querySelector("tbl_list");
-        // console.log(table);
-
-        jsonData.list.map((jsonGame) => (jsonGame.datestring = new Date(jsonGame.starttime * 1000).toISOString()));
-
-        let filteredGames = jsonData.list;
-        for (let i = filteredGames.length - 1; i >= 1; i--) {
-            let gap = filteredGames[i].starttime - filteredGames[i - 1].starttime;
-            if (gap >= 86400 * 181) {
-                console.log(`Assuming account reset on ${filteredGames[i].datestring} due to ${(gap / 60 / 60 / 24).toFixed(0)} day gap`);
-                filteredGames = filteredGames.slice(i);
-                break;
-            }
-        }
-        // Filter out games:
-        // Omit games that have a lobby field (= custom non-ladder game)
-        // Only 4 player games
-        filteredGames = filteredGames.filter((g) => {
-            return !("lobby" in g) && g.playernum == 4;
-        });
-
-        if (filteredGames.length == 0) {
-            alert(`Zero 4 player games for Name:${pname}`);
-            return;
-        }
-        if (filteredGames.length == 1) {
-            // TODO: Fix fence post issues. For now just refuse to graph the 1 game case
-            alert(`Only one 4 player games for Name:${pname}`);
-            return;
-        }
-        console.log("First game is: ", filteredGames[0]);
-
-        let currRank = "N";
-        let currRankPoints = 0;
-        let currTotalRankPoints = 0;
-        for (const [i, jsonGame] of filteredGames.entries()) {
-            let mismatch = false;
-            let playerPlace;
-            let game;
-            for (let p = 1; p <= 4; p++) {
-                if (jsonGame[`player${p}`] == pname) {
-                    playerPlace = p;
-                }
-            }
-
-            if ("lobby" in jsonGame) {
-                continue;
-            }
-
-            let rankPointChange = deltaPoints[jsonGame.playerlevel][playerPlace];
-            if (playerPlace == 4) {
-                rankPointChange = ladderInfo[currRank].last;
-            }
-            // East games are worth 2/3
-            if (jsonGame.playlength == 1) {
-                rankPointChange = (rankPointChange * 2) / 3;
-            }
-            currRankPoints += rankPointChange;
-            if (currRankPoints >= ladderInfo[currRank].target) {
-                currRank = promoteRank(currRank);
-                currRankPoints = ladderInfo[currRank].base;
-            } else if (currRankPoints < 0) {
-                currRank = demoteRank(currRank);
-                currRankPoints = ladderInfo[currRank].base;
-            }
-            jsonGame.postRank = currRank;
-            jsonGame.postRankPoints = currRankPoints;
-            jsonGame.postSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
-            // console.log(i, currRank, currRankPoints, currRankPoints + ladderInfo[currRank].sumbase);
-        }
-        console.log(jsonData);
-        console.log(filteredGames);
-
+    chartRankPoints(games) {
         let traces = [];
         const x = filteredGames.map((_, i) => i + 1); // x-axis: game numbers
         traces.push({
@@ -251,7 +163,6 @@ class Player {
                 // linecolor: "black",
                 // mirror: true,
             },
-
             hovermode: "x",
             shapes: [],
             annotations: [],
@@ -324,6 +235,97 @@ class Player {
         //         alert(`${game.postRank}, ${game.postRankPoints}, ${game.datestring}`);
         //     }
         // });
+    }
+
+    decorateCurrRank(games) {
+        let currRank = "N";
+        let currRankPoints = 0;
+        for (const [i, jsonGame] of games.entries()) {
+            let playerPlace;
+            for (let p = 1; p <= 4; p++) {
+                if (jsonGame[`player${p}`] == pname) {
+                    playerPlace = p;
+                }
+            }
+
+            if ("lobby" in jsonGame) {
+                continue;
+            }
+            jsonGame.currRank = currRank;
+            jsonGame.currRankPoints = currRankPoints;
+            jsonGame.currSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
+
+            let rankPointChange = deltaPoints[jsonGame.playerlevel][playerPlace];
+            if (playerPlace == 4) {
+                rankPointChange = ladderInfo[currRank].last;
+            }
+            // East games are worth 2/3
+            if (jsonGame.playlength == 1) {
+                rankPointChange = (rankPointChange * 2) / 3;
+            }
+            currRankPoints += rankPointChange;
+            if (currRankPoints >= ladderInfo[currRank].target) {
+                currRank = promoteRank(currRank);
+                currRankPoints = ladderInfo[currRank].base;
+            } else if (currRankPoints < 0) {
+                currRank = demoteRank(currRank);
+                currRankPoints = ladderInfo[currRank].base;
+            }
+            jsonGame.postRank = currRank;
+            jsonGame.postRankPoints = currRankPoints;
+            jsonGame.postSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
+            // console.log(i, currRank, currRankPoints, currRankPoints + ladderInfo[currRank].sumbase);
+        }
+    }
+
+    async generate() {
+        let pname = this.pnameBtn.value.trim();
+        localStorage.setItem(`tenhou_players`, `["${pname}"]`);
+        let jsonData;
+        // for now don't cache
+        // jsonData = JSON.parse(localStorage.getItem(`tenhou_${pname}`)) || (await getJson(pname));
+        jsonData = await getJson(pname);
+        // localStorage.setItem(`tenhou_${pname}`, JSON.stringify(jsonData));
+
+        if (!jsonData || jsonData.list.length == 0) {
+            alert(`Zero 4 player games for Name:${pname}`);
+            return;
+        }
+
+        jsonData.list.map((jsonGame) => (jsonGame.datestring = new Date(jsonGame.starttime * 1000).toISOString()));
+
+        let filteredGames = jsonData.list;
+        for (let i = filteredGames.length - 1; i >= 1; i--) {
+            let gap = filteredGames[i].starttime - filteredGames[i - 1].starttime;
+            if (gap >= 86400 * 181) {
+                console.log(`Assuming account reset on ${filteredGames[i].datestring} due to ${(gap / 60 / 60 / 24).toFixed(0)} day gap`);
+                filteredGames = filteredGames.slice(i);
+                break;
+            }
+        }
+        // Filter out games:
+        // Omit games that have a lobby field (= custom non-ladder game)
+        // Only 4 player games
+        filteredGames = filteredGames.filter((g) => {
+            return !("lobby" in g) && g.playernum == 4;
+        });
+
+        if (filteredGames.length == 0) {
+            alert(`Zero 4 player games for Name:${pname}`);
+            return;
+        }
+        if (filteredGames.length == 1) {
+            // TODO: Fix fence post issues. For now just refuse to graph the 1 game case
+            alert(`Only one 4 player games for Name:${pname}`);
+            return;
+        }
+        console.log("First game is: ", filteredGames[0]);
+
+        this.decorateCurrRank(games);
+        console.log(jsonData);
+        console.log(filteredGames);
+
+        this.chartRankPoints(filteredGames);
     }
 }
 
