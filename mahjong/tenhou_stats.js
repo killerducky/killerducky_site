@@ -19,12 +19,13 @@ let jsonPlayerlevel2RoomLong = {
     0: "ippan",
     1: "joukyu",
     2: "tokujou",
+    3: "houou",
 };
 let jsonPlayerlevel2Room = {
     0: "N",
     1: "A",
     2: "E",
-    // 3: Not sure letter for houou
+    3: "P",
 };
 let keymap = {
     "1st player": "player1",
@@ -131,6 +132,7 @@ class Player {
         let xMin = Math.max(0, xMax - this.lastN.value);
         Plotly.relayout(this.ESChart, {
             "xaxis.range": [xMin, xMax],
+            "yaxis.range": [2.5 - 0.3, 2.5 + 0.3],
         });
         Plotly.relayout(this.RankPointChart, {
             "xaxis.range": [xMin, xMax],
