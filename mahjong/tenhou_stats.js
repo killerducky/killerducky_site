@@ -6,7 +6,6 @@ async function getJson(pname) {
         return null;
     }
     let data = await res.json();
-    console.log(data);
     return data;
     // console.log(JSON.stringify(data, null, 2));
 }
@@ -97,6 +96,16 @@ function demoteRank(currRank) {
     }
     return ladderOrder[idx - 1];
 }
+function getTypeStr(game) {
+    let typeStr = "";
+    typeStr += `${game.playernum}`;
+    typeStr += `${jsonPlayerlevel2Room[game.playerlevel]}`;
+    typeStr += `${game.playlength == 1 ? "E" : "S"}`;
+    typeStr += `${game.kuitanari ? "K" : "?"}`;
+    typeStr += `${game.akaari ? "A" : "?"}`;
+    typeStr += `-`;
+    return typeStr;
+}
 
 class Player {
     constructor(chartContainerEl, pname) {
@@ -125,104 +134,62 @@ class Player {
     }
 
     async generate() {
-        let pname = this.pnameBtn.value;
+        let pname = this.pnameBtn.value.trim();
         localStorage.setItem(`tenhou_players`, `["${pname}"]`);
-        let crossCheck = false;
         let jsonData;
         // for now don't cache
         // jsonData = JSON.parse(localStorage.getItem(`tenhou_${pname}`)) || (await getJson(pname));
         jsonData = await getJson(pname);
         // localStorage.setItem(`tenhou_${pname}`, JSON.stringify(jsonData));
-        console.log(jsonData);
-        let csvData;
         let games;
-        if (crossCheck) {
-            // let csvData = await fs.readFile("tenhou_KillerD.csv", "utf-8");
-            let csvData = await fetch("tmp/tenhou_KillerD.csv");
-            csvData = await csvData.text();
-            let lines = csvData.split("\n");
-            let header = lines[0].split(",").map((h) => cleanQuotes(h));
-            games = lines.slice(1).map((line) => {
-                let cols = line.split(",").map((h) => cleanQuotes(h));
-                let game = {};
-                header.forEach((h, i) => {
-                    game[h] = cols[i];
-                });
-                return game;
-            });
-            let rules = new Set(games.map((g) => g.Rule));
-            console.log(rules);
-            const ruleCounts = games.reduce((acc, game) => {
-                const rule = game.Rule || "Unknown"; // fallback if Rule is missing
-                acc[rule] = (acc[rule] || 0) + 1;
-                return acc;
-            }, {});
-            console.log(ruleCounts);
-            games.forEach((game) => {
-                for (const [oldKey, newKey] of Object.entries(keymap)) {
-                    if (oldKey in game) {
-                        game[newKey] = game[oldKey];
-                        delete game[oldKey];
-                    }
-                }
-            });
-            games = games.filter((g) => g.Lobby === "");
-        }
 
-        jsonData.list = jsonData.list.filter((g) => !("lobby" in g));
+        // let noddochi_doc = new DOMParser().parseFromString(jsonData.html, "text/html");
+        // console.log(noddochi_doc);
+        // let table = noddochi_doc.querySelector("tbl_list");
+        // console.log(table);
+
+        jsonData.list.map((jsonGame) => (jsonGame.datestring = new Date(jsonGame.starttime * 1000).toISOString()));
+
+        let filteredGames = jsonData.list;
+        for (let i = filteredGames.length - 1; i >= 1; i--) {
+            let gap = filteredGames[i].starttime - filteredGames[i - 1].starttime;
+            if (gap >= 86400 * 181) {
+                console.log(`Assuming account reset on ${filteredGames[i].datestring} due to ${(gap / 60 / 60 / 24).toFixed(0)} day gap`);
+                filteredGames = filteredGames.slice(i);
+                break;
+            }
+        }
+        // Filter out games:
+        // Omit games that have a lobby field (= custom non-ladder game)
+        // Only 4 player games
+        filteredGames = filteredGames.filter((g) => {
+            return !("lobby" in g) && g.playernum == 4;
+        });
+
+        if (filteredGames.length == 0) {
+            alert(`Zero 4 player games for Name:${pname}`);
+            return;
+        }
+        if (filteredGames.length == 1) {
+            // TODO: Fix fence post issues. For now just refuse to graph the 1 game case
+            alert(`Only one 4 player games for Name:${pname}`);
+            return;
+        }
+        console.log("First game is: ", filteredGames[0]);
 
         let currRank = "N";
         let currRankPoints = 0;
         let currTotalRankPoints = 0;
-        for (const [i, jsonGame] of jsonData.list.entries()) {
+        for (const [i, jsonGame] of filteredGames.entries()) {
             let mismatch = false;
             let playerPlace;
             let game;
-            if (crossCheck) {
-                let game = games[i];
-                for (let p = 1; p <= 4; p++) {
-                    if (game[`player${p}`] != jsonGame[`player${p}`]) {
-                        console.log("mismatch");
-                        console.log(game[`player${p}`], jsonGame[`player${p}`]);
-                        mismatch = true;
-                        break;
-                    }
-                }
-            }
             for (let p = 1; p <= 4; p++) {
                 if (jsonGame[`player${p}`] == pname) {
                     playerPlace = p;
                 }
             }
-            // sctype?
-            // how to know room ippan/joukyu etc?
-            let typeStr = "";
-            typeStr += `${jsonGame.playernum}`;
-            typeStr += `${jsonPlayerlevel2Room[jsonGame.playerlevel]}`;
-            typeStr += `${jsonGame.playlength == 1 ? "E" : "S"}`;
-            typeStr += `${jsonGame.kuitanari ? "K" : "?"}`;
-            typeStr += `${jsonGame.akaari ? "A" : "?"}`;
-            typeStr += `-`;
-            if (crossCheck) {
-                // console.log(typeStr);
-                if (typeStr != game.Rule) {
-                    mismatch = true;
-                    console.log("ERROR");
-                    console.log(jsonGame);
-                    console.log(typeStr);
-                    console.log(game.Rule);
-                    process.exit();
-                }
-                if (mismatch || !playerPlace) {
-                    console.log("ERROR");
-                    console.log(playerPlace);
-                    console.log(game.player1);
-                    console.log(jsonGame.player1);
-                    console.log(game);
-                    console.log(jsonGame);
-                    break;
-                }
-            }
+
             if ("lobby" in jsonGame) {
                 continue;
             }
@@ -236,7 +203,7 @@ class Player {
                 rankPointChange = (rankPointChange * 2) / 3;
             }
             currRankPoints += rankPointChange;
-            if (currRankPoints > ladderInfo[currRank].target) {
+            if (currRankPoints >= ladderInfo[currRank].target) {
                 currRank = promoteRank(currRank);
                 currRankPoints = ladderInfo[currRank].base;
             } else if (currRankPoints < 0) {
@@ -247,25 +214,18 @@ class Player {
             jsonGame.postRankPoints = currRankPoints;
             jsonGame.postSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
             // console.log(i, currRank, currRankPoints, currRankPoints + ladderInfo[currRank].sumbase);
-
-            if (crossCheck) {
-                // console.log(game);
-                if (rankPointChange != game["Pt change"]) {
-                    console.log(game);
-                    console.log("ERROR rankPointChange mismatch");
-                    console.log(playerPlace, rankPointChange, game["Pt change"]);
-                    break;
-                }
-            }
         }
+        console.log(jsonData);
+        console.log(filteredGames);
+
         let traces = [];
-        const x = jsonData.list.map((_, i) => i + 1); // x-axis: game numbers
+        const x = filteredGames.map((_, i) => i + 1); // x-axis: game numbers
         traces.push({
             x: x,
-            y: jsonData.list.map((game) => {
+            y: filteredGames.map((game) => {
                 return game.postSumRankPoints;
             }),
-            text: jsonData.list.map((game) => {
+            text: filteredGames.map((game) => {
                 return `${game.postRank} ${game.postRankPoints}`;
             }),
             mode: "lines",
@@ -293,9 +253,9 @@ class Player {
         };
         let prevGame;
         let prevChange = 0;
-        for (let [index, game] of jsonData.list.entries()) {
+        for (let [index, game] of filteredGames.entries()) {
             // Demotion/promotion or last section
-            if ((prevGame && prevGame.postRank != game.postRank) || index == jsonData.list.length - 1) {
+            if ((prevGame && prevGame.postRank != game.postRank) || index == filteredGames.length - 1) {
                 // draw vertical lines
                 let x_coords = [prevChange + 1, index + 1];
                 let y_coords = [
@@ -352,6 +312,13 @@ class Player {
 
         Plotly.newPlot(this.RankPointChart, traces, layout);
         this.relayout();
+        // TODO: This is conflicting with double click (and also ugly alert right now)
+        // this.RankPointChart.on("plotly_click", function (data) {
+        //     if (data.points.length > 0) {
+        //         let game = filteredGames[data.points[0].x];
+        //         alert(`${game.postRank}, ${game.postRankPoints}, ${game.datestring}`);
+        //     }
+        // });
     }
 }
 

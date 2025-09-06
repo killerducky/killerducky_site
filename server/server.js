@@ -166,13 +166,21 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
 app.get("/api/tenhou/nodocchi_listuser/:nickname", async (req, res) => {
     try {
         const pname = req.params.nickname;
+        console.log(`server fetch ${pname}`);
         const url = "https://nodocchi.moe";
-        const s1 = `${url}/api/listuser.php?name=${pname}`;
-        console.log(`server fetch ${s1}`);
+        let s1 = `${url}/api/listuser.php?name=${pname}`;
         let res1 = await fetch(s1);
         let data = await res1.json();
+
+        // let s2 = `${url}/tenhoulog/#!&name=${pname}`;
+        // let res2 = await fetch(s2);
+        // let data2 = await res2.text();
+        // data.html = data2;
+
         // console.log(data);
         // console.log(JSON.stringify(data, null, 2));
+        // cache headers (valid for 2 minutes) -- should cut 90% of the users doing quick multiple refreshes
+        res.set("Cache-Control", "public, max-age=180");
         res.json(data);
     } catch (err) {
         console.log("Error caught");
