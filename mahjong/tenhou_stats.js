@@ -135,14 +135,15 @@ class Player {
     }
 
     chartRankPoints(games) {
+        let pname = this.pnameBtn.value;
         let traces = [];
-        const x = filteredGames.map((_, i) => i + 1); // x-axis: game numbers
+        const x = games.map((_, i) => i + 1); // x-axis: game numbers
         traces.push({
             x: x,
-            y: filteredGames.map((game) => {
+            y: games.map((game) => {
                 return game.postSumRankPoints;
             }),
-            text: filteredGames.map((game) => {
+            text: games.map((game) => {
                 return `${game.postRank} ${game.postRankPoints}`;
             }),
             mode: "lines",
@@ -169,9 +170,9 @@ class Player {
         };
         let prevGame;
         let prevChange = 0;
-        for (let [index, game] of filteredGames.entries()) {
+        for (let [index, game] of games.entries()) {
             // Demotion/promotion or last section
-            if ((prevGame && prevGame.postRank != game.postRank) || index == filteredGames.length - 1) {
+            if ((prevGame && prevGame.postRank != game.postRank) || index == games.length - 1) {
                 // draw vertical lines
                 let x_coords = [prevChange + 1, index + 1];
                 let y_coords = [
@@ -231,13 +232,14 @@ class Player {
         // TODO: This is conflicting with double click (and also ugly alert right now)
         // this.RankPointChart.on("plotly_click", function (data) {
         //     if (data.points.length > 0) {
-        //         let game = filteredGames[data.points[0].x];
+        //         let game = games[data.points[0].x];
         //         alert(`${game.postRank}, ${game.postRankPoints}, ${game.datestring}`);
         //     }
         // });
     }
 
     decorateCurrRank(games) {
+        let pname = this.pnameBtn.value.trim();
         let currRank = "N";
         let currRankPoints = 0;
         for (const [i, jsonGame] of games.entries()) {
@@ -321,7 +323,7 @@ class Player {
         }
         console.log("First game is: ", filteredGames[0]);
 
-        this.decorateCurrRank(games);
+        this.decorateCurrRank(filteredGames);
         console.log(jsonData);
         console.log(filteredGames);
 
