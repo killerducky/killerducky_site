@@ -79,7 +79,6 @@ for (let [i, rank] of ladderOrder.entries()) {
     }
     prevRank = rank;
 }
-console.log(ladderInfo);
 function promoteRank(currRank) {
     let idx = ladderOrder.indexOf(currRank);
     if (idx != -1 && idx < ladderOrder.length - 1) {
@@ -105,230 +104,255 @@ class Player {
         this.generateBtn = this.chartContainerEl.querySelector(".generate");
         this.pnameBtn = this.chartContainerEl.querySelector(".pname");
         this.pnameBtn.value = pname;
+        this.RankPointChart = this.chartContainerEl.querySelector(".chart-tenhou-rank");
+        this.lastN = this.chartContainerEl.querySelector(".lastN");
+        this.lastN.addEventListener("change", () => this.relayout());
         this.generateBtn.addEventListener("click", async () => {
             document.documentElement.style.cursor = "wait";
             this.generateBtn.disabled = true;
-            await generate(this.pnameBtn.value);
+            await this.generate();
             document.documentElement.style.cursor = "default";
             this.generateBtn.disabled = false;
         });
     }
-}
 
-async function generate(pname) {
-    // let jsonData = JSON.parse(await fs.readFile("tenhou_KillerD.json", "utf-8"));
-    // let jsonData = JSON.parse(await fetch("tenhou_KillerD.json"));
-    let jsonData;
-    // jsonData = await fetch("tmp/tenhou_KillerD.json");
-    // jsonData = await jsonData.json();
-    jsonData = await getJson(pname);
-    // let csvData = await fs.readFile("tenhou_KillerD.csv", "utf-8");
-    let csvData = await fetch("tmp/tenhou_KillerD.csv");
-    csvData = await csvData.text();
-    let lines = csvData.split("\n");
-    let header = lines[0].split(",").map((h) => cleanQuotes(h));
-    let games = lines.slice(1).map((line) => {
-        let cols = line.split(",").map((h) => cleanQuotes(h));
-        let game = {};
-        header.forEach((h, i) => {
-            game[h] = cols[i];
+    relayout() {
+        let xMax = this.RankPointChart.data[0].x.length + 1;
+        let xMin = Math.max(0, xMax - this.lastN.value);
+        Plotly.relayout(this.RankPointChart, {
+            "xaxis.range": [xMin, xMax],
         });
-        return game;
-    });
-
-    let rules = new Set(games.map((g) => g.Rule));
-    console.log(rules);
-    const ruleCounts = games.reduce((acc, game) => {
-        const rule = game.Rule || "Unknown"; // fallback if Rule is missing
-        acc[rule] = (acc[rule] || 0) + 1;
-        return acc;
-    }, {});
-    console.log(ruleCounts);
-    games.forEach((game) => {
-        for (const [oldKey, newKey] of Object.entries(keymap)) {
-            if (oldKey in game) {
-                game[newKey] = game[oldKey];
-                delete game[oldKey];
-            }
-        }
-    });
-
-    games = games.filter((g) => g.Lobby === "");
-    jsonData.list = jsonData.list.filter((g) => !("lobby" in g));
-
-    let currRank = "N";
-    let currRankPoints = 0;
-    let currTotalRankPoints = 0;
-    for (const [i, game] of games.entries()) {
-        let mismatch = false;
-        let jsonGame = jsonData.list[i];
-        let playerPlace;
-        for (let p = 1; p <= 4; p++) {
-            if (game[`player${p}`] != jsonGame[`player${p}`]) {
-                console.log("mismatch");
-                console.log(game[`player${p}`], jsonGame[`player${p}`]);
-                mismatch = true;
-                break;
-            }
-            if (jsonGame[`player${p}`] == pname) {
-                playerPlace = p;
-            }
-        }
-        // sctype?
-        // how to know room ippan/joukyu etc?
-        let typeStr = "";
-        typeStr += `${jsonGame.playernum}`;
-        typeStr += `${jsonPlayerlevel2Room[jsonGame.playerlevel]}`;
-        typeStr += `${jsonGame.playlength == 1 ? "E" : "S"}`;
-        typeStr += `${jsonGame.kuitanari ? "K" : "?"}`;
-        typeStr += `${jsonGame.akaari ? "A" : "?"}`;
-        typeStr += `-`;
-        // console.log(typeStr);
-        if (typeStr != game.Rule) {
-            mismatch = true;
-            console.log("ERROR");
-            console.log(jsonGame);
-            console.log(typeStr);
-            console.log(game.Rule);
-            process.exit();
-        }
-        if (mismatch || !playerPlace) {
-            console.log("ERROR");
-            console.log(playerPlace);
-            console.log(game.player1);
-            console.log(jsonGame.player1);
-            console.log(game);
-            console.log(jsonGame);
-            break;
-        }
-        if ("lobby" in jsonGame) {
-            continue;
-        }
-
-        let rankPointChange = deltaPoints[jsonGame.playerlevel][playerPlace];
-        if (playerPlace == 4) {
-            rankPointChange = ladderInfo[currRank].last;
-        }
-        // East games are worth 2/3
-        if (jsonGame.playlength == 1) {
-            rankPointChange = (rankPointChange * 2) / 3;
-        }
-        currRankPoints += rankPointChange;
-        if (currRankPoints > ladderInfo[currRank].target) {
-            currRank = promoteRank(currRank);
-            currRankPoints = ladderInfo[currRank].base;
-        } else if (currRankPoints < 0) {
-            currRank = demoteRank(currRank);
-            currRankPoints = ladderInfo[currRank].base;
-        }
-        jsonGame.postRank = currRank;
-        jsonGame.postRankPoints = currRankPoints;
-        jsonGame.postSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
-        // console.log(i, currRank, currRankPoints, currRankPoints + ladderInfo[currRank].sumbase);
-
-        // console.log(game);
-        if (rankPointChange != game["Pt change"]) {
-            console.log(game);
-            console.log("ERROR rankPointChange mismatch");
-            console.log(playerPlace, rankPointChange, game["Pt change"]);
-            break;
-        }
     }
-    let traces = [];
-    const x = jsonData.list.map((_, i) => i + 1); // x-axis: game numbers
-    traces.push({
-        x: x,
-        y: jsonData.list.map((game) => {
-            return game.postSumRankPoints;
-        }),
-        text: jsonData.list.map((game) => {
-            return `${game.postRank} ${game.postRankPoints}`;
-        }),
-        mode: "lines",
-        hovertemplate: "%{text}<extra></extra>",
-    });
-    let layout = {
-        title: {
-            text: `Rank Points Trend for ${pname}`,
-        },
-        margin: { t: 50, b: 50, l: 60, r: 60 },
-        xaxis: {
-            title: { text: "Game #", standoff: 10 },
-            // linecolor: "black",
-            // mirror: true,
-        },
-        yaxis: {
-            title: { text: "Rank Points", standoff: 10 },
-            // linecolor: "black",
-            // mirror: true,
-        },
 
-        hovermode: "x",
-        shapes: [],
-        annotations: [],
-    };
-    let prevGame;
-    let prevChange = 0;
-    for (let [index, game] of jsonData.list.entries()) {
-        // Demotion/promotion or last section
-        if ((prevGame && prevGame.postRank != game.postRank) || index == games.length - 1) {
-            // console.log("level=", game.playerlevel, level_dan(game.playerlevel))
-            // draw vertical lines
-            // let x_coords = [prevChange, index == games.length - 1 ? index + 1 : index];
-            let x_coords = [prevChange + 1, index + 1];
-            let y_coords = [
-                ladderInfo[prevGame.postRank].sumbase,
-                ladderInfo[prevGame.postRank].sumbase + ladderInfo[prevGame.postRank].target - ladderInfo[prevGame.postRank].base,
-                ladderInfo[prevGame.postRank].sumbase - ladderInfo[prevGame.postRank].base,
-            ];
-            for (let x of x_coords) {
-                // console.log(index, x, prevGame, ladderInfo[prevGame.postRank].sumbase, prevChange);
-                layout.shapes.push({
-                    type: "line",
-                    x0: x,
-                    x1: x,
-                    y0: y_coords[1],
-                    y1: y_coords[2],
-                    xref: "x",
-                    yref: "y",
-                    line: {
-                        color: "black",
-                        width: 0.5,
-                        dash: "solid",
-                    },
+    async generate() {
+        let pname = this.pnameBtn.value;
+        localStorage.setItem(`tenhou_players`, `["${pname}"]`);
+        let crossCheck = false;
+        let jsonData;
+        // for now don't cache
+        // jsonData = JSON.parse(localStorage.getItem(`tenhou_${pname}`)) || (await getJson(pname));
+        jsonData = await getJson(pname);
+        // localStorage.setItem(`tenhou_${pname}`, JSON.stringify(jsonData));
+        console.log(jsonData);
+        let csvData;
+        let games;
+        if (crossCheck) {
+            // let csvData = await fs.readFile("tenhou_KillerD.csv", "utf-8");
+            let csvData = await fetch("tmp/tenhou_KillerD.csv");
+            csvData = await csvData.text();
+            let lines = csvData.split("\n");
+            let header = lines[0].split(",").map((h) => cleanQuotes(h));
+            games = lines.slice(1).map((line) => {
+                let cols = line.split(",").map((h) => cleanQuotes(h));
+                let game = {};
+                header.forEach((h, i) => {
+                    game[h] = cols[i];
                 });
-            }
-            for (let y of y_coords)
-                layout.shapes.push({
-                    type: "line",
-                    x0: x_coords[0],
-                    x1: x_coords[1],
-                    y0: y,
-                    y1: y,
-                    xref: "x",
-                    yref: "y",
-                    line: {
-                        color: "black",
-                        width: 0.5,
-                        dash: "solid",
-                    },
-                });
-            layout.annotations.push({
-                x: prevChange,
-                y: y_coords[1] + 5,
-                text: prevGame.postRank,
-                showarrow: false,
-                xanchor: "left",
-                yanchor: "bottom",
-                font: { size: 10, color: "black" },
+                return game;
             });
-
-            prevChange = index;
+            let rules = new Set(games.map((g) => g.Rule));
+            console.log(rules);
+            const ruleCounts = games.reduce((acc, game) => {
+                const rule = game.Rule || "Unknown"; // fallback if Rule is missing
+                acc[rule] = (acc[rule] || 0) + 1;
+                return acc;
+            }, {});
+            console.log(ruleCounts);
+            games.forEach((game) => {
+                for (const [oldKey, newKey] of Object.entries(keymap)) {
+                    if (oldKey in game) {
+                        game[newKey] = game[oldKey];
+                        delete game[oldKey];
+                    }
+                }
+            });
+            games = games.filter((g) => g.Lobby === "");
         }
-        prevGame = game;
-    }
 
-    Plotly.newPlot("chart-tenhou-rank", traces, layout);
+        jsonData.list = jsonData.list.filter((g) => !("lobby" in g));
+
+        let currRank = "N";
+        let currRankPoints = 0;
+        let currTotalRankPoints = 0;
+        for (const [i, jsonGame] of jsonData.list.entries()) {
+            let mismatch = false;
+            let playerPlace;
+            let game;
+            if (crossCheck) {
+                let game = games[i];
+                for (let p = 1; p <= 4; p++) {
+                    if (game[`player${p}`] != jsonGame[`player${p}`]) {
+                        console.log("mismatch");
+                        console.log(game[`player${p}`], jsonGame[`player${p}`]);
+                        mismatch = true;
+                        break;
+                    }
+                }
+            }
+            for (let p = 1; p <= 4; p++) {
+                if (jsonGame[`player${p}`] == pname) {
+                    playerPlace = p;
+                }
+            }
+            // sctype?
+            // how to know room ippan/joukyu etc?
+            let typeStr = "";
+            typeStr += `${jsonGame.playernum}`;
+            typeStr += `${jsonPlayerlevel2Room[jsonGame.playerlevel]}`;
+            typeStr += `${jsonGame.playlength == 1 ? "E" : "S"}`;
+            typeStr += `${jsonGame.kuitanari ? "K" : "?"}`;
+            typeStr += `${jsonGame.akaari ? "A" : "?"}`;
+            typeStr += `-`;
+            if (crossCheck) {
+                // console.log(typeStr);
+                if (typeStr != game.Rule) {
+                    mismatch = true;
+                    console.log("ERROR");
+                    console.log(jsonGame);
+                    console.log(typeStr);
+                    console.log(game.Rule);
+                    process.exit();
+                }
+                if (mismatch || !playerPlace) {
+                    console.log("ERROR");
+                    console.log(playerPlace);
+                    console.log(game.player1);
+                    console.log(jsonGame.player1);
+                    console.log(game);
+                    console.log(jsonGame);
+                    break;
+                }
+            }
+            if ("lobby" in jsonGame) {
+                continue;
+            }
+
+            let rankPointChange = deltaPoints[jsonGame.playerlevel][playerPlace];
+            if (playerPlace == 4) {
+                rankPointChange = ladderInfo[currRank].last;
+            }
+            // East games are worth 2/3
+            if (jsonGame.playlength == 1) {
+                rankPointChange = (rankPointChange * 2) / 3;
+            }
+            currRankPoints += rankPointChange;
+            if (currRankPoints > ladderInfo[currRank].target) {
+                currRank = promoteRank(currRank);
+                currRankPoints = ladderInfo[currRank].base;
+            } else if (currRankPoints < 0) {
+                currRank = demoteRank(currRank);
+                currRankPoints = ladderInfo[currRank].base;
+            }
+            jsonGame.postRank = currRank;
+            jsonGame.postRankPoints = currRankPoints;
+            jsonGame.postSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
+            // console.log(i, currRank, currRankPoints, currRankPoints + ladderInfo[currRank].sumbase);
+
+            if (crossCheck) {
+                // console.log(game);
+                if (rankPointChange != game["Pt change"]) {
+                    console.log(game);
+                    console.log("ERROR rankPointChange mismatch");
+                    console.log(playerPlace, rankPointChange, game["Pt change"]);
+                    break;
+                }
+            }
+        }
+        let traces = [];
+        const x = jsonData.list.map((_, i) => i + 1); // x-axis: game numbers
+        traces.push({
+            x: x,
+            y: jsonData.list.map((game) => {
+                return game.postSumRankPoints;
+            }),
+            text: jsonData.list.map((game) => {
+                return `${game.postRank} ${game.postRankPoints}`;
+            }),
+            mode: "lines",
+            hovertemplate: "%{text}<extra></extra>",
+        });
+        let layout = {
+            title: {
+                text: `Rank Points Trend for ${pname}`,
+            },
+            margin: { t: 50, b: 50, l: 60, r: 60 },
+            xaxis: {
+                title: { text: "Game #", standoff: 10 },
+                // linecolor: "black",
+                // mirror: true,
+            },
+            yaxis: {
+                title: { text: "Rank Points", standoff: 10 },
+                // linecolor: "black",
+                // mirror: true,
+            },
+
+            hovermode: "x",
+            shapes: [],
+            annotations: [],
+        };
+        let prevGame;
+        let prevChange = 0;
+        for (let [index, game] of jsonData.list.entries()) {
+            // Demotion/promotion or last section
+            if ((prevGame && prevGame.postRank != game.postRank) || index == jsonData.list.length - 1) {
+                // draw vertical lines
+                let x_coords = [prevChange + 1, index + 1];
+                let y_coords = [
+                    ladderInfo[prevGame.postRank].sumbase,
+                    ladderInfo[prevGame.postRank].sumbase + ladderInfo[prevGame.postRank].target - ladderInfo[prevGame.postRank].base,
+                    ladderInfo[prevGame.postRank].sumbase - ladderInfo[prevGame.postRank].base,
+                ];
+                for (let x of x_coords) {
+                    // console.log(index, x, prevGame, ladderInfo[prevGame.postRank].sumbase, prevChange);
+                    layout.shapes.push({
+                        type: "line",
+                        x0: x,
+                        x1: x,
+                        y0: y_coords[1],
+                        y1: y_coords[2],
+                        xref: "x",
+                        yref: "y",
+                        line: {
+                            color: "black",
+                            width: 0.5,
+                            dash: "solid",
+                        },
+                    });
+                }
+                for (let y of y_coords)
+                    layout.shapes.push({
+                        type: "line",
+                        x0: x_coords[0],
+                        x1: x_coords[1],
+                        y0: y,
+                        y1: y,
+                        xref: "x",
+                        yref: "y",
+                        line: {
+                            color: "black",
+                            width: 0.5,
+                            dash: "solid",
+                        },
+                    });
+                layout.annotations.push({
+                    x: prevChange,
+                    y: y_coords[1] + 5,
+                    text: prevGame.postRank,
+                    showarrow: false,
+                    xanchor: "left",
+                    yanchor: "bottom",
+                    font: { size: 10, color: "black" },
+                });
+
+                prevChange = index;
+            }
+            prevGame = game;
+        }
+
+        Plotly.newPlot(this.RankPointChart, traces, layout);
+        this.relayout();
+    }
 }
 
 //   "sctype": "a",

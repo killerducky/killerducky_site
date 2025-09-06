@@ -10,9 +10,10 @@ title: Tenhou Rank Charts
         <label class="small">Name:</label>
         <input class="pname" type="text" value="" style="width: 80px; height: 20px" />
         <label class="small">Last N Games</label>
-        <input class="xmin" type="number" value="500" step="100" min="0" style="width: 60px; height: 20px" />
+        <input class="lastN" type="number" value="500" step="100" min="0" style="width: 60px; height: 20px" />
         <button class="generate btn">Generate graph</button>
     </div>
+    <br>
     <div class="chart-tenhou-rank"></div>
 </div>
 
