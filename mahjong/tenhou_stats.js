@@ -143,6 +143,11 @@ class Player {
         // localStorage.setItem(`tenhou_${pname}`, JSON.stringify(jsonData));
         let games;
 
+        if (!jsonData || jsonData.list.length == 0) {
+            alert(`Zero 4 player games for Name:${pname}`);
+            return;
+        }
+
         // let noddochi_doc = new DOMParser().parseFromString(jsonData.html, "text/html");
         // console.log(noddochi_doc);
         // let table = noddochi_doc.querySelector("tbl_list");
