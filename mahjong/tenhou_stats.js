@@ -16,10 +16,10 @@ function cleanQuotes(s) {
 }
 
 let jsonPlayerlevel2RoomLong = {
-    0: "ippan",
-    1: "joukyu",
-    2: "tokujou",
-    3: "houou",
+    0: "Ippan",
+    1: "Joukyu",
+    2: "Tokujou",
+    3: "Houou",
 };
 let jsonPlayerlevel2Room = {
     0: "N",
@@ -276,7 +276,11 @@ class Player {
                             x: x,
                             y: ema,
                             mode: "lines",
-                            name: `${value} ${lenValue} ${lambdaStr} ${windowSize}`,
+                            text: ema.map((y) => {
+                                return y === null ? "" : `${y.toFixed(1)}`;
+                            }),
+                            name: `${value} ${lenValue} ${lambdaStr} ${windowSize}`, // e.g. "Joukyu S EMA 400"
+                            hovertemplate: "%{text}<extra></extra>",
                         });
                     }
                 }
@@ -293,8 +297,7 @@ class Player {
                 // mirror: true,
             },
             yaxis: {
-                // title: { text: "Rank Points", standoff: 10 },
-                title: { text: "Average Placement", standoff: 10 },
+                title: { text: "Expected Rank Point Change", standoff: 10 },
                 // linecolor: "black",
                 // mirror: true,
             },

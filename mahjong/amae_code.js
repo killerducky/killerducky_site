@@ -294,9 +294,12 @@ class Player {
                     traces.push({
                         x: x,
                         y: ema,
-                        // y: gameDur,
                         mode: "lines",
+                        text: ema.map((y) => {
+                            return y === null ? "" : `${y.toFixed(1)}`;
+                        }),
                         name: `${value} ${lambdaStr} ${windowSize}`,
+                        hovertemplate: "%{text}<extra></extra>",
                     });
                 }
             }
@@ -329,7 +332,7 @@ class Player {
                 yanchor: "top",
                 orientation: "h",
             },
-            // hovermode: "x unified",
+            hovermode: "x",
             shapes: [],
             annotations: [],
         };
