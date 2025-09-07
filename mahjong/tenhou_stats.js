@@ -27,6 +27,11 @@ let jsonPlayerlevel2Room = {
     2: "E",
     3: "P",
 };
+let playlength2Str = {
+    1: "E",
+    2: "S",
+};
+
 let keymap = {
     "1st player": "player1",
     "2nd player": "player2",
@@ -132,7 +137,7 @@ class Player {
         let xMin = Math.max(0, xMax - this.lastN.value);
         Plotly.relayout(this.ESChart, {
             "xaxis.range": [xMin, xMax],
-            "yaxis.range": [2.5 - 0.3, 2.5 + 0.3],
+            // "yaxis.range": [2.5 - 0.3, 2.5 + 0.3],
         });
         Plotly.relayout(this.RankPointChart, {
             "xaxis.range": [xMin, xMax],
@@ -249,27 +254,37 @@ class Player {
         const x = games.map((_, i) => i + 1); // x-axis: game numbers
         for (let [lambdaStr, lambdaFunc] of [["EMA", utils.exponential_moving_average]]) {
             for (const [key, value] of Object.entries(jsonPlayerlevel2RoomLong)) {
-                let numMatch = games.filter((game) => game.playerlevel == key).length;
-                let attr = games.map((game) => (game.playerlevel == key ? game.playerPlace : null));
-                // let gameDur = games.map((game) => (game.endTime - game.startTime) / 60);
-                if (numMatch / games.length < 0.05) {
-                    continue;
-                }
-                for (let windowSize of windowSizes) {
-                    let ema = utils.calcMovingAverage(attr, windowSize, lambdaFunc);
-                    traces.push({
-                        x: x,
-                        y: ema,
-                        mode: "lines",
-                        name: `${value} ${lambdaStr} ${windowSize}`,
+                for (const [lenKey, lenValue] of Object.entries(playlength2Str)) {
+                    if (lenValue == "E") {
+                        continue; // TODO: Merging these is kinda weird. Maybe allow user to pick E or S?
+                    }
+                    let numMatch = games.filter((game) => game.playerlevel == key && game.playlength == lenKey).length;
+                    // let attr = games.map((game) => (game.playerlevel == key && game.playlength == lenKey ? game.playerPlace : null));
+                    this.normRank = games[games.length - 1].currRank;
+                    let attr = games.map((game) => {
+                        if (!(game.playerlevel == key && game.playlength == lenKey)) {
+                            return null;
+                        }
+                        return this.calcRankPointChange(game, this.normRank);
                     });
+                    if (numMatch / games.length < 0.05) {
+                        continue;
+                    }
+                    for (let windowSize of windowSizes) {
+                        let ema = utils.calcMovingAverage(attr, windowSize, lambdaFunc);
+                        traces.push({
+                            x: x,
+                            y: ema,
+                            mode: "lines",
+                            name: `${value} ${lenValue} ${lambdaStr} ${windowSize}`,
+                        });
+                    }
                 }
             }
         }
         let layout = {
             title: {
-                // text: `Expected Rank Point Change per Match for ${pname}`,
-                text: `Expected Average Placement for ${pname}`,
+                text: `Expected Rank Point Change per Match for ${pname} assuming ${this.normRank}`,
             },
             margin: { t: 50, b: 50, l: 60, r: 60 },
             xaxis: {
@@ -294,7 +309,36 @@ class Player {
             shapes: [],
             annotations: [],
         };
-        console.log(traces);
+        for (let rankLine of ladderOrder) {
+            if (!rankLine.endsWith("d")) continue;
+            layout.shapes.push({
+                type: "line",
+                x0: 0,
+                x1: 1,
+                y0: (ladderInfo[this.normRank].last - ladderInfo[rankLine].last) / 4.0,
+                y1: (ladderInfo[this.normRank].last - ladderInfo[rankLine].last) / 4.0,
+                xref: "paper",
+                yref: "y",
+                line: {
+                    color: "blue",
+                    width: 0.5,
+                    dash: "solid",
+                },
+            });
+            layout.annotations.push({
+                x: 0,
+                y: (ladderInfo[this.normRank].last - ladderInfo[rankLine].last) / 4.0 + 1,
+                xref: "paper",
+                yref: "y",
+                text: rankLine,
+                showarrow: false,
+                xanchor: screenLeft,
+                font: {
+                    color: "blue",
+                    size: 12,
+                },
+            });
+        }
         Plotly.newPlot(this.ESChart, traces, layout);
         // TODO: This is conflicting with double click (and also ugly alert right now)
         // this.RankPointChart.on("plotly_click", function (data) {
@@ -305,6 +349,17 @@ class Player {
         // });
     }
 
+    calcRankPointChange(jsonGame, normRank) {
+        let rankPointChange = deltaPoints[jsonGame.playerlevel][jsonGame.playerPlace];
+        if (jsonGame.playerPlace == 4) {
+            rankPointChange = ladderInfo[normRank].last;
+        }
+        // East games are worth 2/3
+        if (jsonGame.playlength == 1) {
+            rankPointChange = (rankPointChange * 2) / 3;
+        }
+        return rankPointChange;
+    }
     decorateCurrRank(games) {
         let pname = this.pnameBtn.value.trim();
         let currRank = "N";
@@ -324,13 +379,10 @@ class Player {
             jsonGame.currSumRankPoints = currRankPoints + ladderInfo[currRank].sumbase - ladderInfo[currRank].base;
 
             let rankPointChange = deltaPoints[jsonGame.playerlevel][jsonGame.playerPlace];
-            if (jsonGame.playerPlace == 4) {
-                rankPointChange = ladderInfo[currRank].last;
-            }
-            // East games are worth 2/3
             if (jsonGame.playlength == 1) {
                 rankPointChange = (rankPointChange * 2) / 3;
             }
+            rankPointChange = this.calcRankPointChange(jsonGame, jsonGame.currRank);
             currRankPoints += rankPointChange;
             if (currRankPoints >= ladderInfo[currRank].target) {
                 currRank = promoteRank(currRank);

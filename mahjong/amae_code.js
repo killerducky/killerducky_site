@@ -297,9 +297,6 @@ class Player {
                         // y: gameDur,
                         mode: "lines",
                         name: `${value} ${lambdaStr} ${windowSize}`,
-                        // visible: lambdaStr == "Sliding" ? false : true,
-                        // visible: lambdaStr == "Sliding" ? "legendonly" : true,
-                        visible: windowSize == 200 ? "legendonly" : true,
                     });
                 }
             }
