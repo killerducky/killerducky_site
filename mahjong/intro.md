@@ -19,7 +19,7 @@ title: Mahjong
 
 # Beginner resources
 
--   [Basic Yaku and scoring](media/Riichi%20Mahjong%20simplified.pdf) by reddit user u/Aranlyed
+-   [Basic Yaku and scoring](media/Riichi%20Mahjong%20simplified.pdf) by reddit user u/Aranlyde
 -   Full [Yaku List](media/Riichi%20Mahjong%20Yaku%20List.png) by reddit u/Aranlyde [Source](https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/) License CC/BY/NC 4.0
 -   Full [Scoring Guide](media/Riichi%20Mahjong%20Scoring%20Guide.png) by reddit u/Aranlyde [Source](https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/) License CC/BY/NC 4.0
 
@@ -40,7 +40,7 @@ title: Mahjong
         -   Create
         -   Start
 -   Basic [Five block theory](https://mahjong.guide/2017/12/29/mahjong-fundamentals-2-starting-hands-five-block-theory/)
--   Learn the [Basic Yaku and scoring](media/Riichi%20Mahjong%20simplified.pdf) by reddit user u/Aranlyed
+-   Learn the [Basic Yaku and scoring](media/Riichi%20Mahjong%20simplified.pdf) by reddit user u/Aranlyde
 -   Full [Yaku List](media/Riichi%20Mahjong%20Yaku%20List.png) by reddit u/Aranlyde [Source](https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/) License CC/BY/NC 4.0
     -   Order to learn:
         -   [Riichi](https://riichi.wiki/Riichi)
