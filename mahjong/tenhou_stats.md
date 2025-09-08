@@ -37,7 +37,7 @@ Usage: Input username and click Generate Graph
     -   Only 4 player South is shown (toggle for East pending).
 -   Second chart shows your rank and rank points history
 
-See [Mahjong Soul Charts Explained]("/blog/2025/08/30/mjs_charts_explained") for more details (Tenhou charts work mostly the same)
+See [Mahjong Soul Charts Explained](/blog/2025/08/30/mjs_charts_explained) for more details (Tenhou charts work mostly the same)
 
 See [MJS stats](mjs_stats) for the Mahjong Soul version.
 

@@ -47,7 +47,7 @@ title: MJS Charts
 
 -   Second chart shows your rank and rank points history.
 
-See [Mahjong Soul Charts Explained]("/blog/2025/08/30/mjs_charts_explained") for more details.
+See [Mahjong Soul Charts Explained](/blog/2025/08/30/mjs_charts_explained) for more details.
 
 See [Tenhou stats](tenhou_stats) for the Tenhou version.
 
