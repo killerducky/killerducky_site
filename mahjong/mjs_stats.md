@@ -27,37 +27,29 @@ title: MJS Charts
 
 # Mahjong Soul Charts
 
-<ul>
-    <li>Usage: Input username (adjust idx if needed) and click Generate Graph</li>
-    <br />
-    <li>First chart shows your expected rank point change per match.</li>
-    <ul>
-        <li>Example: If you average 25% for 1/2/3/4 placements and your current rank is Master 1, your expected rank point change will be 0.</li>
-        <li>The blue lines show breakeven points for different ranks.</li>
-        <ul>
-            <li>Example: If your rank trend is on the M2 blue line, you would breakeven at M2.</li>
-        </ul>
-        <li>Norm Rank tells the chart which rank to assume.</li>
-        <ul>
-            <li>auto uses your current rank.</li>
-        </ul>
-        <li>Last N Games sets the initial zoom</li>
-        <li>Charts are interactive:</li>
-        <ul>
-            <li>Double click to zoom out</li>
-            <li>Click and drag to zoom in</li>
-            <li>Click in the legend toggle lines</li>
-        </ul>
-        <li>Several averages are shown, each responding more or less quickly to recent results.</li>
-        <li>Averages are tracket separately for Gold room and Jade room (different player pools).</li>
-        <li>Only 4 player is supported.</li>
-    </ul>
-    <li>Second chart shows your rank and rank points history</li>
-    <br />
-    See
-    <a href="/blog/2025/08/30/mjs_charts_explained">Mahjong Soul Charts Explained</a>
-    for more details.
-</ul>
+**Usage**: Input username (adjust idx if needed) and click **Generate Graph**
+
+-   First chart shows your expected rank point change per match.
+
+    -   Example: If you average 25% for 1/2/3/4 placements and your current rank is Master 1, your expected rank point change will be 0.
+    -   The blue lines show breakeven points for different ranks.
+        -   Example: If your rank trend is on the M2 blue line, you would breakeven at M2.
+    -   **Norm Rank** tells the chart which rank to assume.
+        -   `auto` uses your current rank.
+    -   **Last N Games** sets the initial zoom.
+    -   Charts are interactive:
+        -   Double click to zoom out
+        -   Click and drag to zoom in
+        -   Click in the legend to toggle lines
+    -   Several averages are shown, each responding more or less quickly to recent results.
+    -   Averages are tracked separately for Gold room and Jade room (different player pools).
+    -   Only 4 player is supported.
+
+-   Second chart shows your rank and rank points history.
+
+See [Mahjong Soul Charts Explained]("/blog/2025/08/30/mjs_charts_explained") for more details.
+
+See [Tenhou stats](tenhou_stats) for the Tenhou version.
 
 <div class="chart-container">
     <div class="controls">

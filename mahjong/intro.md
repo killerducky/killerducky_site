@@ -73,7 +73,8 @@ title: Mahjong
 -   [Riichi Book 1](https://dainachiba.github.io/RiichiBooks/) Intermediate Mahjong Strategy Primer
     -   Focus on the Basic Tile Efficiency part
 -   [Stats scraper](https://amae-koromo.sapk.ch) (Gold room or higher only)
--   [Expected Score graph maker](https://colab.research.google.com/drive/1o5faMfPrMLzsPIO-ZUj7rY_sJfRblqa4?usp=sharing) Show your rank history and expected score per game (Also Gold room or higher only)
+-   [MJS stats](mjs_stats) Show your rank history and expected score per game (Also Gold room or higher only)
+-   [Tenhou stats](tenhou_stats) Same thing but for Tenhou
 -   [Mortal AI reviewer](https://mjai.ekyu.moe)
     -   Free service!
     -   As of March 2024, new GUI written by... me!
