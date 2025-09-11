@@ -35,7 +35,7 @@ Zoom out by double clicking. Zoom in with click+drag. Change the last N games to
 
 ## Related links
 
-Checkout the [Random Walk](random_walk.html) simulator to get a sense of the randomness in trying to climb the MJS ladder.
+Checkout the [Random Walk](/mahjong/random_walk) simulator to get a sense of the randomness in trying to climb the MJS ladder.
 
 ## Credits
 
