@@ -57,3 +57,25 @@ export function calcMovingAverage(data, windowSize, lambdaAvg) {
     }
     return finalResult;
 }
+export function plotlyTooltipSetup() {
+    document.querySelectorAll(".modebar-btn").forEach((btn) => {
+        let innerText = btn.getAttribute("data-title");
+        btn.addEventListener("mouseenter", (e) => {
+            const tooltip = document.createElement("div");
+            tooltip.className = "custom-tooltip";
+            tooltip.innerText = innerText;
+            document.body.appendChild(tooltip);
+
+            // Position above mouse
+            const rect = e.currentTarget.getBoundingClientRect();
+            tooltip.style.position = "absolute";
+            tooltip.style.left = window.scrollX + rect.left + rect.width / 2 + "px";
+            tooltip.style.top = window.scrollY + rect.top - 30 + "px";
+            tooltip.style.transform = "translateX(-50%)";
+
+            btn.addEventListener("mouseleave", () => tooltip.remove(), { once: true });
+        });
+        btn.removeAttribute("data-title");
+        btn.removeAttribute("rel");
+    });
+}

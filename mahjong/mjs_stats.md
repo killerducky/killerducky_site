@@ -7,9 +7,9 @@ title: MJS Charts
     /* * {
         outline: solid 1px red;
     } */
-    .chart-container {
+    /* .chart-container {
         margin-bottom: 4rem;
-    }
+    } */
     .ESChart,
     .RankPointChart {
         padding: 10px;

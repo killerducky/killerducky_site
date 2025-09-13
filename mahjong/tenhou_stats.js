@@ -451,6 +451,7 @@ class Player {
         this.chartES(filteredGames);
         this.chartRankPoints(filteredGames);
         this.relayout();
+        utils.plotlyTooltipSetup();
     }
 }
 
