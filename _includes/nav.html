@@ -1,9 +1,90 @@
+<style>
+    /* Dropdown container */
+    .dropdown {
+        position: relative;
+    }
+
+    /* Add arrow indicator */
+    .dropdown > a::after {
+        content: " ▼";
+        font-size: 0.7em;
+    }
+
+    /* Dropdown menu */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 180px;
+        background: hsl(210, 70%, 40%);
+        border: 1px solid #ccc;
+        z-index: 1000;
+        flex-direction: column;
+    }
+
+    .dropdown-content a {
+        padding: 0.5rem;
+        display: block;
+        white-space: nowrap;
+    }
+
+    /* Show on hover (desktop) */
+    @media (hover: hover) {
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
+    }
+
+    /* Show on click (mobile) */
+    .dropdown.open .dropdown-content {
+        display: flex;
+    }
+</style>
+
 <div class="nav">
     <a href="{{ '/' | relative_url }}">Home</a>
-    <a href="{{ '/go/intro' | relative_url }}">Go</a>
-    <a href="{{ '/mahjong/intro' | relative_url }}">Riichi Mahjong</a>
-    <a href="{{ '/mahjong/mjs_stats' | relative_url }}">MJS graphs</a>
-    <a href="{{ '/shogi/intro' | relative_url }}">Shogi</a>
+
+    <div class="dropdown">
+        <a href="{{ '/go/intro' | relative_url }}" class="dropdown-toggle">Go</a>
+        <div class="dropdown-content">
+            <a href="{{ '/go/intro' | relative_url }}">Introduction</a>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <a href="{{ '/mahjong/intro' | relative_url }}" class="dropdown-toggle">Riichi Mahjong</a>
+        <div class="dropdown-content">
+            <a href="{{ '/mahjong/intro' | relative_url }}">Introduction</a>
+            <a href="{{ '/mahjong/mjs_stats' | relative_url }}">MJS graphs</a>
+            <a href="{{ '/mahjong/tenhou_stats' | relative_url }}">Tenhou graphs</a>
+            <a href="{{ '/mahjong/random_walk' | relative_url }}">Random Walks</a>
+            <a href="{{ '/mahjong/reference_stats' | relative_url }}">Reference Stats</a>
+            <a href="{{ '/mahjong/mjs_gacha_notes' | relative_url }}">MJS Gacha Notes</a>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <a href="{{ '/shogi/intro' | relative_url }}" class="dropdown-toggle">Shogi</a>
+        <div class="dropdown-content">
+            <a href="{{ '/shogi/intro' | relative_url }}">Introduction</a>
+            <a href="{{ 'shogi/study_plan' | relative_url }}">Study Plan</a>
+        </div>
+    </div>
+
     <a href="{{ '/blog' | relative_url }}">Blog</a>
     <a href="https://www.twitch.tv/killerducky">My Twitch page</a>
 </div>
+
+<script>
+    // Enable click-to-toggle for mobile
+    document.querySelectorAll(".dropdown-toggle").forEach((link) => {
+        link.addEventListener("click", function (e) {
+            // prevent navigation if tapping arrow/menu opener
+            if (e.pointerType === "touch" || window.innerWidth < 768) {
+                e.preventDefault();
+                this.parentElement.classList.toggle("open");
+            }
+        });
+    });
+</script>
