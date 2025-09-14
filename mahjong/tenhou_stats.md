@@ -3,22 +3,6 @@ layout: default
 title: Tenhou Rank Charts
 ---
 
-<style>
-    .chart-tenhou-es,
-    .chart-tenhou-rank {
-        padding: 10px;
-    }
-    .custom-tooltip {
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 0.8em;
-        white-space: nowrap;
-        pointer-events: none;
-    }
-</style>
-
 # Tenhou Rank Charts
 
 Usage: Input username and click Generate Graph
@@ -46,7 +30,11 @@ See [MJS stats](mjs_stats) for the Mahjong Soul version.
         <label class="small">Name:</label>
         <input class="pname" type="text" value="" style="width: 80px; height: 20px" />
         <label class="small">Last N Games</label>
-        <input class="lastN" type="number" value="500" step="100" min="0" style="width: 60px; height: 20px" />
+        <div class="number-stepper">
+            <button class="step-btn step-down" type="button">&minus;</button>
+            <input class="lastn" type="number" value="500" step="100" min="0"/>
+            <button class="step-btn step-up" type="button">&plus;</button>
+        </div>
         <button class="generate btn">Generate graph</button>
     </div>
     <br>

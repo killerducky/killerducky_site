@@ -3,54 +3,6 @@ layout: default
 title: MJS Charts
 ---
 
-<style>
-    /* * {
-        outline: solid 1px red;
-    } */
-    .chart-container {
-        margin-bottom: 4rem;
-    }
-    .ESChart,
-    .RankPointChart {
-        padding: 10px;
-    }
-    .custom-tooltip {
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-size: 0.8em;
-        white-space: nowrap;
-        pointer-events: none;
-    }
-    .number-stepper {
-        display: inline-flex;
-        align-items: center;
-        border: 2px solid hsla(204, 70%, 53%, 1.00);;
-        border-radius: 2px;
-    }
-    .number-stepper button {
-        background-color: hsla(204, 70%, 53%, 1.00);
-        color: white;
-        width: 30px;
-        height: auto;
-    }
-    .number-stepper input[type="number"]::-webkit-outer-spin-button,
-    .number-stepper input[type="number"]::-webkit-inner-spin-button {
-        -webkit-apperance: none;
-        margin:0;
-    }
-    .number-stepper input[type="number"] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-        padding: 2px 6px;
-        width: 40px;
-        text-align: center;
-        border: none;
-        outline: none;
-    }
-</style>
-
 # Mahjong Soul Charts
 
 **Usage**: Input username (adjust idx if needed) and click **Generate Graph**

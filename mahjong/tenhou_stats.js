@@ -122,8 +122,10 @@ class Player {
         this.pnameBtn.value = pname;
         this.ESChart = this.chartContainerEl.querySelector(".chart-tenhou-es");
         this.RankPointChart = this.chartContainerEl.querySelector(".chart-tenhou-rank");
-        this.lastN = this.chartContainerEl.querySelector(".lastN");
-        this.lastN.addEventListener("change", () => this.relayout());
+        this.lastN = this.chartContainerEl.querySelector(".lastn");
+        this.lastN.addEventListener("change", () => {
+            this.relayout();
+        });
         this.generateBtn.addEventListener("click", async () => {
             document.documentElement.style.cursor = "wait";
             this.generateBtn.disabled = true;
@@ -131,6 +133,7 @@ class Player {
             document.documentElement.style.cursor = "default";
             this.generateBtn.disabled = false;
         });
+        utils.handleSteppers(chartContainerEl);
     }
     relayout() {
         let xMax = this.RankPointChart.data[0].x.length + 1;
