@@ -7,9 +7,9 @@ title: MJS Charts
     /* * {
         outline: solid 1px red;
     } */
-    /* .chart-container {
+    .chart-container {
         margin-bottom: 4rem;
-    } */
+    }
     .ESChart,
     .RankPointChart {
         padding: 10px;
@@ -22,6 +22,32 @@ title: MJS Charts
         font-size: 0.8em;
         white-space: nowrap;
         pointer-events: none;
+    }
+    .number-stepper {
+        display: inline-flex;
+        align-items: center;
+        border: 2px solid hsla(204, 70%, 53%, 1.00);;
+        border-radius: 2px;
+    }
+    .number-stepper button {
+        background-color: hsla(204, 70%, 53%, 1.00);
+        color: white;
+        width: 30px;
+        height: auto;
+    }
+    .number-stepper input[type="number"]::-webkit-outer-spin-button,
+    .number-stepper input[type="number"]::-webkit-inner-spin-button {
+        -webkit-apperance: none;
+        margin:0;
+    }
+    .number-stepper input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+        padding: 2px 6px;
+        width: 40px;
+        text-align: center;
+        border: none;
+        outline: none;
     }
 </style>
 
@@ -68,7 +94,11 @@ See [Tenhou stats](tenhou_stats) for the Tenhou version.
             <option value="S3">S3</option>
         </select>
         <label class="small">Last N Games</label>
-        <input class="xmin" type="number" value="500" step="100" min="0" style="width: 60px; height: 20px" />
+        <div class="number-stepper">
+            <button class="step-btn step-down" type="button">&minus;</button>
+            <input class="lastn" type="number" value="500" step="100" min="0"/>
+            <button class="step-btn step-up" type="button">&plus;</button>
+        </div>
         <button class="generate btn">Generate graph</button>
     </div>
     <div class="ESChart" style="width: 1000px; height: 420px"></div>

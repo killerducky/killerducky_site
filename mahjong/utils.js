@@ -1,3 +1,11 @@
+// helper: parse attr or fallback
+const parseAttr = (input, attrName, fallback) => {
+    const v = input.getAttribute(attrName);
+    if (v === null || v === "") return fallback;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+};
+
 export function min(A) {
     let min = A.reduce((min, val) => {
         // console.log(min, val)
@@ -77,5 +85,54 @@ export function plotlyTooltipSetup() {
         });
         btn.removeAttribute("data-title");
         btn.removeAttribute("rel");
+    });
+}
+export function handleSteppers(chartContainerEl) {
+    chartContainerEl.querySelectorAll(".number-stepper").forEach((container) => {
+        const input = container.querySelector('input[type="number"]');
+        const btnUp = container.querySelector(".step-up");
+        const btnDown = container.querySelector(".step-down");
+
+        if (!input) return;
+
+        // get step/min/max dynamically in case they change
+        const getStep = () => parseAttr(input, "step", 1);
+        const getMin = () => parseAttr(input, "min", -Infinity);
+        const getMax = () => parseAttr(input, "max", Infinity);
+
+        const clamp = (v) => Math.min(getMax(), Math.max(getMin(), v));
+
+        const changeValue = (delta) => {
+            // Allow empty input: treat as 0 or min if defined
+            let val = input.value === "" ? (Number.isFinite(getMin()) && getMin() > -Infinity ? getMin() : 0) : Number(input.value);
+
+            if (!Number.isFinite(val)) val = 0;
+
+            const step = getStep();
+            // If step is 0 or NaN, default to 1
+            const effectiveStep = typeof step === "number" && step !== 0 && Number.isFinite(step) ? step : 1;
+
+            // add delta * step
+            let newVal = val + delta * effectiveStep;
+
+            // Align to step grid relative to min if min is finite (helps with non-integer steps)
+            const min = getMin();
+            if (Number.isFinite(min) && effectiveStep !== 0) {
+                // make sure (newVal - min) is a multiple of step (within floating tolerance)
+                const raw = Math.round((newVal - min) / effectiveStep) * effectiveStep + min;
+                newVal = raw;
+            }
+
+            newVal = clamp(newVal);
+
+            // If step or min cause decimal imprecision, format to reasonable decimal places
+            const decimals = (effectiveStep.toString().split(".")[1] || "").length;
+            input.value = Number.isFinite(decimals) && decimals > 0 ? newVal.toFixed(decimals) : String(Math.round(newVal));
+            input.dispatchEvent(new Event("change", { bubbles: true })); // let other listeners know value changed
+        };
+
+        // button handlers
+        btnUp && btnUp.addEventListener("click", () => changeValue(+1));
+        btnDown && btnDown.addEventListener("click", () => changeValue(-1));
     });
 }

@@ -118,11 +118,11 @@ class Player {
         this.pidxBtn.value = this.pidx;
         this.normRankBtn = this.chartContainerEl.querySelector(".norm-rank");
         this.normRankBtn.value = this.normRank;
-        this.xminEl = this.chartContainerEl.querySelector(".xmin");
+        this.lastnEl = this.chartContainerEl.querySelector(".lastn");
         this.ESChart = this.chartContainerEl.querySelector(".ESChart");
         this.RankPointChart = this.chartContainerEl.querySelector(".RankPointChart");
         this.actualXmaxValue;
-        this.xminEl.addEventListener("change", () => this.relayout());
+        this.lastnEl.addEventListener("change", () => this.relayout());
         this.generateBtn.addEventListener("click", async () => {
             document.documentElement.style.cursor = "wait";
             this.generateBtn.disabled = true;
@@ -133,9 +133,10 @@ class Player {
             document.documentElement.style.cursor = "default";
             this.generateBtn.disabled = false;
         });
+        utils.handleSteppers(chartContainerEl);
     }
     relayout() {
-        let xMin = Math.max(0, this.actualXmaxValue - this.xminEl.value);
+        let xMin = Math.max(0, this.actualXmaxValue - this.lastnEl.value);
         let ySlice = this.ESChart.data.map((trace) => trace.y.slice(xMin, this.actualXmaxValue)).flat();
         let yMin = utils.min(ySlice);
         let yMax = utils.max(ySlice);
