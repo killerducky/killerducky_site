@@ -236,7 +236,7 @@ class Player {
                         y: ema,
                         mode: "lines",
                         text: ema.map((y) => {
-                            return y === null ? "" : `${y.toFixed(1)}`;
+                            return y === null ? "" : `${y.toFixed(1)}<br>${value}<br>${lambdaStr} ${windowSize}`;
                         }),
                         name: `${value} ${lambdaStr} ${windowSize}`,
                         hovertemplate: "%{text}<extra></extra>",

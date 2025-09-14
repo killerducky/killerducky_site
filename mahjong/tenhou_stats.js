@@ -280,7 +280,7 @@ class Player {
                             y: ema,
                             mode: "lines",
                             text: ema.map((y) => {
-                                return y === null ? "" : `${y.toFixed(1)}`;
+                                return y === null ? "" : `${y.toFixed(1)}<br>${value} ${lenValue}<br>${lambdaStr} ${windowSize}`;
                             }),
                             name: `${value} ${lenValue} ${lambdaStr} ${windowSize}`, // e.g. "Joukyu S EMA 400"
                             hovertemplate: "%{text}<extra></extra>",
