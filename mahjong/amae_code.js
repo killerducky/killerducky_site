@@ -141,7 +141,7 @@ class Player {
         let yMin = utils.min(ySlice);
         let yMax = utils.max(ySlice);
         Plotly.relayout(this.ESChart, {
-            "xaxis.range": [xMin, this.actualXmaxValue],
+            "xaxis.range": [xMin, this.actualXmaxValue + 2],
             "yaxis.range": [
                 Math.min(((0 - this.normalizeToRankLine) * 15.0) / 4.0 - 2, Math.max(EXPECTED_SCORE_DISPLAY_FLOOR, yMin)),
                 Math.max(yMax, ((5 - this.normalizeToRankLine) * 15.0) / 4.0 + 2),
@@ -150,7 +150,7 @@ class Player {
             // 'yaxis.autorange': true  // TODO this isn't working...
         });
         Plotly.relayout(this.RankPointChart, {
-            "xaxis.range": [xMin, this.actualXmaxValue],
+            "xaxis.range": [xMin, this.actualXmaxValue + 2],
         });
     }
 

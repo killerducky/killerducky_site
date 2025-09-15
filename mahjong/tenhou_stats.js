@@ -139,11 +139,11 @@ class Player {
         let xMax = this.RankPointChart.data[0].x.length + 1;
         let xMin = Math.max(0, xMax - this.lastN.value);
         Plotly.relayout(this.ESChart, {
-            "xaxis.range": [xMin, xMax],
+            "xaxis.range": [xMin, xMax + 2],
             // "yaxis.range": [2.5 - 0.3, 2.5 + 0.3],
         });
         Plotly.relayout(this.RankPointChart, {
-            "xaxis.range": [xMin, xMax],
+            "xaxis.range": [xMin, xMax + 2],
         });
     }
 
