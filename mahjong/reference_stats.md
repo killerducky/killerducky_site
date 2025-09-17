@@ -47,6 +47,7 @@ A collection of reference charts and tables for Mahjong.
         -   [Head start ryanmen](#head-start-ryanmen)
         -   [Head start bad shape](#head-start-bad-shape)
         -   [Head start honor wait](#head-start-honor-wait)
+        -   [Push Fold](#push-fold)
 
 ## Dealin Rates
 
@@ -129,5 +130,14 @@ SMS Table 1.6 - Riichi honor waits with impunity
 
 <div id="chart-riichi-dama-head-start-honor-wait"></div>
 
+### Push Fold
+
+<div id="chart-push-fold"></div>
+<div>
+<div id="chart-push-fold-summary-1"></div>
+<br>
+<div id="chart-push-fold-summary-2"></div>
+</div>
+
 <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
-<script src="stats.js"></script>
+<script type="module" src="stats.js"></script>

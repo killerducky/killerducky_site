@@ -1,3 +1,6 @@
+import * as utils from "./utils.js";
+import * as pfdata from "./push_fold.js";
+
 const dealin_rates = {
     "Guest wind 2 seen": [1.2, 0.4, 0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9, 1.2, 1.6, 2.1],
     "Yakuhai 2 seen": [0.5, 0.5, 0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.4, 0.4, 0.5, 0.7, 0.8, 1.0, 1.3, 1.7, 2.8],
@@ -285,7 +288,7 @@ function riichi_dama_ev() {
     riichi_dama_display(headers, handValues, "Head start bad shape");
     riichi_dama_display(headers, handValues, "Head start honor wait");
 }
-
+// WIP simple simulator
 function push_fold_ev(h_dealer, v_dealer) {
     // turn 9 riichi
     const v_tsumo_value = v_dealer ? 10000 : 7000;
@@ -333,21 +336,210 @@ function push_fold_ev(h_dealer, v_dealer) {
     const chase_ev = winrate * (chase_win_value + 1000) - dealin_rate_total * (v_tsumo_value + 1000) - v_chased_tsumo_rate * (tsumo_payment + 1000);
     // console.log(chase_win_value, chase_ev);
 }
-push_fold_ev(0, 0);
-push_fold_ev(0, 1);
-push_fold_ev(1, 0);
-riichi_dama_ev();
-simplify_types();
-updateTable(9, 15, true);
-document
-    .getElementById("plotForm")
-    .querySelectorAll("input")
-    .forEach((input) => {
-        input.addEventListener("change", (event) => {
-            event.preventDefault();
-            const earlyTurn = parseInt(document.getElementById("earlyTurn").value);
-            const lateTurn = parseInt(document.getElementById("lateTurn").value);
-            const simple = document.getElementById("simple").checked;
-            updateTable(earlyTurn, lateTurn, simple);
-        });
+const push_color2rate = {
+    "#ff0000": 1.0,
+    "#ff9900": 0.8,
+    "#ffff00": 0.5,
+    "#00ff00": 0.2,
+    "#4285f4": 0.0,
+};
+const push_phase2turn = {
+    Early: 4,
+    Mid: 9,
+    Late: 15,
+};
+const push_superSimpleType2SimpleType = {
+    "Suji 19": "Suji 19",
+    "Suji 2378": "Suji 37",
+    "Musuji 2378": "Non suji 37",
+    "Musuji 456": "Non suji 456",
+};
+const push_wait2shorterName = {
+    Tenpai: "T",
+    "1shanten": "1s",
+    "Good wait": "Good wait",
+    "Bad wait": "Bad wait",
+    "Very bad wait [pen/kan 37, 2 tiles]": "Very bad wait",
+    "Perfect [223m23p]": "Perfect",
+    "2x Ryanmen": "2x Good",
+    "Ryanmen + Non-ryanmen [23m246p]": "Good + Bad",
+    "2x Non-ryanmen [24m246p]": "2x Bad",
+    Chiitoi: "Chiitoi",
+    "Headless [111m23p23s]": "Headless ankou",
+    "2x 3-7 floaters": "Sticky 2x 3-7",
+    "3456 + 3-7 floater": "Sticky 3456 + 3-7",
+    "2x 3456": "Sticky 2x 3456",
+};
+
+function pushFoldChart() {
+    console.log(pfdata.push_fold_data);
+    let keys = new Set();
+    let values = new Set();
+    // let handTypes = new Set();
+    for (let item of pfdata.push_fold_data) {
+        item.handType = [item.Type, item.Wait, item.Value];
+        // handTypes.add(item.handType);
+        item.minRiskFold = 1;
+        item.maxRiskPush = 0;
+        item.minRisk = {
+            risk: 1,
+            phase: null,
+            type: null,
+            pushRate: null,
+        };
+        item.maxRisk = {
+            risk: 0,
+            phase: null,
+            type: null,
+            pushRate: null,
+        };
+        for (let [key, value] of Object.entries(item)) {
+            if (value[0] == "#") {
+                keys.add(key);
+                values.add(value);
+                for (let [phase, turn] of Object.entries(push_phase2turn)) {
+                    if (!key.startsWith(phase)) continue;
+                    for (let [type1, type2] of Object.entries(push_superSimpleType2SimpleType)) {
+                        if (!key.includes(type1)) continue;
+                        let risk = simple_dealin_rates[type2][turn] / 100;
+                        let pushRate = push_color2rate[value];
+                        // if: we likely push, and the risk we are pushing is greater than the maxRishPush we've seen before, update maxRishPush we have seen
+                        if (pushRate >= 0.5 && risk > item.maxRiskPush) {
+                            item.maxRiskPush = risk;
+                            item.maxRisk = {
+                                risk: risk,
+                                phase: phase,
+                                type: type2,
+                                pushRate: pushRate,
+                            };
+                        }
+                        if (pushRate <= 0.5 && risk < item.minRiskFold) {
+                            item.minRiskFold = risk;
+                            item.minRisk = {
+                                risk: risk,
+                                phase: phase,
+                                type: type2,
+                                pushRate: pushRate,
+                            };
+                        }
+                        // console.log(`${phase}=${turn} ${type1}=${type2} push:${(pushRate * 100).toFixed(0)}% risk:${(risk * 100).toFixed(0)}`);
+                    }
+                }
+                // console.log(value);
+            }
+        }
+        // console.log(item.handType, (item.minRiskFold * 100).toFixed(0), (item.maxRiskPush * 100).toFixed(0));
+    }
+    // console.log(keys);
+    // console.log(values);
+    // console.log(handTypes);
+
+    let traces = [];
+    let xValues = pfdata.push_fold_data.map((item) => `${push_wait2shorterName[item.Type]} ${push_wait2shorterName[item.Wait]}, ${item.Value}`);
+    let yMin = pfdata.push_fold_data.map((item) => Math.min(0.25, item.maxRiskPush));
+    let yMax = pfdata.push_fold_data.map((item) => (item.minRiskFold == 1 ? null : Math.min(0.25, item.minRiskFold)));
+    let yHeights = yMax.map((max, i) => (max !== null && yMin[i] !== null ? max - yMin[i] : null));
+    traces.push({
+        x: xValues,
+        y: yHeights,
+        base: yMin,
+        text: pfdata.push_fold_data.map((item) => {
+            let top = `${((1 - item.minRisk.pushRate) * 100).toFixed(0)}% Fold ${(item.minRisk.risk * 100).toFixed(0)}%+ ${item.minRisk.phase} ${
+                item.minRisk.type
+            }`;
+            let bot = `${(item.maxRisk.pushRate * 100).toFixed(0)}% Push ${(item.maxRisk.risk * 100).toFixed(0)}%- ${item.maxRisk.phase} ${item.maxRisk.type}`;
+            return `${top}<br>${bot}`;
+        }),
+        type: "bar",
+        marker: {
+            color: "rgba(0,100,255,0.4)",
+            line: { color: "blue", width: 0.5 },
+        },
+        name: "Fold X%+",
+        hovertemplate: "%{text}<extra></extra>",
+        textposition: "none", // don't label the bar
     });
+    // return `${(item.maxRisk.pushRate * 100).toFixed(0)}% Push ${(item.maxRisk.risk * 100).toFixed(0)}%- ${item.maxRisk.phase} ${item.maxRisk.type}`;
+    const layout = {
+        title: { text: `Push Fold` },
+        yaxis: { tickformat: ".0%" },
+        hovermode: "x unified",
+        height: 600,
+        margin: {
+            b: 250,
+        },
+    };
+    let chartid = "chart-push-fold";
+    let chartEl = document.getElementById(chartid);
+    Plotly.newPlot(chartEl, traces, layout);
+    pushFoldSummary(document.querySelector("#chart-push-fold-summary-1"), pfdata.push_fold_data[0]);
+    pushFoldSummary(document.querySelector("#chart-push-fold-summary-2"), pfdata.push_fold_data[1]);
+    let toggleIndex = 0;
+    chartEl.on("plotly_click", function (eventData) {
+        let i = eventData.points[0].pointIndex;
+        pushFoldSummary(document.querySelector(`#chart-push-fold-summary-${toggleIndex + 1}`), pfdata.push_fold_data[i]);
+        toggleIndex = 1 - toggleIndex;
+    });
+}
+
+function pushFoldSummary(sumEl, item) {
+    let xValues = `${push_wait2shorterName[item.Type]} ${push_wait2shorterName[item.Wait]}, ${item.Value}`;
+    let top = `${((1 - item.minRisk.pushRate) * 100).toFixed(0)}% Fold ${(item.minRisk.risk * 100).toFixed(0)}%+ ${item.minRisk.phase} ${item.minRisk.type}`;
+    let bot = `${(item.maxRisk.pushRate * 100).toFixed(0)}% Push ${(item.maxRisk.risk * 100).toFixed(0)}%- ${item.maxRisk.phase} ${item.maxRisk.type}`;
+    sumEl.innerHTML = `${xValues}<br>${top}<br>${bot}`;
+    let keyStr = "";
+    let valueStr = "";
+
+    const table = document.createElement("table");
+    const tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+    const row = document.createElement("tr");
+    const riskRow = document.createElement("tr");
+    for (let [key, value] of Object.entries(item)) {
+        if (!key.startsWith("Early") && !key.startsWith("Mid") && !key.startsWith("Late")) continue;
+        let td;
+        td = document.createElement("td");
+        td.textContent = key;
+        td.style.backgroundColor = value;
+        row.appendChild(td);
+
+        td = document.createElement("td");
+        for (let [phase, turn] of Object.entries(push_phase2turn)) {
+            if (!key.startsWith(phase)) continue;
+            for (let [type1, type2] of Object.entries(push_superSimpleType2SimpleType)) {
+                if (!key.includes(type1)) continue;
+                let risk = simple_dealin_rates[type2][turn]; // TODO: cleanup 1.0 vs 100%??
+                let pushRate = push_color2rate[value];
+                td.textContent = risk;
+            }
+        }
+        riskRow.appendChild(td);
+    }
+    tbody.appendChild(row);
+    tbody.appendChild(riskRow);
+    sumEl.appendChild(table);
+}
+
+function main() {
+    // push_fold_ev(0, 0);
+    // push_fold_ev(0, 1);
+    // push_fold_ev(1, 0);
+    simplify_types();
+    pushFoldChart();
+    riichi_dama_ev();
+    updateTable(9, 15, true);
+    document
+        .getElementById("plotForm")
+        .querySelectorAll("input")
+        .forEach((input) => {
+            input.addEventListener("change", (event) => {
+                event.preventDefault();
+                const earlyTurn = parseInt(document.getElementById("earlyTurn").value);
+                const lateTurn = parseInt(document.getElementById("lateTurn").value);
+                const simple = document.getElementById("simple").checked;
+                updateTable(earlyTurn, lateTurn, simple);
+            });
+        });
+}
+
+main();
