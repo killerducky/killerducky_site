@@ -85,7 +85,9 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         <tbody></tbody>
     </table>
 </div>
+
 ### Full chart
+
 <div style="display: flex; justify-content: flex-start">
     <table id="full-dealin-table" style="margin: 10px">
         <thead>
@@ -99,18 +101,32 @@ Half suji A refers to 46 that is half suji by 19. Half suji B refers to 46 that 
         <tbody></tbody>
     </table>
 </div>
+
 ## Riichi vs Dama Round balance
+
 <ul>
     <li>These charts show average score difference between Riichi and Dama (positive means Riichi scores more).</li>
     <li>Trend lines for deciding on Turns 5, 8, and 12.</li>
     <li>Another trend line for the difference assuming the hand actually wins.</li>
     <li>Data from Statistical Mahjong Strategy, error around 400 points.</li>
 </ul>
+
 ### Head start ryanmen
+
+SMS Table 1.1 - Feel the value of ryanmen riichi
+
 <div id="chart-riichi-dama-head-start-ryanmen"></div>
+
 ### Head start bad shape
+
+SMS Table 1.3 - Wipe away your fear of head start bad shape riichi
+
 <div id="chart-riichi-dama-head-start-bad-shape"></div>
+
 ### Head start honor wait
+
+SMS Table 1.6 - Riichi honor waits with impunity
+
 <div id="chart-riichi-dama-head-start-honor-wait"></div>
 
 <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>

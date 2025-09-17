@@ -203,7 +203,8 @@ function riichi_dama_display(headers, handValues, waitType) {
     });
     const layout = {
         title: { text: `Riichi vs Dama difference for: ${waitType}` },
-        yaxis: { range: [-1500, 5500] },
+        xaxis: { fixedrange: true },
+        yaxis: { range: [-1500, 5500], fixedrange: true },
     };
     let chartid = "chart-riichi-dama-" + waitType.replace(/\s+/g, "-").toLowerCase();
     Plotly.newPlot(chartid, traces, layout);

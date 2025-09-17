@@ -87,28 +87,36 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
         const pidx = req.params.pidx;
         const url = `https://5-data.amae-koromo.com/api/v2/pl4/search_player/${pname}`;
 
-        console.log("server fetch", pname, pidx);
+        let log = `fetch mjs ${pname} ${pidx}`;
         let res1 = await fetch(url);
         let data1 = await res1.json();
         if (data1.length == 0) {
-            res.status(404).json({ error: "Player not found" });
+            let err = "Player not found";
+            log += ` ${err}`;
+            console.log(log);
+            res.status(404).json({ error: err });
             return;
         }
         const result = data1[pidx];
         if (!result) {
-            res.status(404).json({ error: "Player index not found" });
+            let err = "Player index not found";
+            log += ` ${err}`;
+            console.log(log);
+            res.status(404).json({ error: err });
             return;
         }
 
         let dbPlayerData = await getPlayer(pname, pidx);
         if (dbPlayerData) {
-            console.log("DB Player:", dbPlayerData.info.latest_timestamp, dbPlayerData.games.length);
+            log += ` db games:${dbPlayerData.games.length}`;
             if (dbPlayerData.info.latest_timestamp == result.latest_timestamp) {
-                console.log("latest_timestamp match, no new games");
+                log += ` new games:0`;
+                console.log(log);
                 res.json(dbPlayerData);
                 return;
             }
         } else {
+            log += ` db games:0`;
             dbPlayerData = {};
         }
         dbPlayerData.info = result; // update info
@@ -137,7 +145,7 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
             let s1 = `${s0}player_records/${result.id}/${start}999/${date_limit}000?limit=500&mode=${mode}&descending=true&tag=`;
             const res2 = await fetch(s1);
             const these_games = await res2.json();
-            console.log(these_games.length);
+            // console.log(these_games.length);
             // these_games.slice(0, 5).forEach((g) => {
             //     console.log(g.uuid, start - g.startTime, date_limit - g.startTime);
             // });
@@ -153,12 +161,14 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
             }
         }
         // Combine new games with existing ones
+        log += ` new games:${games.length}`;
+        console.log(log);
         dbPlayerData.games = [...games, ...(dbPlayerData.games || [])];
         await addPlayer(pname, pidx, dbPlayerData.info, dbPlayerData.games);
         res.json(dbPlayerData);
     } catch (err) {
-        console.log("Error caught");
-        console.log(err);
+        log += ` Error:${err}`;
+        console.log(log);
         res.status(500).json({ error: err.message });
     }
 });
@@ -166,19 +176,17 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
 app.get("/api/tenhou/nodocchi_listuser/:nickname", async (req, res) => {
     try {
         const pname = req.params.nickname;
-        console.log(`server fetch ${pname}`);
+        let log = `fetch tenhou ${pname}`;
         const url = "https://nodocchi.moe";
         let s1 = `${url}/api/listuser.php?name=${pname}`;
         let res1 = await fetch(s1);
         let data = await res1.json();
-
-        // let s2 = `${url}/tenhoulog/#!&name=${pname}`;
-        // let res2 = await fetch(s2);
-        // let data2 = await res2.text();
-        // data.html = data2;
-
-        // console.log(data);
-        // console.log(JSON.stringify(data, null, 2));
+        if (data && data.list) {
+            log += ` games:${data.list.length}`;
+        } else {
+            log += ` games:0`;
+        }
+        console.log(log);
         // cache headers (valid for 2 minutes) -- should cut 90% of the users doing quick multiple refreshes
         res.set("Cache-Control", "public, max-age=180");
         res.json(data);

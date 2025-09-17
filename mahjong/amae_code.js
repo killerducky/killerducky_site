@@ -32,7 +32,6 @@ const last_place_penalty = {
 };
 
 const d = ["?", "E", "M", "S", "?", "C"];
-const C1_LEVEL = 10701; // TODO just make forward/reverse maps instead of all this math?
 const level_dan = (level) => `${d[(Math.floor(level / 100) % 100) - 2]}${level % 100}`;
 const level_pt_base = (level) => {
     const level_pt_base = {
@@ -222,10 +221,11 @@ class Player {
 
         // for (let [lambdaStr, lambdaFunc] of [["EMA", exponential_moving_average], ["Sliding", slidingWindowAverage]]) {
         for (let [lambdaStr, lambdaFunc] of [["EMA", utils.exponential_moving_average]]) {
-            for (const [key, value] of Object.entries(modeId2RoomTypeFull)) {
-                let numMatch = games.filter((game) => game.modeId == key).length;
-                let attr = games.map((game) => (game.modeId == key ? game.player.gradingScoreNorm : null));
+            for (const [modeId, roomTypeFull] of Object.entries(modeId2RoomTypeFull)) {
+                let numMatch = games.filter((game) => game.modeId == modeId).length;
+                let attr = games.map((game) => (game.modeId == modeId ? game.player.gradingScoreNorm : null));
                 // let gameDur = games.map((game) => (game.endTime - game.startTime) / 60);
+                // Filter averages of game types we don't play often.
                 if (numMatch / games.length < 0.05) {
                     continue;
                 }
@@ -236,9 +236,9 @@ class Player {
                         y: ema,
                         mode: "lines",
                         text: ema.map((y) => {
-                            return y === null ? "" : `${y.toFixed(1)}<br>${value}<br>${lambdaStr} ${windowSize}`;
+                            return y === null ? "" : `${y.toFixed(1)}<br>${roomTypeFull}<br>${lambdaStr} ${windowSize}`;
                         }),
-                        name: `${value} ${lambdaStr} ${windowSize}`,
+                        name: `${roomTypeFull} ${lambdaStr} ${windowSize}`,
                         hovertemplate: "%{text}<extra></extra>",
                     });
                 }

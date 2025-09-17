@@ -23,6 +23,5 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # CMD ["bundle", "exec", "jekyll", "serve", "--host", "0.0.0.0", "--livereload"]
-# CMD ["bundle", "exec", "jekyll", "build", "--config" "_config.yml,_config_dev.yml", "--destination", "/srv/jekyll/_site"]
 # CMD ["sh", "-c", "bundle exec jekyll build --config _config.yml${JEKYLL_ENV:+,_config_dev.yml} --destination /srv/jekyll/_site"]
 CMD ["sh"]
