@@ -12,14 +12,15 @@ title: How to play Go
 
 ## How to play Go
 
--   [How to play Go](#how-to-play-go)
--   [Under construction](#under-construction)
--   [Game objective](#game-objective)
--   [Example Counting the score](#example-counting-the-score)
--   [Liberties](#liberties)
--   [Capturing](#capturing)
--   [Groups](#groups)
--   [Suicide?](#suicide)
+- [How to play Go](#how-to-play-go)
+- [Under construction](#under-construction)
+- [Game objective](#game-objective)
+- [Example Counting the score](#example-counting-the-score)
+- [Liberties](#liberties)
+- [Capturing](#capturing)
+- [Groups](#groups)
+- [Suicide?](#suicide)
+- [Ko](#ko)
 
 ## Under construction
 
@@ -27,10 +28,10 @@ Yet another introduction to Go, under construction. Relevant [xkcd](https://xkcd
 
 ## Game objective
 
--   The goal is to control more area than your opponent
--   Control includes:
-    -   Empty intersections that only reach your stones (like a paint-fill)
-    -   The intersections where your stones are placed
+- The goal is to control more area than your opponent
+- Control includes:
+    - Empty intersections that only reach your stones (like a paint-fill)
+    - The intersections where your stones are placed
 
 ## Example Counting the score
 
@@ -40,14 +41,14 @@ Here's an example of a finished 9x9 game.
 
 Out of the 81 intersections:
 
--   Black controls:
-    -   30 empty intersections (shown with △)
-    -   14 stones
-    -   44 points total
--   White controls:
-    -   24 empty intersections (shown with ○)
-    -   13 stones
-    -   37 points total
+- Black controls:
+    - 30 empty intersections (shown with △)
+    - 14 stones
+    - 44 points total
+- White controls:
+    - 24 empty intersections (shown with ○)
+    - 13 stones
+    - 37 points total
 
 {% endcapture %}
 
@@ -62,8 +63,8 @@ But there's another rule: to balance the game, White is given a bonus called **k
 
 With komi added:
 
--   White's score becomes 44.5.
--   Black stays at 44.
+- White's score becomes 44.5.
+- Black stays at 44.
 
 White wins by 0.5 points!
 
@@ -112,18 +113,36 @@ content="Save White's stone"
 
 ## Suicide?
 
-It's illegal to place a stone where it would have no liberties &mdash; unless that move captures some opponent stones.
+It's illegal to place a stone where it would have no liberties &mdash; **unless** that move captures some opponent stones.
 
 {% capture diagram_text %}
 
 Capture White's group
 
-Playing A immediately is illegal, first you must **reduce** white's liberties by playing B.
+Playing A immediately is illegal. First you must **reduce** white's liberties by playing B.
 
 {% endcapture %}
 
-{% include go_tsumego.html
-id="capture_one_eye_1"
-sgf="/go/lesson_0/capture_one_eye_1.sgf"
-content=diagram_text
-%}
+{% include go_tsumego.html sgf="/go/lesson_0/capture_one_eye_1.sgf" content=diagram_text %}
+
+## Ko
+
+**Ko** is a Japanese word meaning "eternity". Repeating the board position by capturing a single stone is **illegal**.
+
+{% capture diagram_text %}
+
+After Black plays A to reduce White's territory, White captures at B.
+
+It would then be illegal for Black to recapture immediately. Black must play a different move &mdash; such as reducing White's territory. This is called a **ko threat**
+
+White faces a dilemma: If White connects the ko, Black can follow up their **ko threat** and reduce White's territory. So White decides to answer the ko threat.
+
+Once the board has changed, Black can **recapture the ko**.
+
+Next, White cannot immediately recapture the ko, and with no useful moves left, White passes.
+
+Finally, Black resolves the ko fight by connecting.
+
+{% endcapture %}
+
+{% include go_tsumego.html sgf="/go/lesson_0/ko_1.sgf" content=diagram_text %}

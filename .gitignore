@@ -5,3 +5,4 @@ _site
 vendor
 nginx.conf
 tmp
+node_modules

@@ -2,8 +2,10 @@
 {% assign default_id = include.sgf | split: '/' | last | replace: '.sgf', '' %} 
 {% assign tsumego_id = include.id | default: default_id %}
 
+<!-- data-wgo-layout="left: ['InfoBox', 'CommentBox'], bottom: ['Control']" -->
+
 <div class="two-col-container">
-    <div class="wgo-large" id="{{ tsumego_id }}" data-wgo-board="background: ''">Your browser doesn't support WGo Player. Use some modern browser.</div>
+    <div class="wgo-large" id="{{ tsumego_id }}">Your browser doesn't support WGo Player. Use some modern browser.</div>
     <div>{{ include.content | markdownify }}</div>
 </div>
 
@@ -11,6 +13,7 @@
     var tsumego = new WGo.Tsumego(document.getElementById("{{ tsumego_id }}"), {
         sgfFile: "{{ include.sgf }}",
         background: "",
+        allowIllegalMoves: "true",
         // debug: true,
     });
     // tsumego.setCoordinates(true);

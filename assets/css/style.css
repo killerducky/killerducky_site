@@ -31,8 +31,15 @@ header {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
 }
-.two-col-container > * {
+/* .two-col-container > * {
     flex: fr;
+} */
+.two-col-container > :first-child {
+    flex: 0 0 300px; /* fixed 300px */
+}
+
+.two-col-container > :last-child {
+    flex: 1; /* takes the rest */
 }
 .nav {
     background: hsl(210, 70%, 40%);
