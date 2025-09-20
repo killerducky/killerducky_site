@@ -1,13 +1,14 @@
 <div class="two-col-container">
-    <div class="wgo-large" id="{{ include.id | default: tsumego_wrapper}}">Your browser doesn't support WGo Player. Use some modern browser.</div>
-
-    <div markdown="1">{{include.caption}}</div>
+    <div class="wgo-large" id="{{ include.id | default: tsumego_wrapper}}" data-wgo-board="background: ''">
+        Your browser doesn't support WGo Player. Use some modern browser.
+    </div>
+    <div>{{include.content | markdownify }}</div>
 </div>
 
 <script>
-    // let sgf = WGo.loadSgfFromFile("/go/lesson_0/capture_1.sgf");
     var tsumego = new WGo.Tsumego(document.getElementById("{{ include.id | default: tsumego_wrapper}}"), {
         sgfFile: "{{ include.sgf }}",
+        background: "",
         // debug: true,
     });
     // tsumego.setCoordinates(true);

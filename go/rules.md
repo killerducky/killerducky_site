@@ -10,14 +10,19 @@ title: Go Beginner Intro
 <link rel="stylesheet" type="text/css" href="/assets/wgo.js/tsumego.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/wgo-custom.css" />
 
-## The Rules of Go/Baduk/Weiqi
+## How to play Go/Baduk/Weiqi
 
--   [The Rules of Go/Baduk/Weiqi](#the-rules-of-gobadukweiqi)
+-   [How to play Go/Baduk/Weiqi](#how-to-play-gobadukweiqi)
+-   [Under construction](#under-construction)
 -   [Game objective](#game-objective)
 -   [Example Counting the score](#example-counting-the-score)
 -   [Liberties](#liberties)
 -   [Capturing](#capturing)
 -   [Groups](#groups)
+
+## Under construction
+
+Yet another introduction to Go, under construction. Relevant [xkcd](https://xkcd.com/927/)
 
 ## Game objective
 
@@ -30,13 +35,8 @@ title: Go Beginner Intro
 
 Here's an example of a finished 9x9 game.
 
-<div class="two-col-container">
+{% capture diagram_text %}
 
-<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" data-wgo-move="999" data-wgo-enablewheel="false" >
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-
-<div markdown="1">
 Out of the 81 intersections:
 
 -   Black controls:
@@ -48,8 +48,12 @@ Out of the 81 intersections:
     -   13 stones
     -   37 points total
 
-</div>
-</div>
+{% endcapture %}
+
+{% include go_diagram.html
+   sgf="/go/lesson_0/first_9x9_game.sgf"
+   content=diagram_text
+%}
 
 So Black seems ahead by 7 points.
 
@@ -62,96 +66,49 @@ With komi added:
 
 That means White wins by 0.5 points!
 
-<!-- Diagram + explaination text -->
-
-<!--
-
-<div class="two-col-container">
-<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" style="min-width: 300px; margin: 0" data-wgo-move="999" data-wgo-enablewheel="false" >
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-<div markdown="1">
-</div>
-</div>
-
--->
-
 ## Liberties
 
 That example was a very peaceful game. The players just divided the board in half and counted the score. But most games will not be so peaceful, Go is war! Your opponents will do their best to destroy not only your territory, but also to capture your stones. To see how stones are captured we need to learn about Liberties.
 
 A **Liberty** is an unoccupied intersection horizontally or vertically adjacent to a stone.
 
-<div class="two-col-container">
-<div data-wgo="/go/lesson_0/4_liberties.sgf" data-wgo-layout="" class="wgo-large" data-wgo-move="999" data-wgo-enablewheel="false" >
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-<div markdown="1">
-The White stone has 4 liberties, marked with ◻︎
-</div>
-</div>
+{% include go_diagram.html
+   sgf="/go/lesson_0/4_liberties.sgf"
+   content="The White stone has 4 liberties, marked with ◻︎"
+%}
 
 ## Capturing
 
 If all the liberties are taken by the stones of opposing color, that stone is **captured** and is removed from the board.
 
-<div class="two-col-container">
-<div class="wgo-large" id="tsumego_wrapper">
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-
-<div markdown="1">
-Capture White's stone
-</div>
-</div>
-
-<script>
-// let sgf = WGo.loadSgfFromFile("/go/lesson_0/capture_1.sgf");
-var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
-	sgfFile: "/go/lesson_0/capture_1.sgf",
-	// debug: true,
-});
-tsumego.setCoordinates(true);
-</script>
+{% include go_tsumego.html
+id="capture_1"
+sgf="/go/lesson_0/capture_1.sgf"
+content="Capture White's stone"
+%}
 
 ## Groups
 
 **Groups** of stones of the same color placed **horizontally or vertically** adjacent to each other **share liberties**.
 
 {% include go_diagram.html
+id="group_8_liberties"
 sgf="/go/lesson_0/group_8_liberties.sgf"
 content="White's group has 8 liberties"
 %}
 
 If a group of stones loses all of its liberties, **the entire group** is captured.
 
-<div class="two-col-container">
-<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" style="min-width: 300px; margin: 0" data-wgo-move="999" data-wgo-enablewheel="false" >
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-<div markdown="1">
-</div>
-</div>
+{% include go_tsumego.html
+id="group_8_liberties_capture"
+sgf="/go/lesson_0/group_8_liberties_capture.sgf"
+content="Capture White's group"
+%}
 
-You can **escape** from being captured by connecting to a group and extend it's liberties.
+You can **escape** from being captured by extending a group to gain more liberties.
 
-<div class="two-col-container">
-<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" style="min-width: 300px; margin: 0" data-wgo-move="999" data-wgo-enablewheel="false" >
-Your browser doesn't support WGo Player. Use some modern browser.
-</div>
-<div markdown="1">
-</div>
-</div>
-<!--
-<div style="width: 20%; margin: 0; background-color: #f9f9f9; padding: 10px; border-radius: 10px" id="tsumego_wrapper">
-Your browser doesn't support WGo Player. Use some modern browser.
-</div> -->
-
-<!--
-<script>
-var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
-	sgf: "(;FF[4]GM[1]VW[aa:jg]SZ[19]ST[2]EV[N° 1 .|. Level #2]AB[bb][cb][db][fb]AW[ea][eb][bc][cc][dc]C[Black to play]FG[1](;B[ec];W[fc];B[ed];W[gb](;B[fd];W[gc](;B[ab];W[ba](;B[bd];W[cd];B[ce];W[be](;B[dd];W[ad];B[ac]C[Correct!]TE[1])(;B[ac];W[ad];B[dd]C[Correct!]TE[1]))(;B[ce];W[ac]C[Fail!]))(;B[da];W[fa];B[ab];W[ba]C[Fail!]))(;B[ab];W[ba];B[fd];W[gc](;B[bd];W[cd];B[ce];W[be](;B[dd];W[ad];B[ac]C[Correct!]TE[1])(;B[ac];W[ad];B[dd]C[Correct!]TE[1]))(;B[ce];W[ac]C[Fail!]))(;B[da];W[fa];B[ab];W[ba]C[Fail!]))(;B[da];W[fc];B[ab];W[ba]C[Fail!]))",
-	debug: true, /* remove this line hide solution */
-});
-tsumego.setCoordinates(true);
-</script> -->
+{% include go_tsumego.html
+id="save_1"
+sgf="/go/lesson_0/save_1.sgf"
+content="Save White's stone"
+%}

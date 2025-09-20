@@ -3,11 +3,12 @@
         data-wgo="{{ include.sgf }}"
         data-wgo-layout=""
         class="wgo-large"
-        style="min-width: 300px; margin: 0; background: transparent"
+        style="min-width: 300px; margin: 0"
         data-wgo-move="999"
         data-wgo-enablewheel="false"
+        data-wgo-board="background: ''"
     >
         Your browser doesn't support WGo Player. Use some modern browser.
     </div>
-    <div>{{ include.content }}</div>
+    <div>{{ include.content | markdownify }}</div>
 </div>
