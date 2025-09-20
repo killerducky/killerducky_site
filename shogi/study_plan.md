@@ -2,8 +2,6 @@
 layout: default
 ---
 
-[Back to Shogi top](intro)
-
 Join [Shogi Harbour's Discord](https://discord.gg/wggn65v)
 
 -   [Introduction](#introduction)

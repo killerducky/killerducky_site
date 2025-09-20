@@ -524,7 +524,8 @@ function main() {
     // push_fold_ev(0, 1);
     // push_fold_ev(1, 0);
     simplify_types();
-    pushFoldChart();
+    console.log("WIP for now don't show pushFoldChart");
+    // pushFoldChart();
     riichi_dama_ev();
     updateTable(9, 15, true);
     document
