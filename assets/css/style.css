@@ -16,12 +16,21 @@ header {
     color: hsl(0, 0%, 95%);
     padding: 15px;
     text-align: center;
-    font-size: 1.5em;
+    font-size: clamp(1em, 4vw, 1.5em);
 }
 /* This isn't really needed now that Nav is always horizontal */
 .container {
     display: flex;
     flex-direction: column;
+}
+.two-col-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+}
+.two-col-container > * {
+    flex: 1;
 }
 .nav {
     background: hsl(210, 70%, 40%);
@@ -33,6 +42,7 @@ header {
     gap: 1rem;
     padding: 1rem;
 }
+/* narrow screens */
 @media (max-width: 767px) {
     ul {
         padding-left: 1em;
@@ -43,7 +53,11 @@ header {
     ul ul ul {
         padding-left: 0.4em;
     }
+    .two-col-container {
+        flex-direction: column;
+    }
 }
+/* wide screens */
 @media (min-width: 768px) {
     main {
         flex: 1;

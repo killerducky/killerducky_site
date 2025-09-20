@@ -1,0 +1,13 @@
+(;GM[1]FF[4]CA[UTF-8]AP[Sabaki:0.52.2]KM[7.5]SZ[7]DT[2025-09-18]C[Here is a simple game on a 7x7 board.]RU[AGA];B[dd]C[Black plays first.];W[ed]C[Then White plays.];B[de]C[The players continue placing stones on the board in turn.];W[ee]C[For this example both players simply make a straight wall.];B[dc]C["A stone laid is a stone played" -- you cannot move a stone on the board.];W[ec]C[Continue until the walls are finished.];B[df];W[ef];B[db];W[eb];B[dg];W[eg];B[da]
+;W[ea]C[Now the board is cleanly divided. Black decides there are no more moves that would change the score, so Black passes.];B[]C[White also decides there is nothing more to do, so White also passes.];W[]C[Two passes in a row end the game. We count the final score using area scoring rules:
+
+Black has 7 living stones, and surrounds 21 empty points, total 28 points.
+
+White has 7 living stones, and surrounds 14 empty points, total 21 points. 
+
+It seems like White lost by 7 points. But since going first gives Black an advantage, White gets a bonus of 7.5 points (called komi).
+
+So White has 28.5 points, and White wins by 0.5 points.
+
+
+])
