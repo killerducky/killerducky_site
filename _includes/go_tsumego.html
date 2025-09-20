@@ -1,12 +1,14 @@
+<!-- prettier-ignore -->
+{% assign default_id = include.sgf | split: '/' | last | replace: '.sgf', '' %} 
+{% assign tsumego_id = include.id | default: default_id %}
+
 <div class="two-col-container">
-    <div class="wgo-large" id="{{ include.id | default: tsumego_wrapper}}" data-wgo-board="background: ''">
-        Your browser doesn't support WGo Player. Use some modern browser.
-    </div>
-    <div>{{include.content | markdownify }}</div>
+    <div class="wgo-large" id="{{ tsumego_id }}" data-wgo-board="background: ''">Your browser doesn't support WGo Player. Use some modern browser.</div>
+    <div>{{ include.content | markdownify }}</div>
 </div>
 
 <script>
-    var tsumego = new WGo.Tsumego(document.getElementById("{{ include.id | default: tsumego_wrapper}}"), {
+    var tsumego = new WGo.Tsumego(document.getElementById("{{ tsumego_id }}"), {
         sgfFile: "{{ include.sgf }}",
         background: "",
         // debug: true,
