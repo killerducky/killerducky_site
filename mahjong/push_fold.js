@@ -200,7 +200,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "Perfect [223m23p]",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff0000",
         "Mid Suji 19": "#ff9900",
@@ -272,7 +272,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "2x Ryanmen",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff9900",
         "Mid Suji 19": "#ff9900",
@@ -344,7 +344,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "Ryanmen + Non-ryanmen [23m246p]",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff9900",
         "Mid Suji 19": "#ff9900",
@@ -542,7 +542,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "Headless [111m23p23s]",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff0000",
         "Mid Suji 19": "#ff0000",
@@ -614,7 +614,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "2x 3-7 floaters",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff0000",
         "Mid Suji 19": "#ff9900",
@@ -686,7 +686,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "3456 + 3-7 floater",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff0000",
         "Mid Suji 19": "#ff0000",
@@ -758,7 +758,7 @@ export const push_fold_data = [
     {
         Type: "1shanten",
         Wait: "2x 3456",
-        Value: "PInfu+1",
+        Value: "Pinfu+1",
         Genbutsu: "",
         "Early Suji 19": "#ff0000",
         "Mid Suji 19": "#ff0000",

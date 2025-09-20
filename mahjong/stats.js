@@ -394,36 +394,35 @@ function pushFoldChart() {
             pushRate: null,
         };
         for (let [key, value] of Object.entries(item)) {
-            if (value[0] == "#") {
-                keys.add(key);
-                values.add(value);
-                for (let [phase, turn] of Object.entries(push_phase2turn)) {
-                    if (!key.startsWith(phase)) continue;
-                    for (let [type1, type2] of Object.entries(push_superSimpleType2SimpleType)) {
-                        if (!key.includes(type1)) continue;
-                        let risk = simple_dealin_rates[type2][turn] / 100;
-                        let pushRate = push_color2rate[value];
-                        // if: we likely push, and the risk we are pushing is greater than the maxRishPush we've seen before, update maxRishPush we have seen
-                        if (pushRate >= 0.5 && risk > item.maxRiskPush) {
-                            item.maxRiskPush = risk;
-                            item.maxRisk = {
-                                risk: risk,
-                                phase: phase,
-                                type: type2,
-                                pushRate: pushRate,
-                            };
-                        }
-                        if (pushRate <= 0.5 && risk < item.minRiskFold) {
-                            item.minRiskFold = risk;
-                            item.minRisk = {
-                                risk: risk,
-                                phase: phase,
-                                type: type2,
-                                pushRate: pushRate,
-                            };
-                        }
-                        // console.log(`${phase}=${turn} ${type1}=${type2} push:${(pushRate * 100).toFixed(0)}% risk:${(risk * 100).toFixed(0)}`);
+            if (value[0] != "#") continue;
+            // keys.add(key);
+            // values.add(value);
+            for (let [phase, turn] of Object.entries(push_phase2turn)) {
+                if (!key.startsWith(phase)) continue;
+                for (let [type1, type2] of Object.entries(push_superSimpleType2SimpleType)) {
+                    if (!key.includes(type1)) continue;
+                    let risk = simple_dealin_rates[type2][turn] / 100;
+                    let pushRate = push_color2rate[value];
+                    // if: we likely push, and the risk we are pushing is greater than the maxRishPush we've seen before, update maxRishPush we have seen
+                    if (pushRate >= 0.5 && risk > item.maxRiskPush) {
+                        item.maxRiskPush = risk;
+                        item.maxRisk = {
+                            risk: risk,
+                            phase: phase,
+                            type: type2,
+                            pushRate: pushRate,
+                        };
                     }
+                    if (pushRate <= 0.5 && risk < item.minRiskFold) {
+                        item.minRiskFold = risk;
+                        item.minRisk = {
+                            risk: risk,
+                            phase: phase,
+                            type: type2,
+                            pushRate: pushRate,
+                        };
+                    }
+                    // console.log(`${phase}=${turn} ${type1}=${type2} push:${(pushRate * 100).toFixed(0)}% risk:${(risk * 100).toFixed(0)}`);
                 }
                 // console.log(value);
             }
