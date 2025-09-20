@@ -15,8 +15,9 @@ title: Go Beginner Intro
 -   [The Rules of Go/Baduk/Weiqi](#the-rules-of-gobadukweiqi)
 -   [Game objective](#game-objective)
 -   [Example Counting the score](#example-counting-the-score)
+-   [Liberties](#liberties)
 -   [Capturing](#capturing)
-    -   [Liberties](#liberties)
+-   [Groups](#groups)
 
 ## Game objective
 
@@ -75,13 +76,11 @@ Your browser doesn't support WGo Player. Use some modern browser.
 
 -->
 
-## Capturing
+## Liberties
 
 That example was a very peaceful game. The players just divided the board in half and counted the score. But most games will not be so peaceful, Go is war! Your opponents will do their best to destroy not only your territory, but also to capture your stones. To see how stones are captured we need to learn about Liberties.
 
-### Liberties
-
--   A **Liberty** is an unoccupied intersection horizontally or vertically adjacent to a stone.
+A **Liberty** is an unoccupied intersection horizontally or vertically adjacent to a stone.
 
 <div class="two-col-container">
 <div data-wgo="/go/lesson_0/4_liberties.sgf" data-wgo-layout="" class="wgo-large" data-wgo-move="999" data-wgo-enablewheel="false" >
@@ -92,7 +91,10 @@ The White stone has 4 liberties, marked with ◻︎
 </div>
 </div>
 
--   If all the liberties are taken by the stones of opposing color, that stone is **captured** and is removed from the board.
+## Capturing
+
+If all the liberties are taken by the stones of opposing color, that stone is **captured** and is removed from the board.
+
 <div class="two-col-container">
 <div class="wgo-large" id="tsumego_wrapper">
 Your browser doesn't support WGo Player. Use some modern browser.
@@ -112,12 +114,34 @@ var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
 tsumego.setCoordinates(true);
 </script>
 
--   **Groups** of stones of the same color placed **horizontally or vertically** adjacent to each other **share liberties**.
+## Groups
 
--   If a group of stones loses all of its liberties, **the entire group** is captured.
+**Groups** of stones of the same color placed **horizontally or vertically** adjacent to each other **share liberties**.
 
--   You can **escape** from being captured by connecting to a group and extend it's liberties.
+{% include go_diagram.html
+sgf="/go/lesson_0/group_8_liberties.sgf"
+content="White's group has 8 liberties"
+%}
 
+If a group of stones loses all of its liberties, **the entire group** is captured.
+
+<div class="two-col-container">
+<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" style="min-width: 300px; margin: 0" data-wgo-move="999" data-wgo-enablewheel="false" >
+Your browser doesn't support WGo Player. Use some modern browser.
+</div>
+<div markdown="1">
+</div>
+</div>
+
+You can **escape** from being captured by connecting to a group and extend it's liberties.
+
+<div class="two-col-container">
+<div data-wgo="/go/lesson_0/first_9x9_game.sgf" data-wgo-layout="" class="wgo-large" style="min-width: 300px; margin: 0" data-wgo-move="999" data-wgo-enablewheel="false" >
+Your browser doesn't support WGo Player. Use some modern browser.
+</div>
+<div markdown="1">
+</div>
+</div>
 <!--
 <div style="width: 20%; margin: 0; background-color: #f9f9f9; padding: 10px; border-radius: 10px" id="tsumego_wrapper">
 Your browser doesn't support WGo Player. Use some modern browser.
