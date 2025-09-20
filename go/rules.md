@@ -3,6 +3,13 @@ layout: default
 title: Go Beginner Intro
 ---
 
+<script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>
+<script type="text/javascript" src="/assets/wgo.js/wgo.player.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/wgo.js/wgo.player.css" />
+<script type="text/javascript" src="/assets/wgo.js/tsumego.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/wgo.js/tsumego.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/wgo-custom.css" />
+
 ## The Rules of Go/Baduk/Weiqi
 
 -   [The Rules of Go/Baduk/Weiqi](#the-rules-of-gobadukweiqi)
@@ -29,23 +36,23 @@ Your browser doesn't support WGo Player. Use some modern browser.
 </div>
 
 <div markdown="1">
-Out of the 81 intersections on the board:
+Out of the 81 intersections:
 
 -   Black controls:
     -   30 empty intersections (shown with △)
     -   14 stones
+    -   44 points total
 -   White controls:
     -   24 empty intersections (shown with ○)
     -   13 stones
+    -   37 points total
 
-So the raw totals are:
-
--   Black: 44 points
--   White: 37 points
+</div>
+</div>
 
 So Black seems ahead by 7 points.
 
-But there's one more rule: to make up for moving second, White is given a bonus called komi. In this example, komi is 7.5 points.
+But there's one more rule: to make up for moving second, White is given a bonus called **komi**. In this example, komi is 7.5 points.
 
 With komi added:
 
@@ -53,9 +60,6 @@ With komi added:
 -   Black stays at 44.
 
 That means White wins by 0.5 points!
-
-</div>
-</div>
 
 <!-- Diagram + explaination text -->
 
@@ -84,32 +88,35 @@ That example was a very peaceful game. The players just divided the board in hal
 Your browser doesn't support WGo Player. Use some modern browser.
 </div>
 <div markdown="1">
-4 liberties are marked with ◻︎
+The White stone has 4 liberties, marked with ◻︎
 </div>
 </div>
 
 -   If all the liberties are taken by the stones of opposing color, that stone is **captured** and is removed from the board.
 <div class="two-col-container">
-<div data-wgo="/go/lesson_0/capture_1.sgf" data-wgo-layout="" class="wgo-large" data-wgo-move="999" data-wgo-enablewheel="false" >
+<div class="wgo-large" id="tsumego_wrapper">
 Your browser doesn't support WGo Player. Use some modern browser.
 </div>
+
 <div markdown="1">
 Capture White's stone
 </div>
 </div>
+
+<script>
+// let sgf = WGo.loadSgfFromFile("/go/lesson_0/capture_1.sgf");
+var tsumego = new WGo.Tsumego(document.getElementById("tsumego_wrapper"), {
+	sgfFile: "/go/lesson_0/capture_1.sgf",
+	// debug: true,
+});
+tsumego.setCoordinates(true);
+</script>
 
 -   **Groups** of stones of the same color placed **horizontally or vertically** adjacent to each other **share liberties**.
 
 -   If a group of stones loses all of its liberties, **the entire group** is captured.
 
 -   You can **escape** from being captured by connecting to a group and extend it's liberties.
-
-<script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>
-<script type="text/javascript" src="/assets/wgo.js/wgo.player.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/assets/wgo.js/wgo.player.css" />
-<script type="text/javascript" src="/assets/wgo.js/tsumego.js"></script>
-<link rel="stylesheet" type="text/css" href="/assets/wgo.js/tsumego.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/wgo-custom.css" />
 
 <!--
 <div style="width: 20%; margin: 0; background-color: #f9f9f9; padding: 10px; border-radius: 10px" id="tsumego_wrapper">

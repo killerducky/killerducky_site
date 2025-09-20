@@ -375,7 +375,7 @@
         if (!e.node.comment) {
             switch (e.node._ev) {
                 case 0:
-                    this.setInfo("Incorrect solution! Try again.");
+                    this.setInfo("Wrong, try again.");
                     break;
                 case 1:
                     this.setInfo("There is a better way to solve this! Try again.");
@@ -387,7 +387,7 @@
                     this.setInfo("You have solved it!");
                     break;
                 default:
-                    this.setInfo("Unknown move - probably incorrect.");
+                    this.setInfo("Wrong, try again.");
                     break;
             }
         }

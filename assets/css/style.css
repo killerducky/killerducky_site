@@ -30,7 +30,7 @@ header {
     align-items: flex-start;
 }
 .two-col-container > * {
-    flex: 1;
+    flex: fr;
 }
 .nav {
     background: hsl(210, 70%, 40%);
