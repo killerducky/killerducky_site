@@ -1,6 +1,8 @@
 ---
 layout: default
 title: How to play Go
+previous: go/how-to-play
+next: go/basic-techniques
 ---
 
 <script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>
@@ -149,9 +151,11 @@ Let's shift focus from prolonging the game to ending it quickly, so you can get 
 
 Recall the definition of **Territory** — Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.) Even if an area seems clearly under your control, just one opponent stone in there means it's not yet your territory.
 
+Instead of playing out the capturing moves, the players may both pass and agree that certain stones are dead. If they agree, those stones are removed and the score is counted.
+
 {% capture diagram_text %}
 
-Here both Black and White need to play one more move to confirm their territories. Instead of playing out those moves, the players can pass in this position and agree that certain stones are dead. If both players agree, the dead stones are removed and the score is counted. On a 9x9 board it's just a couple moves saved, but on larger boards it could save quite a few moves.
+Here both Black and White need to play one more move to confirm their territories. On a 9x9 board it's just a couple moves saved, but on larger boards it could save quite a few moves.
 
 After agreeing the score is:
 
@@ -172,6 +176,8 @@ After agreeing the score is:
    content=diagram_text
 %}
 
-If there is a disagreement about the status of one or more groups, play is resumed with the opponent of the last player to pass having the move. The game is over when the players agree on the status of all groups on the board, or, failing such agreement, if both players pass twice in succession. In this case any stones remaining on the board are deemed alive.
+Under the AGA rules, if the players can't agree on whether certain groups are alive or dead, play continues, with the opponent of the last player to pass moving next. If they never agree and both pass twice in a row, then every stone left on the board is treated as alive.
 
-These are the official AGA rules. On [OGS](https://online-go.com), this agreement phase happens mostly automatically. After both players pass, the computer marks any stones it thinks are dead. Players then review the board and can make changes if needed. Once everything looks correct, click the "Accept removed stones" to end the game, or Cancel to continue playing if is something wrong.
+On [OGS](https://online-go.com), this agreement phase is mostly automated. After both players pass, the server marks groups it thinks are dead. Players review the marked stones and adjust them if needed. Once everything looks correct, click the "Accept removed stones" to finish the game, or Cancel to keep playing if something's wrong.
+
+In an online setting, the agreement phase is another spot where you might run into players not acting in good faith. If your OGS opponent is abusing the agreement phase, for example marking clearly alive stones as dead, use the [Call moderator](https://forums.online-go.com/t/reporting-a-guide-to-making-good-use-of-the-call-moderator-and-report-functions/36381) button ([wiki link](https://github.com/online-go/online-go.com/wiki/Chatting-&-Getting-Involved-in-the-Community#contacting-a-moderator) for the same).

@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Basic Techniques
+previous: go/how-to-end
+next: go/life-and-death
 ---
 
 <script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>

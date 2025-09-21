@@ -1,6 +1,8 @@
 ---
 layout: default
 title: How to play Go
+previous: go/intro
+next: go/how-to-end
 ---
 
 <script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>

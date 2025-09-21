@@ -1,0 +1,9 @@
+<!-- prettier-ignore -->
+<div class="PageNavigation">
+  {% if page.previous %}
+    <a class="prev" href="{{ site.baseurl }}/{{ page.previous }}">&laquo; Previous</a>
+  {% endif %}
+  {% if page.next %}
+    <a class="next" href="{{ site.baseurl }}/{{ page.next }}">Next &raquo;</a>
+  {% endif %}
+</div>

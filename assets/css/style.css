@@ -27,13 +27,10 @@ header {
     display: flex;
     flex-direction: row;
     gap: 20px;
-    align-items: center;
+    align-items: top;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
 }
-/* .two-col-container > * {
-    flex: fr;
-} */
 .two-col-container > :first-child {
     flex: 0 0 300px; /* fixed 300px */
 }
@@ -106,6 +103,38 @@ blockquote {
     float: right;
     width: 350px;
 } */
+.PageNavigation {
+    font-size: 1em;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin: 2em 0;
+    font-size: 0.95rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1em;
+}
+.PageNavigation a {
+    /* color: #0066cc; */
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.25em 0.5em;
+    border-radius: 4px;
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+.PageNavigation a:hover {
+    /* background: #f0f0f0; */
+    background: hsl(210, 70%, 95%);
+    /* color: #004999; */
+}
+.PageNavigation .prev {
+    text-align: left;
+}
+
+.PageNavigation .next {
+    text-align: right;
+}
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
