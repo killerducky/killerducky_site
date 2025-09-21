@@ -40,11 +40,11 @@ Yet another introduction to Go, under construction. Relevant [xkcd](https://xkcd
 
 #### Quick note on Area vs Territory
 
-There are two major ways to count the score in Go: **area scoring** and **territory scoring**.
+There are two main ways to count the score in Go: **area scoring** and **territory scoring**.
 
 - In territory scoring, you don't count points for your live stones on the board.
     - Instead you get a point for each **prisoner** &mdash; opponent stones you capture.
-- If both players make the same number of moves, the two methods give the same result &mdash; just counted in a differently.
+- If both players have made the same number of moves, the two methods give the same result &mdash; just counted differently.
 
 For this guide, we’ll stick with area scoring because it makes explaining the end of the game a bit simpler.
 

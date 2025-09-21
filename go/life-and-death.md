@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Life and Death
-previous: go/basic-techniques
+previous: go/net-and-ladder
 next: go/intro
 ---
 
@@ -20,7 +20,7 @@ The Go board is a battlefield. Opponents will try to surround and capture your s
 - [Suicide?](#suicide)
 - [Pointless sacrifice?](#pointless-sacrifice)
 - [Continuous sacrifices](#continuous-sacrifices)
-- [The mythical two eyes](#the-mythical-two-eyes)
+- [Life](#life)
 
 ## Suicide?
 
@@ -58,7 +58,7 @@ It's still possible to capture this group by repeating the same process. Each ti
 
 {% include go_sgf.html sgf="/go/lesson_1/capture_one_eye_3.sgf" content=diagram_text %}
 
-## The mythical two eyes
+## Life
 
 It's time to finally reveal Go's magic defense mechanism:
 
@@ -72,8 +72,16 @@ White again has three liberties inside, but this time Black starts attacking fro
 
 Now White can divide those internal liberties into two separate areas &mdash; **two eyes**.
 
-A group with two eyes is **alive**. No matter how the opponent plays, they can't fill both eyes, so the group can never be captured.
-
 {% endcapture %}
 
 {% include go_sgf.html sgf="/go/lesson_1/capture_one_eye_3_fail.sgf" content=diagram_text %}
+
+{% capture diagram_text %}
+
+A group with two eyes is **alive**. No matter how Black plays, they can't fill both eyes, so the group can never be captured.
+
+{% endcapture %}
+
+{% include go_diagram.html
+sgf="/go/lesson_1/capture_one_eye_3_fail.sgf"
+content=diagram_text %}

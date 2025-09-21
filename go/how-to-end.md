@@ -2,7 +2,7 @@
 layout: default
 title: How to play Go
 previous: go/how-to-play
-next: go/basic-techniques
+next: go/net-and-ladder
 ---
 
 <script type="text/javascript" src="/assets/wgo.js/wgo.min.js"></script>
@@ -149,7 +149,9 @@ Or: How to stop playing Go even faster.
 
 Let's shift focus from prolonging the game to ending it quickly, so you can get to the next round!
 
-Recall the definition of **Territory** — Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.) Even if an area seems clearly under your control, just one opponent stone in there means it's not yet your territory.
+Recall the definition of **Territory** — Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.)
+
+**Important**: Even if an area seems clearly under your control, just one opponent stone in there means it's not yet your territory.
 
 Instead of playing out the capturing moves, the players may both pass and agree that certain stones are dead. If they agree, those stones are removed and the score is counted.
 

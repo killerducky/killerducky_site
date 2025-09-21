@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Basic Techniques
+title: Nets and Ladders
 previous: go/how-to-end
 next: go/life-and-death
 ---
@@ -12,11 +12,11 @@ next: go/life-and-death
 <link rel="stylesheet" type="text/css" href="/assets/wgo.js/tsumego.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/wgo-custom.css" />
 
-## Basic Techniques
+## Nets and Ladders
 
-Let's learn some basic Go techniques!
+Nets and ladders are two of the most basic ways to capture stones.
 
-- [Basic Techniques](#basic-techniques)
+- [Nets and Ladders](#nets-and-ladders)
 - [Net](#net)
 - [Ladder](#ladder)
 
