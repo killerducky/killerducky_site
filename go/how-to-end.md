@@ -18,6 +18,7 @@ title: How to play Go
 - [A tragic mistake](#a-tragic-mistake)
 - [Bad faith opponent](#bad-faith-opponent)
 - [A practical note](#a-practical-note)
+- [Shortcuts!](#shortcuts)
 
 ## How do we know when it's over?
 
@@ -31,12 +32,12 @@ For experienced players this is usually obvious &mdash; they can quickly tell wh
 
 Out of the 81 intersections:
 
-- Black controls:
-    - 30 empty intersections (shown with △)
+- Black
+    - 30 points of territory (shown with △)
     - 14 stones
     - 44 points total
-- White controls:
-    - 24 empty intersections (shown with ○)
+- White
+    - 24 points of territory (shown with ○)
     - 13 stones
     - 7.5 point for komi
     - 44.5 points total
@@ -58,12 +59,12 @@ There's no rule stopping such a move. In fact, White's wall has a small weakness
 
 Black cuts, attacking the weakness in White's wall. But White captures the invasion and defends their territory. Afterwards:
 
-- Black controls:
-    - 30 empty intersections (shown with △)
+- Black:
+    - 30 points of territory (shown with △)
     - 14 stones
     - 44 points total
-- White controls:
-    - 19 empty intersections (shown with ○)
+- White:
+    - 19 points of territory (shown with ○)
     - 18 stones
     - 7.5 point for komi
     - 44.5 points total
@@ -83,12 +84,12 @@ In the end, nothing changed, so Black could have simply accepted defeat instead 
 
 But what if White misplays the defense? In this case, the invasion succeeds spectacularly and now:
 
-- Black controls:
-    - 37 empty intersections (shown with △)
+- Black:
+    - 37 points of territory (shown with △)
     - 22 stones
     - 59 points total
-- White controls:
-    - 12 empty intersections (shown with ○)
+- White:
+    - 12 points of territory (shown with ○)
     - 12 stones
     - 7.5 point for komi
     - 21.5 points total
@@ -110,12 +111,12 @@ What if White defends correctly and Black refuses to give up, dragging the game 
 
 Eventually, the stubborn player runs out of legal moves. If you're patient enough to make it to the end you will see the final score is:
 
-- Black controls:
-    - 1 empty intersection
+- Black:
+    - 1 point of territory
     - 44 stones
     - 45 points total
-- White controls:
-    - 8 empty intersections
+- White:
+    - 8 points of territory
     - 29 stones
     - 7.5 point for komi
     - 44.5 points total
@@ -142,6 +143,35 @@ If you are playing on [OGS](https://online-go.com), use the [Call moderator](htt
 
 ## Shortcuts!
 
-Or: How to stop playing Go even faster
+Or: How to stop playing Go even faster.
 
-Let's shift focus from prolonging the game to shortening it up. We need to end this quick so we can play another game!
+Let's shift focus from prolonging the game to ending it quickly, so you can get to the next round!
+
+Recall the definition of **Territory** — Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.) Even if an area seems clearly under your control, just one opponent stone in there means it's not yet your territory.
+
+{% capture diagram_text %}
+
+Here both Black and White need to play one more move to confirm their territories. Instead of playing out those moves, the players can pass in this position and agree that certain stones are dead. If both players agree, the dead stones are removed and the score is counted. On a 9x9 board it's just a couple moves saved, but on larger boards it could save quite a few moves.
+
+After agreeing the score is:
+
+- Black:
+    - 25 points of territory
+    - 21 stones
+    - 46 points total
+- White:
+    - 17 points of territory
+    - 20 stones
+    - 7.5 point for komi
+    - 44.5 points total
+
+{% endcapture %}
+
+{% include go_diagram.html
+   sgf="/go/lesson_0/agree-dead.sgf"
+   content=diagram_text
+%}
+
+If there is a disagreement about the status of one or more groups, play is resumed with the opponent of the last player to pass having the move. The game is over when the players agree on the status of all groups on the board, or, failing such agreement, if both players pass twice in succession. In this case any stones remaining on the board are deemed alive.
+
+These are the official AGA rules. On [OGS](https://online-go.com), this agreement phase happens mostly automatically. After both players pass, the computer marks any stones it thinks are dead. Players then review the board and can make changes if needed. Once everything looks correct, click the "Accept removed stones" to end the game, or Cancel to continue playing if is something wrong.

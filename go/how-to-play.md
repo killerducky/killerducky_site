@@ -15,6 +15,7 @@ title: How to play Go
 - [How to play Go](#how-to-play-go)
 - [Under construction](#under-construction)
 - [Game objective](#game-objective)
+    - [Quick note on Area vs Territory](#quick-note-on-area-vs-territory)
 - [Example Counting the score](#example-counting-the-score)
 - [Liberties](#liberties)
 - [Capturing](#capturing)
@@ -31,7 +32,21 @@ Yet another introduction to Go, under construction. Relevant [xkcd](https://xkcd
 - The goal is to control more area than your opponent
 - Control comes from:
     - **Territory** &mdash; Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.)
-    - **Live stones** &mdash; all the intersections your stones already occupy.
+    - **Live stones** &mdash; all the intersections your stones already occupy. -
+
+<aside markdown=1>
+
+#### Quick note on Area vs Territory
+
+There are two major ways to count the score in Go: **area scoring** and **territory scoring**.
+
+- In territory scoring, you don't count points for your live stones on the board.
+    - Instead you get a point for each **prisoner** &mdash; opponent stones you capture.
+- If both players make the same number of moves, the two methods give the same result &mdash; just counted in a differently.
+
+For this guide, we’ll stick with area scoring because it makes explaining the end of the game a bit simpler.
+
+</aside>
 
 ## Example Counting the score
 
@@ -42,11 +57,11 @@ Here's an example of a finished 9x9 game.
 Out of the 81 intersections:
 
 - Black controls:
-    - 30 empty intersections (shown with △)
+    - 30 points of territory (shown with △)
     - 14 stones
     - 44 points total
 - White controls:
-    - 24 empty intersections (shown with ○)
+    - 24 points of territory (shown with ○)
     - 13 stones
     - 37 points total
 
@@ -57,11 +72,7 @@ Out of the 81 intersections:
    content=diagram_text
 %}
 
-So Black seems ahead by 7 points.
-
-But there's another rule: to balance the game, White is given a bonus called **komi**. In this example, komi is 7.5 points.
-
-With komi added:
+So Black seems ahead by 7 points, but there's another rule: to balance the game, White is given a bonus called **komi**. In this example, komi is 7.5 points. With komi added:
 
 - White's score becomes 44.5.
 - Black stays at 44.
