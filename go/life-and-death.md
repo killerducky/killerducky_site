@@ -23,6 +23,8 @@ The Go board is a battlefield. Opponents will try to surround and capture your s
 - [Life](#life)
 - [Life without two eyes?](#life-without-two-eyes)
 - [False eyes](#false-eyes)
+- [False eyes and kos](#false-eyes-and-kos)
+  - [Some kos matter!](#some-kos-matter)
 
 ## Suicide?
 
@@ -119,3 +121,35 @@ White's eye at B isn't solid. Black can play A to turn B into a **false eye**. N
 {% endcapture %}
 
 {% include go_tsumego.html sgf="/go/lesson_1/false_eye.sgf" content=diagram_text %}
+
+## False eyes and kos
+
+Sometimes a false eye will involve a ko. But if winning the **ko-fight** still doesn't save the group, we consider the group dead right away.
+
+{% capture diagram_text %}
+
+Black must **throw-in** a stone at **A**. This stops White from playing there to solidify the eye at **B**.
+
+**A** becomes a **false eye**, and White is dead even though there is a ko-fight left over.
+
+{% endcapture %}
+
+{% include go_tsumego.html sgf="/go/lesson_1/false_eye_ko.sgf" content=diagram_text %}
+
+Since the group is already dead after Black's throw-in at **A**, in a real game both players will move on to unresolved parts of the board. Also in a **tsumego** (life and death) problem, it's considered solved at that point. Remember from the [shortcuts](how-to-end#shortcuts) section that players don't usually play out all the moves needed to capture dead stones. In this case, even though a ko fight is involved, the group will eventually die anyways.
+
+### Some kos matter!
+
+Here's an example where the ko really matters.
+
+{% capture diagram_text %}
+
+Black plays A to try to make B a false eye.
+
+But to keep the eye false, Black must win the **ko-fight**.
+
+{% endcapture %}
+
+{% include go_tsumego.html sgf="/go/lesson_1/false_eye_ko_matters.sgf" content=diagram_text %}
+
+In a real game, both players would have to weigh whether to keep fighting this ko or play elsewhere and concede it. In a **tsumego** problem, though, it's considered solved as soon as the ko-fight begins. The group’s fate now hinges on the ko: if there was no way to kill it cleanly without a ko, that already counts as a success for the attacker.

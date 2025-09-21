@@ -50,6 +50,10 @@
     height: 100px;
 }
 
+.wgo-tsumego-comment {
+    height: 4rem;
+}
+
 /* prevent useless whitespace */
 /* .wgo-player-board {
     height: auto !important;
