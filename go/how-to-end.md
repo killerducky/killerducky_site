@@ -10,9 +10,9 @@ title: How to play Go
 <link rel="stylesheet" type="text/css" href="/assets/wgo.js/tsumego.css">
 <link rel="stylesheet" type="text/css" href="/assets/css/wgo-custom.css" />
 
-## How to **stop** playing Go!
+## How to **stop** playing Go
 
-- [How to **stop** playing Go!](#how-to-stop-playing-go)
+- [How to **stop** playing Go](#how-to-stop-playing-go)
 - [How do we know when it's over?](#how-do-we-know-when-its-over)
 - [A desperate invasion](#a-desperate-invasion)
 - [A tragic mistake](#a-tragic-mistake)
@@ -21,11 +21,11 @@ title: How to play Go
 
 ## How do we know when it's over?
 
-A major dilemma for new Go players is figuring out when the game is over. Unlike chess with a clear end condition, capture the King, Go ends when... well whenever the players agree to end.
+A common dilemma for new Go players is figuring out when the game ends. Unlike chess, which ends when the King is captured, Go ends when the players **agree** it's over.
 
-And how do you agree to end? By passing. If **both** players pass back to back, then you can end the game and count the score.
+And how do you agree to end? By passing. If **both** players pass in succession, the game ends and the score is counted.
 
-Between two experience players this isn't a problem, they will easily see when there isn't anything useful left to do. But for newer players it can be a real challenge. Let's revisit the first diagram from the [how-to-play](how-to-play#example-counting-the-score) page.
+For experienced players this is usually obvious &mdash; they can quickly tell when no meaningful moves remain. But for beginners, it's often much harder. Let's revisit the first diagram from the [how-to-play](how-to-play#example-counting-the-score) page.
 
 {% capture diagram_text %}
 
@@ -50,11 +50,13 @@ Out of the 81 intersections:
 
 ## A desperate invasion
 
-The last two moves of this game both players passed. But suppose Black counts and realizes they are going to lose (maybe they suddenly remembered that pesky komi rule?). There isn't anything stopping them from trying to invade White's area. In fact there is one small weakness in White's wall... Go is war! The only territory is territory that you can defend against any and all invasions.
+In our example game, both players passed on the final two moves. But imagine Black suddenly realizes they're losing (maybe they just remembered that pesky komi rule). Instead of accepting defeat, Black decides to invade White's territory.
+
+There's no rule stopping such a move. In fact, White's wall has a small weakness. Go is war! Territory isn't yours unless you can defend it against any invasion.
 
 {% capture diagram_text %}
 
-Black tries to attack the weakness in White's wall by cutting it. But White is able to capture this invasion and defend their territory. At the end of the variation:
+Black cuts, attacking the weakness in White's wall. But White captures the invasion and defends their territory. Afterwards:
 
 - Black controls:
     - 30 empty intersections (shown with △)
@@ -66,7 +68,7 @@ Black tries to attack the weakness in White's wall by cutting it. But White is a
     - 7.5 point for komi
     - 44.5 points total
 
-In the end, nothing changed, so Black may as well have accepted his defeat instead of trying this invasion.
+In the end, nothing changed, so Black could have simply accepted defeat instead of trying this invasion.
 
 {% endcapture %}
 
@@ -79,7 +81,7 @@ In the end, nothing changed, so Black may as well have accepted his defeat inste
 
 {% capture diagram_text %}
 
-What if Black tried the same attack, but White got a little careless? After White's disaster the score is now:
+But what if White misplays the defense? In this case, the invasion succeeds spectacularly and now:
 
 - Black controls:
     - 37 empty intersections (shown with △)
@@ -104,9 +106,9 @@ Black wins by a landslide &mdash; 37.5 points.
 
 {% capture diagram_text %}
 
-What if White defends correctly, but Black gets stubborn? If the game ends by agreement, but one side **never agrees**, how does the game end?
+What if White defends correctly and Black refuses to give up, dragging the game on with pointless moves? If one player never agrees the game is over, what happens then?
 
-Eventually there is a forced way to end the shenanigans &mdash; you simply wait for the opponent to have no legal moves left. If you're patient enough to make it to the end you will see the final result is:
+Eventually, the stubborn player runs out of legal moves. If you're patient enough to make it to the end you will see the final score is:
 
 - Black controls:
     - 1 empty intersection
@@ -118,7 +120,7 @@ Eventually there is a forced way to end the shenanigans &mdash; you simply wait 
     - 7.5 point for komi
     - 44.5 points total
 
-And after all, nothing changed. White still wins by 0.5 points.
+And still nothing changed. White still wins by 0.5 points.
 
 {% endcapture %}
 
@@ -129,9 +131,17 @@ And after all, nothing changed. White still wins by 0.5 points.
 
 ## A practical note
 
-The previous example is extreme, but for beginners it's not easy to know what is a reasonable attempt and what is a waste of time. If you are playing in good faith, there's nothing wrong with playing out situations that you're not sure about. But especially if you're playing online against an unknown opponent, you might run into:
+The previous example is extreme, but for beginners it can genuinely be hard to tell the difference between a real invasion attempt and a pointless one. If you are playing in good faith, there's nothing wrong with "playing it out" to learn.
 
-- Beginners that legitimately don't know how to end the game
-- Opponents that are not playing in good faith &mdash; they might be trying to test your patience or even get you to resign.
+But especially online against an unknown opponent, you might run into:
 
-If you are playing on [OGS](https://online-go.com), you should use the [Call moderator](https://forums.online-go.com/t/reporting-a-guide-to-making-good-use-of-the-call-moderator-and-report-functions/36381) button ([wiki link](https://github.com/online-go/online-go.com/wiki/Chatting-&-Getting-Involved-in-the-Community#contacting-a-moderator) for the same) if the situation truly gets out of hand.
+- Beginners who simply don't know they are supposed to pass.
+- Opponents not acting in good faith &mdash; stalling in hopes you'll give up.
+
+If you are playing on [OGS](https://online-go.com), use the [Call moderator](https://forums.online-go.com/t/reporting-a-guide-to-making-good-use-of-the-call-moderator-and-report-functions/36381) button ([wiki link](https://github.com/online-go/online-go.com/wiki/Chatting-&-Getting-Involved-in-the-Community#contacting-a-moderator) for the same) if things get out of hand.
+
+## Shortcuts!
+
+Or: How to stop playing Go even faster
+
+Let's shift focus from prolonging the game to shortening it up. We need to end this quick so we can play another game!

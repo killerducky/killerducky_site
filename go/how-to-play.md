@@ -29,9 +29,9 @@ Yet another introduction to Go, under construction. Relevant [xkcd](https://xkcd
 ## Game objective
 
 - The goal is to control more area than your opponent
-- Control includes:
-    - Empty intersections that only reach your stones (like a paint-fill)
-    - The intersections where your stones are placed
+- Control comes from:
+    - **Territory** &mdash; Empty intersections sealed off by your stones. (Picture a flood fill: if the color can only reach your stones, the area is yours.)
+    - **Live stones** &mdash; all the intersections your stones already occupy.
 
 ## Example Counting the score
 
