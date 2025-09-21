@@ -87,8 +87,8 @@ a:hover {
 }
 main {
     padding: 20px;
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 1 1 auto; /* Not sure I need this anymore without side nav? */
+    /* min-width: 0; */
 }
 blockquote {
     font-style: italic;

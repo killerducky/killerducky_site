@@ -47,7 +47,7 @@
 
 /* save more space, override hardcoded wgo height */
 .wgo-player-bottom .wgo-comments-wrapper {
-    height: 300px;
+    height: 100px;
 }
 
 /* prevent useless whitespace */

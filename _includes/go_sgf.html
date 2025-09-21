@@ -1,0 +1,14 @@
+<!-- data-wgo-layout="left: ['InfoBox', 'CommentBox'], bottom: ['Control']" -->
+
+<div class="two-col-container">
+    <div
+        data-wgo="{{ include.sgf }}"
+        data-wgo-layout="bottom: ['Control', 'CommentBox']"
+        class="wgo-large"
+        style="min-width: 300px; margin: 0"
+        data-wgo-board="background: ''"
+    >
+        Your browser doesn't support WGo Player. Use some modern browser.
+    </div>
+    <div>{{ include.content | markdownify }}</div>
+</div>
