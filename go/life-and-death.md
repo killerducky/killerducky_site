@@ -21,6 +21,8 @@ The Go board is a battlefield. Opponents will try to surround and capture your s
 - [Pointless sacrifice?](#pointless-sacrifice)
 - [Continuous sacrifices](#continuous-sacrifices)
 - [Life](#life)
+- [Life without two eyes?](#life-without-two-eyes)
+- [False eyes](#false-eyes)
 
 ## Suicide?
 
@@ -85,3 +87,35 @@ A group with two eyes is **alive**. No matter how Black plays, they can't fill b
 {% include go_diagram.html
 sgf="/go/lesson_1/capture_one_eye_3_fail.sgf"
 content=diagram_text %}
+
+## Life without two eyes?
+
+Below, Black has four internal liberties in a straight line. As your **eye space** grows, it becomes easier to split it into **two eyes**. In this position, we don't even need to move yet:
+
+- If White plays A, we respond at B
+- If White plays B, we respond at A.
+- This situation is called **miai** &mdash; there are two **vital points** and White cannot play both.
+
+{% capture diagram_text %}
+
+Since we have **miai** to live, we can **tenuki** and play the more useful move at T.
+
+If White tries to kill, respond at the other **vital point**.
+
+{% endcapture %}
+
+{% include go_tsumego.html sgf="/go/lesson_1/straight_4_alive.sgf" content=diagram_text %}
+
+**Key Point**: You don't have to actually form two eyes to be alive, _as long as_ you have multiple options to do so when the opponent attacks.
+
+## False eyes
+
+In the examples so far, the stones were all solidly connected. But when there are cutting points, the situation can change.
+
+{% capture diagram_text %}
+
+White's eye at B isn't solid. Black can play A to turn B into a **false eye**. Next Black can capture some of the stones forming the eye.
+
+{% endcapture %}
+
+{% include go_tsumego.html sgf="/go/lesson_1/false_eye.sgf" content=diagram_text %}

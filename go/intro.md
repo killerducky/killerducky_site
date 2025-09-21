@@ -10,6 +10,7 @@ title: Go resources
 - [Learn Go!](#learn-go)
 - [Table of Contents](#table-of-contents)
 - [Learning Go from scratch](#learning-go-from-scratch)
+- [Beginner puzzles and lessons](#beginner-puzzles-and-lessons)
 - [Playing on OGS](#playing-on-ogs)
 - [Black to Play problems](#black-to-play-problems)
 - [Reviewing with AI](#reviewing-with-ai)
@@ -19,8 +20,16 @@ title: Go resources
 
 # Learning Go from scratch
 
-- [How to Play](how-to-play) - My own introduction, under construction
-- [Rules](https://learn-go.now.sh) - Rules at learn-go.now.sh
+This is my own introduction — still a work in progress.
+
+- [How to Play Go](how-to-play) &mdash; The easy part: learning how to place stones and follow basic rules
+- [How to **Stop** playing Go](how-to-end) &mdash; The tricky part: knowing when the game is over
+- [Nets and Ladders](net-and-ladder) &mdash; The bread and butter of capturing stones
+- [Life and Death](life-and-death) &mdash; The real challenge: keeping your stones alive and capturing others
+- [Official AGA Rules](aga-concise-rules) &mdash; The official rules, in case curiosity strikes
+
+# Beginner puzzles and lessons
+
 - [Basic Tactics](https://online-go.com/puzzle/1493) - Basic captures, nets, ladders, etc.
 - [More basic tactics](https://online-go.com/puzzle/1769) - Mark5000’s Tactics Tutor – basic instincts of hane at head of two etc.
 - [Basic Life and Death](https://online-go.com/puzzle/2625) - Mark5000’s tsumego
