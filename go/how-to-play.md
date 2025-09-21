@@ -94,9 +94,18 @@ A **Liberty** is an empty intersection directly adjacent to a stone, either hori
 
 If all the liberties of a stone are occupied by the opponent's stones, that stone is **captured** and removed from the board.
 
+{% capture diagram_text %}
+Capture White's stone
+
+When a White stone has only one liberty left, it's said to be in **atari** &mdash; meaning it can be captured on the next move.
+
+Fun fact: Nolan Bushnell named his company Atari in 1972 after this Go term!
+
+{% endcapture %}
+
 {% include go_tsumego.html
 sgf="/go/lesson_0/capture_1.sgf"
-content="Capture White's stone"
+content=diagram_text
 %}
 
 ## Groups

@@ -1,5 +1,5 @@
 <!-- prettier-ignore -->
-{% assign default_id = include.sgf | split: '/' | last | replace: '.sgf', '' %} 
+{% assign default_id = include.sgf | split: '/' | last | replace: '.sgf', '' | prepend: 'go-id-' %} 
 {% assign tsumego_id = include.id | default: default_id %}
 
 <!-- data-wgo-layout="left: ['InfoBox', 'CommentBox'], bottom: ['Control']" -->
