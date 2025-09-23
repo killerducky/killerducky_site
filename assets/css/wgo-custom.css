@@ -8,6 +8,12 @@
     overflow-wrap: break-word;
 }
 
+.wgo-player-main {
+    font-family: "Segeo UI";
+    font-size: 1em;
+    line-height: 1.5;
+}
+
 .wgo-comments-wrapper .wgo-box-title {
     /* save space by not showing this */
     display: none;
@@ -51,7 +57,10 @@
 }
 
 .wgo-tsumego-comment {
-    height: 4rem;
+    height: 5rem;
+    font-size: 1em;
+    font-weight: normal;
+    font-family: "Segoe UI";
 }
 
 /* prevent useless whitespace */
