@@ -19,8 +19,9 @@ next: go/net-and-ladder
 - [A desperate invasion](#a-desperate-invasion)
 - [A tragic mistake](#a-tragic-mistake)
 - [Bad faith opponent](#bad-faith-opponent)
-- [A practical note](#a-practical-note)
-- [Shortcuts!](#shortcuts)
+  - [A practical note](#a-practical-note)
+  - [The details of how it finally ends](#the-details-of-how-it-finally-ends)
+- [Shortcuts — by agreement only](#shortcuts--by-agreement-only)
 
 ## How do we know when it's over?
 
@@ -107,11 +108,26 @@ Black wins by a landslide &mdash; 37.5 points.
 
 ## Bad faith opponent
 
+What if White defends correctly but Black refuses to give up, dragging the game on with pointless moves? If one player never agrees the game is over, what happens then?
+
+### A practical note
+
+The following example is extreme, but for beginners it can genuinely be hard to tell the difference between a real invasion attempt and a pointless one. If you are playing in good faith, there's nothing wrong with "playing it out" to learn.
+
+But especially online against an unknown opponent, you might run into:
+
+- Beginners who simply don't know they are supposed to pass.
+- Opponents not acting in good faith &mdash; stalling in hopes you'll give up.
+
+If you are playing on [OGS](https://online-go.com), use the [Call moderator](https://forums.online-go.com/t/reporting-a-guide-to-making-good-use-of-the-call-moderator-and-report-functions/36381) button ([wiki link](https://github.com/online-go/online-go.com/wiki/Chatting-&-Getting-Involved-in-the-Community#contacting-a-moderator) for the same) if things get out of hand.
+
+### The details of how it finally ends
+
+This is gonna be pretty long &mdash; feel free to skip if you're playing with friends who won't push things this far.
+
 {% capture diagram_text %}
 
-What if White defends correctly and Black refuses to give up, dragging the game on with pointless moves? If one player never agrees the game is over, what happens then?
-
-Eventually, the stubborn player runs out of legal moves. If you're patient enough to make it to the end you will see the final score is:
+Eventually, the stubborn player runs out of legal moves. If you're patient enough to sit through it, the final score ends up as:
 
 - Black:
     - 1 point of territory
@@ -123,7 +139,7 @@ Eventually, the stubborn player runs out of legal moves. If you're patient enoug
     - 7.5 point for komi
     - 44.5 points total
 
-And still nothing changed. White still wins by 0.5 points.
+And after all that, nothing changed &mdash; White still wins by 0.5 points.
 
 {% endcapture %}
 
@@ -132,18 +148,7 @@ And still nothing changed. White still wins by 0.5 points.
    content=diagram_text
 %}
 
-## A practical note
-
-The previous example is extreme, but for beginners it can genuinely be hard to tell the difference between a real invasion attempt and a pointless one. If you are playing in good faith, there's nothing wrong with "playing it out" to learn.
-
-But especially online against an unknown opponent, you might run into:
-
-- Beginners who simply don't know they are supposed to pass.
-- Opponents not acting in good faith &mdash; stalling in hopes you'll give up.
-
-If you are playing on [OGS](https://online-go.com), use the [Call moderator](https://forums.online-go.com/t/reporting-a-guide-to-making-good-use-of-the-call-moderator-and-report-functions/36381) button ([wiki link](https://github.com/online-go/online-go.com/wiki/Chatting-&-Getting-Involved-in-the-Community#contacting-a-moderator) for the same) if things get out of hand.
-
-## Shortcuts!
+## Shortcuts &mdash; by agreement only
 
 Or: How to stop playing Go even faster.
 
@@ -157,9 +162,11 @@ Instead of playing out the capturing moves, the players may both pass and agree 
 
 {% capture diagram_text %}
 
-Here both Black and White need to play one more move to confirm their territories. On a 9x9 board it's just a couple moves saved, but on larger boards it could save quite a few moves.
+Experienced players will recognize the stones marked with ○ are hopelessly dead. Without an agreement phase, both Black and White would need to play three more moves (1, 2, 3, and A, B, C) just to prove the obvious. On a 9x9 board it's only a couple moves, but on larger boards it could mean dozens.
 
-After agreeing the score is:
+So it's common practice to just pass here, agree those stones are dead, and remove them from the board.
+
+Final score in this case:
 
 - Black:
     - 25 points of territory

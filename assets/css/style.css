@@ -3,13 +3,30 @@
 } */
 html {
     background-color: hsl(210, 100%, 90%);
-}
-body {
+    font-size: 16px;
     max-width: 1050px; /* not 1000px or less because it messes up MJS charts. need to fix that first */
-    margin: 0px auto 150px auto;
+    margin: 0px auto 100px auto;
     line-height: 1.6;
     font-family: "Segoe UI";
     display: block;
+}
+h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+h2 {
+    font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+}
+h3 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+h4 {
+    font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+}
+h5 {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+}
+h6 {
+    font-size: clamp(0.875rem, 2.5vw, 1.25rem);
 }
 header {
     background: hsl(210, 70%, 40%);
@@ -50,6 +67,9 @@ header {
 }
 /* narrow screens */
 @media (max-width: 767px) {
+    html {
+        font-size: 14px;
+    }
     ul {
         padding-left: 1em;
     }
