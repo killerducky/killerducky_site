@@ -162,7 +162,7 @@ Instead of playing out the capturing moves, the players may both pass and agree 
 
 {% capture diagram_text %}
 
-Experienced players will recognize the stones marked with ○ are hopelessly dead. Without an agreement phase, both Black and White would need to play three more moves (1, 2, 3, and A, B, C) just to prove the obvious. On a 9x9 board it's only a couple moves, but on larger boards it could mean dozens.
+Experienced players understand the stones marked ○ are hopelessly dead. Without an agreement phase, both Black and White would need to play three more moves (1, 2, 3, and A, B, C) just to prove the obvious. On a 9x9 board it's only a couple moves, but on larger boards it could mean dozens.
 
 So it's common practice to just pass here, agree those stones are dead, and remove them from the board.
 

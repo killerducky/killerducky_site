@@ -26,7 +26,7 @@ layout: main
     <p>Japanese chess &mdash; similar to Crazyhouse &mdash; every captured piece can be placed on the board as your own!</p>
   </div>
   <div class="card">
-    <h3><a href="https://www.twitch.tv/killerducky">My Twitch page</a></h3>
+    <h3><a href="https://www.twitch.tv/killerducky">Twitch</a></h3>
     <p>Come learn a new game with me live!</p>
   </div>
 </div>
