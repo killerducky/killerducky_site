@@ -165,6 +165,8 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
         console.log(log);
         dbPlayerData.games = [...games, ...(dbPlayerData.games || [])];
         await addPlayer(pname, pidx, dbPlayerData.info, dbPlayerData.games);
+        // cache headers (valid for 2 minutes) -- should cut 90% of the users doing quick multiple refreshes
+        res.set("Cache-Control", "public, max-age=180");
         res.json(dbPlayerData);
     } catch (err) {
         log += ` Error:${err}`;

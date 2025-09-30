@@ -319,6 +319,17 @@ class Player {
             name: `rp`,
             hovertemplate: "%{text}<extra></extra>",
         });
+        // go backwards so inserting doesn't mess up indices
+        for (let index = games.length - 1; index >= 1; index--) {
+            let game = games[index];
+            let prevGame = games[index - 1];
+            // Demotion/promotion or last section
+            if (prevGame.player.level != game.player.level) {
+                traces[0].x.splice(index, 0, index);
+                traces[0].y.splice(index, 0, level_pt_sum_base[game.player.level]);
+                traces[0].text.splice(index, 0, `${traces[0].text[index - 1]} ${game.player.level > prevGame.player.level ? "promote" : "demote"}`);
+            }
+        }
 
         layout = {
             title: {
