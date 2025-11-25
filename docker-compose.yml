@@ -1,62 +1,62 @@
 version: "3.9"
 
 services:
-    db:
-        image: mysql:8
-        container_name: mahjong-mysql
-        restart: always
-        environment:
-            MYSQL_ROOT_PASSWORD: rootpass
-            MYSQL_DATABASE: mahjong
-            MYSQL_USER: mahjonguser
-            MYSQL_PASSWORD: mahjongpass
-        volumes:
-            - db_data:/var/lib/mysql
-        ports:
-            - "3306:3306"
+  db:
+    image: mysql:8
+    container_name: mahjong-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mahjong
+      MYSQL_USER: mahjonguser
+      MYSQL_PASSWORD: mahjongpass
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
 
-    nodeapp:
-        build: ./server
-        container_name: server-nodeapp
-        restart: always
-        environment:
-            DB_HOST: mahjong-mysql
-            DB_USER: root
-            DB_PASSWORD: rootpass
-            DB_NAME: mahjong
-        depends_on:
-            - db
-        ports:
-            - "3000:3000"
+  nodeapp:
+    build: ./server
+    container_name: server-nodeapp
+    restart: always
+    environment:
+      DB_HOST: mahjong-mysql
+      DB_USER: root
+      DB_PASSWORD: rootpass
+      DB_NAME: mahjong
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
 
-    jekyll:
-        build:
-            context: .
-            dockerfile: dockerfile-jekyll
-        container_name: killerducky_site-jekyll
-        ports:
-            - "4000:4000"
-        volumes:
-            - ./site:/srv/jekyll
-        environment:
-            JEKYLL_ENV: ${JEKYLL_ENV:-production}
-        # restart: unless-stopped
+  jekyll:
+    build:
+      context: .
+      dockerfile: dockerfile-jekyll
+    container_name: killerducky_site-jekyll
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./site:/srv/jekyll
+    environment:
+      JEKYLL_ENV: ${JEKYLL_ENV:-production}
+    # restart: unless-stopped
 
-    nginx:
-        image: nginx:latest
-        container_name: killerducky-nginx
-        restart: always
-        volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf:ro
-            - ./site/_site:/usr/share/nginx/html:ro # use Jekyll output
-            # TODO: dev server this doesn't exist?
-            - /etc/letsencrypt:/etc/letsencrypt
-        ports:
-            - "80:80"
-            - "443:443"
-        depends_on:
-            - nodeapp
-            - jekyll
+  nginx:
+    image: nginx:latest
+    container_name: killerducky-nginx
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./site/_site:/usr/share/nginx/html:ro # use Jekyll output
+      # TODO: dev server this doesn't exist?
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - nodeapp
+      - jekyll
 
 volumes:
-    db_data:
+  db_data:
