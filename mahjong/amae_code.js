@@ -297,9 +297,9 @@ class Player {
 
     let traces = [];
 
-    // for (let [lambdaStr, lambdaFunc] of [["EMA", exponential_moving_average], ["Sliding", slidingWindowAverage]]) {
     for (let [lambdaStr, lambdaFunc] of [
       ["EMA", utils.exponential_moving_average],
+      // ["Win", utils.slidingWindowAverage],
     ]) {
       for (const [modeId, roomTypeFull] of Object.entries(
         modeId2RoomTypeFull
