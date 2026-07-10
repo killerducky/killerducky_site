@@ -17,6 +17,7 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
 - [Places to Play](#places-to-play)
   - [Lishogi](#lishogi)
   - [81dojo](#81dojo)
+  - [Kiou Shogi (棋桜)](#kiou-shogi-棋桜)
   - [Shogi Wars](#shogi-wars)
   - [Shogi Quest](#shogi-quest)
 - [Ranks and Ratings](#ranks-and-ratings)
@@ -55,6 +56,22 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
   - Shogi.CZ set shows how the pieces move on the bottom half.
   - Highlight movable squares
   - On Communication tab, Notation-Style = Chess-order
+
+## [Kiou Shogi (棋桜)](https://kioushogi.com)
+
+- Play as anime characters, get new characters using Gatcha system
+- Steam client only (iphone and android apps are region locked to Japan)
+- Three time controls: 10|30, 5+5, 3|0
+- Unlimited games for free, pay for Gatcha pulls or AI functions
+- Gatcha notes:
+  - 5% chance per pull to get a character
+    - Pick pool to target characters you want
+  - Around USD $4 for monthly pass will get you a little over 10 pulls (~50% chance of a character)
+  - Grind for around 2 free pulls a month:
+    - Login daily to get gold (playing games gets some gold too)
+    - Market -> 1st blue button -> Buy any gifts for 15,000 or 75,000 gold
+    - Dorm -> Inventory -> Convert gifts to gold boxes
+    - Market -> bottom right button -> Convert 50 gold boxes to a Gatcha pull ticket
 
 ## Shogi Wars
 

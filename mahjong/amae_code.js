@@ -1,5 +1,11 @@
 import * as utils from "./utils.js";
 
+// Secret multiple graphs function:
+// Open console (F12 on some browsers)
+// players = [["KillerDucky",0],["KillerTroll",0],["navitas",0],["Xsin",1],["IcyPhoenix",0],["MrFeng",0],["wrathss",0],["sapphiclilac",0],["LastKnight",0],["StickThief",0],["furgers",0]]
+// localStorage.setItem("players", JSON.stringify(players));
+// Reload page
+
 const EXPECTED_SCORE_DISPLAY_FLOOR = -30;
 const NUM_PLAYERS = 4; // only 4 supported for now
 const RANK_LINES = ["M1", "M2", "M3", "S1", "S2", "S3"];
@@ -131,7 +137,7 @@ function storePlayerList() {
 function last_place_normalize(
   game_type,
   rank_game_was_played_at,
-  rank_to_normalize_to
+  rank_to_normalize_to,
 ) {
   // Add this amount to the points iff we were 4th to normalize it to normalize_to_rank
   return (
@@ -184,7 +190,7 @@ class Player {
       "yaxis.range": [
         Math.min(
           ((0 - this.normalizeToRankLine) * 15.0) / 4.0 - 2,
-          Math.max(EXPECTED_SCORE_DISPLAY_FLOOR, yMin)
+          Math.max(EXPECTED_SCORE_DISPLAY_FLOOR, yMin),
         ),
         Math.max(yMax, ((5 - this.normalizeToRankLine) * 15.0) / 4.0 + 2),
       ],
@@ -230,7 +236,7 @@ class Player {
     let data = await loadPlayerData(this.pname, this.pidx);
     if (!data) {
       alert(
-        `Failed to load data for Name:${this.pname} idx:${this.pidx}\nData from https://amae-koromo.sapk.ch\nGold room and up only.`
+        `Failed to load data for Name:${this.pname} idx:${this.pidx}\nData from https://amae-koromo.sapk.ch\nGold room and up only.`,
       );
       return;
     }
@@ -241,7 +247,7 @@ class Player {
     for (let game of games) {
       game.player = game.players.find((p) => p.accountId == this.uuid);
       const players_sorted = [...game.players].sort(
-        (a, b) => a.gradingScore - b.gradingScore
+        (a, b) => a.gradingScore - b.gradingScore,
       );
       players_sorted.forEach((player, index) => {
         player.placement = players_sorted.length - index;
@@ -276,7 +282,7 @@ class Player {
         game.player.gradingScoreNorm += last_place_normalize(
           modeId2RoomLength[game["modeId"]],
           level_dan(game.player["level"]),
-          this.normRank
+          this.normRank,
         );
       }
       if (!prevGame || prevGame.player.level != game.player.level) {
@@ -302,11 +308,11 @@ class Player {
       // ["Win", utils.slidingWindowAverage],
     ]) {
       for (const [modeId, roomTypeFull] of Object.entries(
-        modeId2RoomTypeFull
+        modeId2RoomTypeFull,
       )) {
         let numMatch = games.filter((game) => game.modeId == modeId).length;
         let attr = games.map((game) =>
-          game.modeId == modeId ? game.player.gradingScoreNorm : null
+          game.modeId == modeId ? game.player.gradingScoreNorm : null,
         );
         // let gameDur = games.map((game) => (game.endTime - game.startTime) / 60);
         // Filter averages of game types we don't play often.
@@ -419,7 +425,7 @@ class Player {
         traces[0].text.splice(
           index,
           0,
-          `${traces[0].text[index - 1]} ${game.player.level > prevGame.player.level ? "promote" : "demote"}`
+          `${traces[0].text[index - 1]} ${game.player.level > prevGame.player.level ? "promote" : "demote"}`,
         );
       }
     }
@@ -457,7 +463,7 @@ class Player {
         (prevGame && prevGame.player.level != game.player.level) ||
         index == games.length - 1
       ) {
-        // console.log("level=", game.player.level, level_dan(game.player.level))
+        console.log("level=", game.player.level, level_dan(game.player.level));
         // draw vertical lines
         let x_coords = [
           prevChange,
