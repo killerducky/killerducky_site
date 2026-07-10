@@ -9,7 +9,7 @@ layout: main
 <blockquote>"What am I even supposed to do?"</blockquote>
 <p>
     This site helps beginners get over that wall, enjoy discovering the game, and learn in the best order with carefully selected resources
-    &mdash even for those approaching intermediate level.
+    &mdash; even for those approaching intermediate level.
 </p>
 <div class="cards">
   <div class="card">

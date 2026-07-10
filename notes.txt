@@ -125,3 +125,27 @@ docker exec -it killerducky-nginx sh
 nginx -s reload
 docker compose logs -ft nodeapp
 
+
+ssl renewal problem:
+nginx-prod.conf:
+         location /.well-known/acme-challenge/ {
+-           alias /var/www/letsencrypt/;
++           root /var/www/letsencrypt/;
+           try_files $uri =404;
+         }
+
+mkdir -p /var/www/letsencrypt/.well-known/acme-challenge
+
+renew cert:
+on host (not inside any docker):
+    sudo certbot certonly \
+    --webroot \
+    -w /var/www/letsencrypt \
+    -d killerducky.com \
+    -d www.killerducky.com
+
+rebuild:
+    docker compose down
+    docker compose --env-file .dev-env up -d --build
+    # Not sure if/why this last step was required, didn't it rebuild everything?
+    docker compose exec nginx nginx -s reload
