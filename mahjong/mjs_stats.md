@@ -5,25 +5,28 @@ title: MJS Charts
 
 # Mahjong Soul Charts
 
+## Disabled for now. The amae stats site now requires an API key. If I get that working later will reenable this.
+
+[Github issue](https://github.com/SAPikachu/amae-koromo/issues/126)
+
 **Usage**: Input username (adjust idx if needed) and click **Generate Graph**
 
--   First chart shows your expected rank point change per match.
+- First chart shows your expected rank point change per match.
+  - Example: If you average 25% for 1/2/3/4 placements and your current rank is Master 1, your expected rank point change will be 0.
+  - The blue lines show breakeven points for different ranks.
+    - Example: If your rank trend is on the M2 blue line, you would breakeven at M2.
+  - **Norm Rank** tells the chart which rank to assume.
+    - `auto` uses your current rank.
+  - **Last N Games** sets the initial zoom.
+  - Charts are interactive:
+    - Double click to zoom out
+    - Click and drag to zoom in
+    - Click in the legend to toggle lines
+  - Several averages are shown, each responding more or less quickly to recent results.
+  - Averages are tracked separately for Gold room and Jade room (different player pools).
+  - Only 4 player is supported.
 
-    -   Example: If you average 25% for 1/2/3/4 placements and your current rank is Master 1, your expected rank point change will be 0.
-    -   The blue lines show breakeven points for different ranks.
-        -   Example: If your rank trend is on the M2 blue line, you would breakeven at M2.
-    -   **Norm Rank** tells the chart which rank to assume.
-        -   `auto` uses your current rank.
-    -   **Last N Games** sets the initial zoom.
-    -   Charts are interactive:
-        -   Double click to zoom out
-        -   Click and drag to zoom in
-        -   Click in the legend to toggle lines
-    -   Several averages are shown, each responding more or less quickly to recent results.
-    -   Averages are tracked separately for Gold room and Jade room (different player pools).
-    -   Only 4 player is supported.
-
--   Second chart shows your rank and rank points history.
+- Second chart shows your rank and rank points history.
 
 See [Mahjong Soul Charts Explained](/blog/2025/08/30/mjs_charts_explained) for more details.
 
@@ -58,4 +61,4 @@ See [Tenhou stats](tenhou_stats) for the Tenhou version.
 </div>
 
 <script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
-<script type="module" src="./amae_code.js"></script>
+<!-- <script type="module" src="./amae_code.js"></script> -->

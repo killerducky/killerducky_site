@@ -66,8 +66,9 @@ If you're a beginner, check my [step-by-step study plan](study_plan)!
 - Gatcha notes:
   - 5% chance per pull to get a character
     - Pick pool to target characters you want
-  - Around USD $4 for monthly pass will get you a little over 10 pulls (~50% chance of a character)
-  - Grind for around 2 free pulls a month:
+  - 650 Yen ($4 USD) for monthly pass for 10 pulls (~50% chance of a character)
+    - Market -> 3rd purple button
+  - Grind for 1-2 free pulls a month:
     - Login daily to get gold (playing games gets some gold too)
     - Market -> 1st blue button -> Buy any gifts for 15,000 or 75,000 gold
     - Dorm -> Inventory -> Convert gifts to gold boxes
