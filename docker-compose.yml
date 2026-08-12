@@ -5,6 +5,8 @@ services:
     image: mysql:8
     container_name: mahjong-mysql
     restart: always
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: mahjong
@@ -19,6 +21,8 @@ services:
     build: ./server
     container_name: server-nodeapp
     restart: always
+    env_file:
+      - .env
     environment:
       DB_HOST: mahjong-mysql
       DB_USER: root

@@ -5,10 +5,6 @@ title: MJS Charts
 
 # Mahjong Soul Charts
 
-## Disabled for now. The amae stats site now requires an API key. If I get that working later will reenable this.
-
-[Github issue](https://github.com/SAPikachu/amae-koromo/issues/126)
-
 **Usage**: Input username (adjust idx if needed) and click **Generate Graph**
 
 - First chart shows your expected rank point change per match.
@@ -61,4 +57,4 @@ See [Tenhou stats](tenhou_stats) for the Tenhou version.
 </div>
 
 <script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
-<!-- <script type="module" src="./amae_code.js"></script> -->
+<script type="module" src="./amae_code.js"></script>

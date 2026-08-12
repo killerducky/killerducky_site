@@ -13,6 +13,7 @@ const JSON_DATA_BASE_FILENAME = "json_db/amae_data";
 const app = express();
 const PORT = 3000;
 const s0 = "https://5-data.amae-koromo.com/api/v2/pl4/";
+const AUTH_TOKEN = process.env.AUTH_TOKEN;
 // # 12 = 4p Hanchan Jade room, 9 = 4p Hanchan Gold room
 // # 11 = 4p Tonpuusen Jade room, 8 = 4p Tonpuusent Gold room
 const mode = "16,15,12,11,9,8";
@@ -145,16 +146,22 @@ app.get("/player/:nickname/:pidx", async (req, res) => {
       date_limit = dbPlayerData.games[0].startTime + 1; // no overlap
       // so the date_limit is exclusive -- does not include games that start on this timestamp
     }
+    // console.log(AUTH_TOKEN);
     for (let i = 0; i < 20; i++) {
       // testing shows ${start}000 will work, but just leave it as is
       let s1 = `${s0}player_records/${result.id}/${start}999/${date_limit}000?limit=500&mode=${mode}&descending=true&tag=`;
-      const res2 = await fetch(s1);
+      // console.log(s1);
+      const res2 = await fetch(s1, {
+        headers: {
+          Authorization: AUTH_TOKEN,
+        },
+      });
       const these_games = await res2.json();
       // console.log(these_games.length);
       // these_games.slice(0, 5).forEach((g) => {
       //     console.log(g.uuid, start - g.startTime, date_limit - g.startTime);
       // });
-      await delay(10);
+      await delay(1000);
       const length = these_games.length;
       if (length == 0) {
         break;
