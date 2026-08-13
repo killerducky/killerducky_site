@@ -19,16 +19,113 @@
         height: 100vh;
         overflow: hidden;
         background-color: #1e3a2b; /* Traditional felt green */
-        font-family: sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       }
 
       #sandbox {
         width: 100%;
         height: 100%;
         display: block;
-        touch-action: none; /* Prevents scrolling on touch devices during drag */
+        touch-action: none;
       }
 
+      /* Toolbar Styling */
+      .toolbar {
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 8px 12px;
+        border-radius: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      }
+
+      .btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .btn:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .btn.toggle-active {
+        background: #2563eb;
+        border-color: #60a5fa;
+        box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+      }
+
+      .divider {
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Context Menu Styling */
+      .context-menu {
+        position: absolute;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 4px;
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        display: none;
+        flex-direction: column;
+        min-width: 140px;
+      }
+
+      .context-menu .menu-item {
+        padding: 8px 12px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.12s ease;
+      }
+
+      .context-menu .menu-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .context-menu .menu-item.danger:hover {
+        background: rgba(239, 68, 68, 0.8);
+      }
+
+      /* SVG Tile styling */
       .tile-group {
         cursor: grab;
       }
@@ -38,25 +135,75 @@
         cursor: grabbing;
       }
 
-      .pool-bg {
-        fill: rgba(0, 0, 0, 0.4);
-        stroke: rgba(255, 255, 255, 0.1);
-        stroke-width: 1px;
+      /* Selected Tile Highlight */
+      .tile-group.selected .tile-bg {
+        stroke: #3b82f6;
+        stroke-width: 2.5px;
+        filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
       }
 
-      .pool-label {
-        fill: #ffffff;
-        font-size: 12px;
-        opacity: 0.6;
+      /* Selection Box Styling */
+      #selection-box {
+        fill: rgba(59, 130, 246, 0.2);
+        stroke: #3b82f6;
+        stroke-width: 1.5px;
+        stroke-dasharray: 4 4;
+        pointer-events: none;
+      }
+
+      .pool-bg {
+        fill: rgba(0, 0, 0, 0.45);
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1px;
       }
     </style>
   </head>
   <body>
-    <svg id="sandbox" xmlns="http://www.w3.org/2000/svg">
-      <!-- Main Board Area -->
-      <g id="board-layer"></g>
+    <!-- Controls Toolbar -->
+    <div class="toolbar">
+      <button id="btn-undo" class="btn" disabled title="Undo (Ctrl+Z)">
+        ↺ Undo
+      </button>
+      <button id="btn-redo" class="btn" disabled title="Redo (Ctrl+Y)">
+        ↻ Redo
+      </button>
+      <div class="divider"></div>
+      <button id="btn-reset" class="btn" title="Clear Sandbox">🗑️ Reset</button>
+      <div class="divider"></div>
+      <button
+        id="btn-snap"
+        class="btn toggle-active"
+        title="Toggle Grid/Row Snapping"
+      >
+        🧲 Snapping: <span id="snap-status">ON</span>
+      </button>
+      <button
+        id="btn-overlap"
+        class="btn toggle-active"
+        title="Toggle Auto-Separation"
+      >
+        🛡️ No Overlap: <span id="overlap-status">ON</span>
+      </button>
+    </div>
 
-      <!-- Bottom Tile Pool Area -->
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu">
+      <div id="cm-copy" class="menu-item">📋 Copy</div>
+      <div id="cm-delete" class="menu-item danger">🗑️ Delete</div>
+    </div>
+
+    <!-- Main SVG Surface -->
+    <svg id="sandbox" xmlns="http://www.w3.org/2000/svg">
+      <g id="board-layer"></g>
+      <rect
+        id="selection-box"
+        x="0"
+        y="0"
+        width="0"
+        height="0"
+        visibility="hidden"
+      />
+
       <g id="pool-layer">
         <rect
           id="pool-bg"
@@ -64,23 +211,31 @@
           x="0"
           y="0"
           width="100%"
-          height="120"
+          height="140"
         />
         <g id="pool-tiles"></g>
       </g>
     </svg>
 
     <script>
-      // Global configuration state expected by createTileSvg
+      // --- System State & Configuration ---
       const GS = {
         C_colorTileBg: "#fffff0",
       };
 
-      // Standard Tenhou numerical indexing map:
-      // 11-19: 1m - 9m
-      // 21-29: 1p - 9p
-      // 31-39: 1s - 9s
-      // 41-47: 1z - 7z
+      const SCALE = 2.2;
+      const TILE_WIDTH = 20 * SCALE; // ~44px
+      const TILE_HEIGHT = 26 * SCALE; // ~57.2px
+
+      // Default modes ON
+      let snapMode = true;
+      let preventOverlapMode = true;
+
+      let activeSelection = new Set();
+      let undoStack = [];
+      let redoStack = [];
+      let tileIdCounter = 0;
+
       function tenhou2str(tile) {
         const suitMap = { 1: "m", 2: "p", 3: "s", 4: "z" };
         const suit = Math.floor(tile / 10);
@@ -88,22 +243,47 @@
         if (suitMap[suit] && val >= 1 && val <= 9) {
           return `${val}${suitMap[suit]}`;
         }
-        return "1m"; // Default fallback
+        return "1m";
       }
 
-      // List of all standard 34 Mahjong tiles encoded in Tenhou format
       const ALL_TILES = [
-        // Manzu (1m - 9m)
-        11, 12, 13, 14, 15, 16, 17, 18, 19,
-        // Pinzu (1p - 9p)
-        21, 22, 23, 24, 25, 26, 27, 28, 29,
-        // Souzu (1s - 9s)
-        31, 32, 33, 34, 35, 36, 37, 38, 39,
-        // Honors (1z - 7z: East, South, West, North, White, Green, Red)
-        41, 42, 43, 44, 45, 46, 47,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19, // 1m-9m
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29, // 1p-9p
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39, // 1s-9s
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47, // 1z-7z
       ];
 
-      // --- Requested Function ---
+      // --- Required Tile Generator Function ---
       function createTileSvg(x, y, tile) {
         if (isNaN(tile)) {
           console.log(tile);
@@ -120,6 +300,7 @@
         backgroundRect.setAttribute("fill", GS.C_colorTileBg);
         backgroundRect.setAttribute("rx", "2px");
         backgroundRect.setAttribute("ry", "2px");
+        backgroundRect.classList.add("tile-bg");
 
         const tileSvg = document.createElementNS(
           "http://www.w3.org/2000/svg",
@@ -136,21 +317,661 @@
         return [backgroundRect, tileSvg];
       }
 
-      // --- Sandbox Application Logic ---
+      // --- DOM References ---
       const svg = document.getElementById("sandbox");
       const boardLayer = document.getElementById("board-layer");
       const poolLayer = document.getElementById("pool-layer");
       const poolBg = document.getElementById("pool-bg");
       const poolTilesGroup = document.getElementById("pool-tiles");
+      const selectionBox = document.getElementById("selection-box");
 
-      // Scale factor for rendering small SVG tile coordinates larger on screen
-      const SCALE = 2.2;
-      const TILE_WIDTH = 20 * SCALE;
-      const TILE_HEIGHT = 26 * SCALE;
+      const btnUndo = document.getElementById("btn-undo");
+      const btnRedo = document.getElementById("btn-redo");
+      const btnReset = document.getElementById("btn-reset");
+      const btnSnap = document.getElementById("btn-snap");
+      const btnOverlap = document.getElementById("btn-overlap");
+      const snapStatus = document.getElementById("snap-status");
+      const overlapStatus = document.getElementById("overlap-status");
 
+      const contextMenu = document.getElementById("context-menu");
+      const cmCopy = document.getElementById("cm-copy");
+      const cmDelete = document.getElementById("cm-delete");
+
+      // --- Context Menu Management ---
+      function showContextMenu(x, y) {
+        contextMenu.style.display = "flex";
+        const menuWidth = contextMenu.offsetWidth || 140;
+        const menuHeight = contextMenu.offsetHeight || 80;
+
+        let left = x;
+        let top = y;
+
+        if (left + menuWidth > window.innerWidth)
+          left = window.innerWidth - menuWidth - 8;
+        if (top + menuHeight > window.innerHeight)
+          top = window.innerHeight - menuHeight - 8;
+
+        contextMenu.style.left = `${left}px`;
+        contextMenu.style.top = `${top}px`;
+      }
+
+      function hideContextMenu() {
+        contextMenu.style.display = "none";
+      }
+
+      function copySelectedTiles() {
+        if (activeSelection.size === 0) return;
+
+        const offset = 16;
+        const newTilesData = [];
+        const selectedTiles = Array.from(activeSelection)
+          .map((id) => getTileById(id))
+          .filter(Boolean);
+
+        clearSelection();
+
+        selectedTiles.forEach((tileGroup) => {
+          const tileCode = parseInt(tileGroup.dataset.tile, 10);
+          const curX = parseFloat(tileGroup.dataset.x);
+          const curY = parseFloat(tileGroup.dataset.y);
+
+          const instance = spawnTileInstance(
+            curX + offset,
+            curY + offset,
+            tileCode,
+          );
+          toggleSelectTile(instance.dataset.id, true);
+
+          newTilesData.push({
+            id: instance.dataset.id,
+            tileCode,
+            x: parseFloat(instance.dataset.x),
+            y: parseFloat(instance.dataset.y),
+          });
+        });
+
+        if (preventOverlapMode) resolveOverlaps();
+
+        recordAction({ type: "ADD", tiles: newTilesData });
+        hideContextMenu();
+      }
+
+      function deleteSelectedTiles() {
+        if (activeSelection.size === 0) return;
+
+        const tilesToDelete = Array.from(activeSelection).map((id) => {
+          const t = getTileById(id);
+          return {
+            id,
+            tileCode: parseInt(t.dataset.tile, 10),
+            x: parseFloat(t.dataset.x),
+            y: parseFloat(t.dataset.y),
+          };
+        });
+
+        tilesToDelete.forEach((t) => removeTileFromBoard(t.id));
+        recordAction({ type: "DELETE", tiles: tilesToDelete });
+        hideContextMenu();
+      }
+
+      // --- Undo / Redo Engine ---
+      function recordAction(action) {
+        undoStack.push(action);
+        redoStack = [];
+        updateToolbarUI();
+      }
+
+      function updateToolbarUI() {
+        btnUndo.disabled = undoStack.length === 0;
+        btnRedo.disabled = redoStack.length === 0;
+      }
+
+      function undo() {
+        if (undoStack.length === 0) return;
+        const action = undoStack.pop();
+        redoStack.push(action);
+
+        if (action.type === "ADD") {
+          action.tiles.forEach((t) => removeTileFromBoard(t.id));
+        } else if (action.type === "MOVE") {
+          action.moves.forEach((m) =>
+            setTilePosition(getTileById(m.id), m.fromX, m.fromY),
+          );
+        } else if (action.type === "RESET" || action.type === "DELETE") {
+          action.tiles.forEach((t) =>
+            spawnTileInstance(t.x, t.y, t.tileCode, t.id),
+          );
+        }
+        if (preventOverlapMode) resolveOverlaps();
+        updateToolbarUI();
+      }
+
+      function redo() {
+        if (redoStack.length === 0) return;
+        const action = redoStack.pop();
+        undoStack.push(action);
+
+        if (action.type === "ADD") {
+          action.tiles.forEach((t) =>
+            spawnTileInstance(t.x, t.y, t.tileCode, t.id),
+          );
+        } else if (action.type === "MOVE") {
+          action.moves.forEach((m) =>
+            setTilePosition(getTileById(m.id), m.toX, m.toY),
+          );
+        } else if (action.type === "RESET") {
+          clearBoard(false);
+        } else if (action.type === "DELETE") {
+          action.tiles.forEach((t) => removeTileFromBoard(t.id));
+        }
+        if (preventOverlapMode) resolveOverlaps();
+        updateToolbarUI();
+      }
+
+      // --- Tile Management Helpers ---
+      function getTileById(id) {
+        return boardLayer.querySelector(`[data-id="${id}"]`);
+      }
+
+      function setTilePosition(tileGroup, x, y) {
+        if (!tileGroup) return;
+        tileGroup.dataset.x = x;
+        tileGroup.dataset.y = y;
+        tileGroup.setAttribute(
+          "transform",
+          `translate(${x}, ${y}) scale(${SCALE})`,
+        );
+      }
+
+      // Keeps tile coordinates constrained inside the active playing board
+      function clampTilePosition(x, y) {
+        const toolbarHeight = 70; // Clearance below toolbar
+        const poolHeight = 140; // Height reserved for pool tray
+        const minX = 0;
+        const maxX = Math.max(0, window.innerWidth - TILE_WIDTH);
+        const minY = toolbarHeight;
+        const maxY = Math.max(
+          minY,
+          window.innerHeight - poolHeight - TILE_HEIGHT,
+        );
+
+        return {
+          x: Math.min(Math.max(x, minX), maxX),
+          y: Math.min(Math.max(y, minY), maxY),
+        };
+      }
+
+      function spawnTileInstance(x, y, tileCode, customId = null) {
+        const id = customId || `tile_${++tileIdCounter}_${Date.now()}`;
+        const group = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g",
+        );
+        group.classList.add("tile-group");
+        group.dataset.id = id;
+        group.dataset.tile = tileCode;
+
+        const [bg, img] = createTileSvg(0, 0, tileCode);
+        group.appendChild(bg);
+        group.appendChild(img);
+
+        const clamped = clampTilePosition(x, y);
+        setTilePosition(group, clamped.x, clamped.y);
+
+        group.addEventListener("pointerdown", (e) =>
+          onTilePointerDown(e, group),
+        );
+        group.addEventListener("contextmenu", (e) =>
+          onTileContextMenu(e, group),
+        );
+        boardLayer.appendChild(group);
+        return group;
+      }
+
+      function removeTileFromBoard(id) {
+        const tile = getTileById(id);
+        if (tile) {
+          tile.remove();
+          activeSelection.delete(id);
+        }
+      }
+
+      function clearBoard(record = true) {
+        const tiles = Array.from(
+          boardLayer.querySelectorAll(".tile-group"),
+        ).map((t) => ({
+          id: t.dataset.id,
+          tileCode: parseInt(t.dataset.tile, 10),
+          x: parseFloat(t.dataset.x),
+          y: parseFloat(t.dataset.y),
+        }));
+
+        if (tiles.length === 0) return;
+
+        boardLayer.innerHTML = "";
+        clearSelection();
+
+        if (record) {
+          recordAction({ type: "RESET", tiles });
+        }
+      }
+
+      // --- Snapping Engine ---
+      function applySnapping(movedTiles) {
+        if (!snapMode || movedTiles.length === 0) return;
+
+        const allTiles = Array.from(boardLayer.querySelectorAll(".tile-group"));
+        const movedIds = new Set(movedTiles.map((t) => t.dataset.id));
+        const staticTiles = allTiles.filter((t) => !movedIds.has(t.dataset.id));
+
+        if (staticTiles.length === 0) return;
+
+        const SNAP_Y_THRESHOLD = 25;
+        const SNAP_X_THRESHOLD = 25;
+
+        // Find reference anchor tile (top-left tile of dragged set)
+        let anchor = movedTiles[0];
+        let anchorX = parseFloat(anchor.dataset.x);
+        let anchorY = parseFloat(anchor.dataset.y);
+
+        movedTiles.forEach((t) => {
+          const tx = parseFloat(t.dataset.x);
+          const ty = parseFloat(t.dataset.y);
+          if (ty < anchorY || (ty === anchorY && tx < anchorX)) {
+            anchor = t;
+            anchorX = tx;
+            anchorY = ty;
+          }
+        });
+
+        // 1. Vertical Row Alignment Snapping
+        let targetY = anchorY;
+        let bestYDiff = SNAP_Y_THRESHOLD;
+        let snappedYTile = null;
+
+        staticTiles.forEach((st) => {
+          const sy = parseFloat(st.dataset.y);
+          const diff = Math.abs(anchorY - sy);
+          if (diff < bestYDiff) {
+            bestYDiff = diff;
+            targetY = sy;
+            snappedYTile = st;
+          }
+        });
+
+        // 2. Horizontal Adjacency Snapping
+        let targetX = anchorX;
+        if (snappedYTile !== null) {
+          const rowTiles = staticTiles.filter(
+            (st) => Math.abs(parseFloat(st.dataset.y) - targetY) < 3,
+          );
+
+          let bestXDiff = SNAP_X_THRESHOLD;
+
+          rowTiles.forEach((rt) => {
+            const rx = parseFloat(rt.dataset.x);
+            const snapLeft = rx - TILE_WIDTH;
+            const snapRight = rx + TILE_WIDTH;
+
+            const diffLeft = Math.abs(anchorX - snapLeft);
+            if (diffLeft < bestXDiff) {
+              bestXDiff = diffLeft;
+              targetX = snapLeft;
+            }
+
+            const diffRight = Math.abs(anchorX - snapRight);
+            if (diffRight < bestXDiff) {
+              bestXDiff = diffRight;
+              targetX = snapRight;
+            }
+          });
+        }
+
+        // Apply translation delta across all selected/moved tiles
+        const deltaX = targetX - anchorX;
+        const deltaY = targetY - anchorY;
+
+        if (deltaX !== 0 || deltaY !== 0) {
+          movedTiles.forEach((t) => {
+            const curX = parseFloat(t.dataset.x);
+            const curY = parseFloat(t.dataset.y);
+            const clamped = clampTilePosition(curX + deltaX, curY + deltaY);
+            setTilePosition(t, clamped.x, clamped.y);
+          });
+        }
+      }
+
+      // --- Non-Overlapping Separation Algorithm ---
+      function resolveOverlaps() {
+        if (!preventOverlapMode) return;
+
+        const tiles = Array.from(boardLayer.querySelectorAll(".tile-group"));
+        if (tiles.length <= 1) return;
+
+        const w = TILE_WIDTH;
+        const h = TILE_HEIGHT;
+        const maxIterations = 35;
+        let moved = true;
+
+        for (let iter = 0; iter < maxIterations && moved; iter++) {
+          moved = false;
+          for (let i = 0; i < tiles.length; i++) {
+            for (let j = i + 1; j < tiles.length; j++) {
+              const t1 = tiles[i];
+              const t2 = tiles[j];
+
+              let x1 = parseFloat(t1.dataset.x);
+              let y1 = parseFloat(t1.dataset.y);
+              let x2 = parseFloat(t2.dataset.x);
+              let y2 = parseFloat(t2.dataset.y);
+
+              const dx = x1 + w / 2 - (x2 + w / 2);
+              const dy = y1 + h / 2 - (y2 + h / 2);
+
+              const overlapX = w - Math.abs(dx);
+              const overlapY = h - Math.abs(dy);
+
+              if (overlapX > 0 && overlapY > 0) {
+                moved = true;
+
+                if (Math.abs(y1 - y2) < 4) {
+                  const shift = overlapX / 2 + 0.1;
+                  const sign = dx >= 0 ? 1 : -1;
+                  x1 += shift * sign;
+                  x2 -= shift * sign;
+                } else if (overlapX < overlapY) {
+                  const shift = overlapX / 2 + 0.1;
+                  const sign = dx >= 0 ? 1 : -1;
+                  x1 += shift * sign;
+                  x2 -= shift * sign;
+                } else {
+                  const shift = overlapY / 2 + 0.1;
+                  const sign = dy >= 0 ? 1 : -1;
+                  y1 += shift * sign;
+                  y2 -= shift * sign;
+                }
+
+                const clamped1 = clampTilePosition(x1, y1);
+                const clamped2 = clampTilePosition(x2, y2);
+                setTilePosition(t1, clamped1.x, clamped1.y);
+                setTilePosition(t2, clamped2.x, clamped2.y);
+              }
+            }
+          }
+        }
+      }
+
+      // --- Selection & Marquee Box Logic ---
+      function clearSelection() {
+        activeSelection.forEach((id) => {
+          const t = getTileById(id);
+          if (t) t.classList.remove("selected");
+        });
+        activeSelection.clear();
+      }
+
+      function toggleSelectTile(id, forceState = null) {
+        const tile = getTileById(id);
+        if (!tile) return;
+
+        const shouldSelect =
+          forceState !== null ? forceState : !activeSelection.has(id);
+        if (shouldSelect) {
+          activeSelection.add(id);
+          tile.classList.add("selected");
+        } else {
+          activeSelection.delete(id);
+          tile.classList.remove("selected");
+        }
+      }
+
+      let isBoxSelecting = false;
+      let boxStart = { x: 0, y: 0 };
+
+      svg.addEventListener("pointerdown", (e) => {
+        hideContextMenu();
+        if (
+          e.target !== svg &&
+          e.target !== boardLayer &&
+          e.target.id !== "pool-bg"
+        )
+          return;
+
+        if (e.button !== 0) return; // Left click only for marquee selection
+
+        if (!e.shiftKey) clearSelection();
+
+        isBoxSelecting = true;
+        boxStart = { x: e.clientX, y: e.clientY };
+
+        selectionBox.setAttribute("x", boxStart.x);
+        selectionBox.setAttribute("y", boxStart.y);
+        selectionBox.setAttribute("width", "0");
+        selectionBox.setAttribute("height", "0");
+        selectionBox.setAttribute("visibility", "visible");
+      });
+
+      // --- Drag & Interaction Engine ---
       let activeDrag = null;
 
-      // Position the bottom pool tray
+      function onTileContextMenu(e, group) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const tileId = group.dataset.id;
+        if (!activeSelection.has(tileId)) {
+          clearSelection();
+          toggleSelectTile(tileId, true);
+        }
+
+        showContextMenu(e.clientX, e.clientY);
+      }
+
+      function onTilePointerDown(e, group) {
+        hideContextMenu();
+
+        if (e.button !== 0) return; // Only trigger drag on left-click
+        e.stopPropagation();
+
+        const tileId = group.dataset.id;
+
+        if (!activeSelection.has(tileId)) {
+          if (!e.shiftKey) clearSelection();
+          toggleSelectTile(tileId, true);
+        } else if (e.shiftKey) {
+          toggleSelectTile(tileId, false);
+          return;
+        }
+
+        activeSelection.forEach((id) => {
+          const t = getTileById(id);
+          if (t) boardLayer.appendChild(t);
+        });
+
+        const targets = Array.from(activeSelection).map((id) => {
+          const element = getTileById(id);
+          return {
+            element,
+            id,
+            startX: parseFloat(element.dataset.x),
+            startY: parseFloat(element.dataset.y),
+          };
+        });
+
+        activeDrag = {
+          type: "EXISTING",
+          pointerId: e.pointerId,
+          cursorStartX: e.clientX,
+          cursorStartY: e.clientY,
+          targets,
+        };
+
+        group.setPointerCapture(e.pointerId);
+      }
+
+      function onPoolTilePointerDown(e, poolGroup) {
+        hideContextMenu();
+
+        if (e.button !== 0) return;
+        e.stopPropagation();
+
+        clearSelection();
+        const tileCode = parseInt(poolGroup.dataset.tile, 10);
+        const rect = poolGroup.getBoundingClientRect();
+
+        const instance = spawnTileInstance(rect.left, rect.top, tileCode);
+        toggleSelectTile(instance.dataset.id, true);
+
+        activeDrag = {
+          type: "NEW_POOL",
+          pointerId: e.pointerId,
+          cursorStartX: e.clientX,
+          cursorStartY: e.clientY,
+          targets: [
+            {
+              element: instance,
+              id: instance.dataset.id,
+              tileCode,
+              startX: rect.left,
+              startY: rect.top,
+            },
+          ],
+        };
+
+        instance.setPointerCapture(e.pointerId);
+      }
+
+      window.addEventListener("pointermove", (e) => {
+        if (isBoxSelecting) {
+          const currentX = e.clientX;
+          const currentY = e.clientY;
+
+          const x = Math.min(boxStart.x, currentX);
+          const y = Math.min(boxStart.y, currentY);
+          const width = Math.abs(currentX - boxStart.x);
+          const height = Math.abs(currentY - boxStart.y);
+
+          selectionBox.setAttribute("x", x);
+          selectionBox.setAttribute("y", y);
+          selectionBox.setAttribute("width", width);
+          selectionBox.setAttribute("height", height);
+
+          const boxRect = {
+            left: x,
+            top: y,
+            right: x + width,
+            bottom: y + height,
+          };
+
+          boardLayer.querySelectorAll(".tile-group").forEach((tile) => {
+            const tx = parseFloat(tile.dataset.x);
+            const ty = parseFloat(tile.dataset.y);
+            const isInside = !(
+              tx > boxRect.right ||
+              tx + TILE_WIDTH < boxRect.left ||
+              ty > boxRect.bottom ||
+              ty + TILE_HEIGHT < boxRect.top
+            );
+
+            toggleSelectTile(tile.dataset.id, isInside);
+          });
+          return;
+        }
+
+        if (!activeDrag) return;
+
+        const dx = e.clientX - activeDrag.cursorStartX;
+        const dy = e.clientY - activeDrag.cursorStartY;
+
+        activeDrag.targets.forEach((target) => {
+          const clamped = clampTilePosition(
+            target.startX + dx,
+            target.startY + dy,
+          );
+          setTilePosition(target.element, clamped.x, clamped.y);
+        });
+      });
+
+      window.addEventListener("pointerup", (e) => {
+        if (isBoxSelecting) {
+          isBoxSelecting = false;
+          selectionBox.setAttribute("visibility", "hidden");
+        }
+
+        if (!activeDrag) return;
+
+        const movedElements = activeDrag.targets.map((t) => t.element);
+
+        applySnapping(movedElements);
+        if (preventOverlapMode) {
+          resolveOverlaps();
+        }
+
+        if (activeDrag.type === "NEW_POOL") {
+          const t = activeDrag.targets[0];
+          recordAction({
+            type: "ADD",
+            tiles: [
+              {
+                id: t.id,
+                tileCode: t.tileCode,
+                x: parseFloat(t.element.dataset.x),
+                y: parseFloat(t.element.dataset.y),
+              },
+            ],
+          });
+        } else {
+          const moves = activeDrag.targets
+            .map((t) => ({
+              id: t.id,
+              fromX: t.startX,
+              fromY: t.startY,
+              toX: parseFloat(t.element.dataset.x),
+              toY: parseFloat(t.element.dataset.y),
+            }))
+            .filter((m) => m.fromX !== m.toX || m.fromY !== m.toY);
+
+          if (moves.length > 0) {
+            recordAction({ type: "MOVE", moves });
+          }
+        }
+
+        try {
+          activeDrag.targets[0].element.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        activeDrag = null;
+      });
+
+      // Global context menu dismiss listeners
+      window.addEventListener("contextmenu", (e) => {
+        // Prevent default right click menu everywhere except outside SVG
+        if (e.target.closest("#sandbox")) {
+          e.preventDefault();
+        }
+      });
+
+      window.addEventListener("pointerdown", (e) => {
+        if (!contextMenu.contains(e.target)) {
+          hideContextMenu();
+        }
+      });
+
+      // Keyboard Controls
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          hideContextMenu();
+        } else if (e.key === "Delete" || e.key === "Backspace") {
+          deleteSelectedTiles();
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+          if (e.shiftKey) redo();
+          else undo();
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+          redo();
+        }
+      });
+
+      // --- Pool Tray Layout ---
       function setupPoolLayout() {
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
@@ -160,13 +981,13 @@
         poolBg.setAttribute("height", poolHeight);
         poolBg.setAttribute("width", screenWidth);
 
-        poolTilesGroup.innerHTML = ""; // Clear pool tiles
+        poolTilesGroup.innerHTML = "";
 
         const marginX = 20;
         const gapX = 6;
         const gapY = 10;
         let currentX = marginX;
-        let currentY = screenHeight - poolHeight + 20;
+        let currentY = screenHeight - poolHeight + 18;
 
         ALL_TILES.forEach((tileCode) => {
           if (currentX + TILE_WIDTH > screenWidth - marginX) {
@@ -174,127 +995,54 @@
             currentY += TILE_HEIGHT + gapY;
           }
 
-          // Render pool template tile
-          const group = createInteractiveTileGroup(
-            currentX,
-            currentY,
-            tileCode,
-            true,
+          const group = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
           );
-          poolTilesGroup.appendChild(group);
+          group.classList.add("tile-group");
+          group.dataset.tile = tileCode;
 
+          const [bg, img] = createTileSvg(0, 0, tileCode);
+          group.appendChild(bg);
+          group.appendChild(img);
+
+          group.setAttribute(
+            "transform",
+            `translate(${currentX}, ${currentY}) scale(${SCALE})`,
+          );
+          group.addEventListener("pointerdown", (e) =>
+            onPoolTilePointerDown(e, group),
+          );
+
+          poolTilesGroup.appendChild(group);
           currentX += TILE_WIDTH + gapX;
         });
       }
 
-      // Helper to instantiate a tile inside an SVG group with uniform scaling and drag listeners
-      function createInteractiveTileGroup(
-        x,
-        y,
-        tileCode,
-        isPoolTemplate = false,
-      ) {
-        const group = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "g",
-        );
-        group.classList.add("tile-group");
-        group.dataset.tile = tileCode;
-        group.dataset.x = x;
-        group.dataset.y = y;
+      // --- UI Event Listeners ---
+      cmCopy.addEventListener("click", copySelectedTiles);
+      cmDelete.addEventListener("click", deleteSelectedTiles);
 
-        // Generate raw tile elements using the user's function
-        const [bg, img] = createTileSvg(0, 0, tileCode);
+      btnUndo.addEventListener("click", undo);
+      btnRedo.addEventListener("click", redo);
+      btnReset.addEventListener("click", () => clearBoard(true));
 
-        group.appendChild(bg);
-        group.appendChild(img);
+      btnSnap.addEventListener("click", () => {
+        snapMode = !snapMode;
+        snapStatus.textContent = snapMode ? "ON" : "OFF";
+        btnSnap.classList.toggle("toggle-active", snapMode);
+      });
 
-        // Set visual placement and scale
-        group.setAttribute(
-          "transform",
-          `translate(${x}, ${y}) scale(${SCALE})`,
-        );
+      btnOverlap.addEventListener("click", () => {
+        preventOverlapMode = !preventOverlapMode;
+        overlapStatus.textContent = preventOverlapMode ? "ON" : "OFF";
+        btnOverlap.classList.toggle("toggle-active", preventOverlapMode);
+        if (preventOverlapMode) resolveOverlaps();
+      });
 
-        // Attach Pointer Events for dragging
-        group.addEventListener("pointerdown", (e) =>
-          onPointerDown(e, group, isPoolTemplate),
-        );
-
-        return group;
-      }
-
-      // Pointer event handles
-      function onPointerDown(e, group, isPoolTemplate) {
-        e.stopPropagation();
-
-        let targetGroup = group;
-
-        // Spawns a clone onto the active sandbox board if dragged from the pool
-        if (isPoolTemplate) {
-          const tileCode = parseInt(group.dataset.tile, 10);
-          const rect = group.getBoundingClientRect();
-
-          targetGroup = createInteractiveTileGroup(
-            rect.left,
-            rect.top,
-            tileCode,
-            false,
-          );
-          boardLayer.appendChild(targetGroup);
-        } else {
-          // Move element to top layer inside the board
-          boardLayer.appendChild(group);
-        }
-
-        const currentX = parseFloat(targetGroup.dataset.x);
-        const currentY = parseFloat(targetGroup.dataset.y);
-
-        activeDrag = {
-          element: targetGroup,
-          startX: e.clientX,
-          startY: e.clientY,
-          origX: currentX,
-          origY: currentY,
-        };
-
-        targetGroup.classList.add("dragging");
-        targetGroup.setPointerCapture(e.pointerId);
-      }
-
-      function onPointerMove(e) {
-        if (!activeDrag) return;
-
-        const dx = e.clientX - activeDrag.startX;
-        const dy = e.clientY - activeDrag.startY;
-
-        const newX = activeDrag.origX + dx;
-        const newY = activeDrag.origY + dy;
-
-        activeDrag.element.dataset.x = newX;
-        activeDrag.element.dataset.y = newY;
-        activeDrag.element.setAttribute(
-          "transform",
-          `translate(${newX}, ${newY}) scale(${SCALE})`,
-        );
-      }
-
-      function onPointerUp(e) {
-        if (!activeDrag) return;
-
-        activeDrag.element.classList.remove("dragging");
-        try {
-          activeDrag.element.releasePointerCapture(e.pointerId);
-        } catch (err) {}
-
-        activeDrag = null;
-      }
-
-      // Global Event Listeners
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp);
       window.addEventListener("resize", setupPoolLayout);
 
-      // Initialization
+      // --- Initialization ---
       setupPoolLayout();
     </script>
   </body>
