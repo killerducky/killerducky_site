@@ -120,10 +120,13 @@ dev:
     docker compose --env-file .dev-env up -d --build
 
 prod:
-docker compose up -d --build
-docker exec -it killerducky-nginx sh
-nginx -s reload
-docker compose logs -ft nodeapp
+    docker compose up -d --build
+
+    # If local IP for the server doesn't update (happens often on rebuild), force nginx to reload:
+    docker exec -it killerducky-nginx sh
+    nginx -s reload
+
+    docker compose logs -ft nodeapp
 
 
 ssl renewal problem:

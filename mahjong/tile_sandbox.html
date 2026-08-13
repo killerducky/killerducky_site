@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mahjong Tile Sandbox</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      body,
+      html {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background-color: #1e3a2b; /* Traditional felt green */
+        font-family: sans-serif;
+      }
+
+      #sandbox {
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: none; /* Prevents scrolling on touch devices during drag */
+      }
+
+      .tile-group {
+        cursor: grab;
+      }
+
+      .tile-group:active,
+      .tile-group.dragging {
+        cursor: grabbing;
+      }
+
+      .pool-bg {
+        fill: rgba(0, 0, 0, 0.4);
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1px;
+      }
+
+      .pool-label {
+        fill: #ffffff;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <svg id="sandbox" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main Board Area -->
+      <g id="board-layer"></g>
+
+      <!-- Bottom Tile Pool Area -->
+      <g id="pool-layer">
+        <rect
+          id="pool-bg"
+          class="pool-bg"
+          x="0"
+          y="0"
+          width="100%"
+          height="120"
+        />
+        <g id="pool-tiles"></g>
+      </g>
+    </svg>
+
+    <script>
+      // Global configuration state expected by createTileSvg
+      const GS = {
+        C_colorTileBg: "#fffff0",
+      };
+
+      // Standard Tenhou numerical indexing map:
+      // 11-19: 1m - 9m
+      // 21-29: 1p - 9p
+      // 31-39: 1s - 9s
+      // 41-47: 1z - 7z
+      function tenhou2str(tile) {
+        const suitMap = { 1: "m", 2: "p", 3: "s", 4: "z" };
+        const suit = Math.floor(tile / 10);
+        const val = tile % 10;
+        if (suitMap[suit] && val >= 1 && val <= 9) {
+          return `${val}${suitMap[suit]}`;
+        }
+        return "1m"; // Default fallback
+      }
+
+      // List of all standard 34 Mahjong tiles encoded in Tenhou format
+      const ALL_TILES = [
+        // Manzu (1m - 9m)
+        11, 12, 13, 14, 15, 16, 17, 18, 19,
+        // Pinzu (1p - 9p)
+        21, 22, 23, 24, 25, 26, 27, 28, 29,
+        // Souzu (1s - 9s)
+        31, 32, 33, 34, 35, 36, 37, 38, 39,
+        // Honors (1z - 7z: East, South, West, North, White, Green, Red)
+        41, 42, 43, 44, 45, 46, 47,
+      ];
+
+      // --- Requested Function ---
+      function createTileSvg(x, y, tile) {
+        if (isNaN(tile)) {
+          console.log(tile);
+          throw new Error();
+        }
+        const backgroundRect = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "rect",
+        );
+        backgroundRect.setAttribute("x", x - 1);
+        backgroundRect.setAttribute("y", y - 1);
+        backgroundRect.setAttribute("width", "20");
+        backgroundRect.setAttribute("height", "26");
+        backgroundRect.setAttribute("fill", GS.C_colorTileBg);
+        backgroundRect.setAttribute("rx", "2px");
+        backgroundRect.setAttribute("ry", "2px");
+
+        const tileSvg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "image",
+        );
+        tileSvg.setAttribute(
+          "href",
+          `media/Regular_shortnames/${tenhou2str(tile)}.svg`,
+        );
+        tileSvg.setAttribute("x", x);
+        tileSvg.setAttribute("y", y);
+        tileSvg.setAttribute("width", 18);
+
+        return [backgroundRect, tileSvg];
+      }
+
+      // --- Sandbox Application Logic ---
+      const svg = document.getElementById("sandbox");
+      const boardLayer = document.getElementById("board-layer");
+      const poolLayer = document.getElementById("pool-layer");
+      const poolBg = document.getElementById("pool-bg");
+      const poolTilesGroup = document.getElementById("pool-tiles");
+
+      // Scale factor for rendering small SVG tile coordinates larger on screen
+      const SCALE = 2.2;
+      const TILE_WIDTH = 20 * SCALE;
+      const TILE_HEIGHT = 26 * SCALE;
+
+      let activeDrag = null;
+
+      // Position the bottom pool tray
+      function setupPoolLayout() {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const poolHeight = 140;
+
+        poolBg.setAttribute("y", screenHeight - poolHeight);
+        poolBg.setAttribute("height", poolHeight);
+        poolBg.setAttribute("width", screenWidth);
+
+        poolTilesGroup.innerHTML = ""; // Clear pool tiles
+
+        const marginX = 20;
+        const gapX = 6;
+        const gapY = 10;
+        let currentX = marginX;
+        let currentY = screenHeight - poolHeight + 20;
+
+        ALL_TILES.forEach((tileCode) => {
+          if (currentX + TILE_WIDTH > screenWidth - marginX) {
+            currentX = marginX;
+            currentY += TILE_HEIGHT + gapY;
+          }
+
+          // Render pool template tile
+          const group = createInteractiveTileGroup(
+            currentX,
+            currentY,
+            tileCode,
+            true,
+          );
+          poolTilesGroup.appendChild(group);
+
+          currentX += TILE_WIDTH + gapX;
+        });
+      }
+
+      // Helper to instantiate a tile inside an SVG group with uniform scaling and drag listeners
+      function createInteractiveTileGroup(
+        x,
+        y,
+        tileCode,
+        isPoolTemplate = false,
+      ) {
+        const group = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g",
+        );
+        group.classList.add("tile-group");
+        group.dataset.tile = tileCode;
+        group.dataset.x = x;
+        group.dataset.y = y;
+
+        // Generate raw tile elements using the user's function
+        const [bg, img] = createTileSvg(0, 0, tileCode);
+
+        group.appendChild(bg);
+        group.appendChild(img);
+
+        // Set visual placement and scale
+        group.setAttribute(
+          "transform",
+          `translate(${x}, ${y}) scale(${SCALE})`,
+        );
+
+        // Attach Pointer Events for dragging
+        group.addEventListener("pointerdown", (e) =>
+          onPointerDown(e, group, isPoolTemplate),
+        );
+
+        return group;
+      }
+
+      // Pointer event handles
+      function onPointerDown(e, group, isPoolTemplate) {
+        e.stopPropagation();
+
+        let targetGroup = group;
+
+        // Spawns a clone onto the active sandbox board if dragged from the pool
+        if (isPoolTemplate) {
+          const tileCode = parseInt(group.dataset.tile, 10);
+          const rect = group.getBoundingClientRect();
+
+          targetGroup = createInteractiveTileGroup(
+            rect.left,
+            rect.top,
+            tileCode,
+            false,
+          );
+          boardLayer.appendChild(targetGroup);
+        } else {
+          // Move element to top layer inside the board
+          boardLayer.appendChild(group);
+        }
+
+        const currentX = parseFloat(targetGroup.dataset.x);
+        const currentY = parseFloat(targetGroup.dataset.y);
+
+        activeDrag = {
+          element: targetGroup,
+          startX: e.clientX,
+          startY: e.clientY,
+          origX: currentX,
+          origY: currentY,
+        };
+
+        targetGroup.classList.add("dragging");
+        targetGroup.setPointerCapture(e.pointerId);
+      }
+
+      function onPointerMove(e) {
+        if (!activeDrag) return;
+
+        const dx = e.clientX - activeDrag.startX;
+        const dy = e.clientY - activeDrag.startY;
+
+        const newX = activeDrag.origX + dx;
+        const newY = activeDrag.origY + dy;
+
+        activeDrag.element.dataset.x = newX;
+        activeDrag.element.dataset.y = newY;
+        activeDrag.element.setAttribute(
+          "transform",
+          `translate(${newX}, ${newY}) scale(${SCALE})`,
+        );
+      }
+
+      function onPointerUp(e) {
+        if (!activeDrag) return;
+
+        activeDrag.element.classList.remove("dragging");
+        try {
+          activeDrag.element.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        activeDrag = null;
+      }
+
+      // Global Event Listeners
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("resize", setupPoolLayout);
+
+      // Initialization
+      setupPoolLayout();
+    </script>
+  </body>
+</html>
