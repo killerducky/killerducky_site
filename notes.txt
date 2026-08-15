@@ -121,6 +121,8 @@ dev:
 
 prod:
     docker compose up -d --build
+    or for jekyll only:
+    docker compose up --build jekyll
 
     # If local IP for the server doesn't update (happens often on rebuild), force nginx to reload:
     docker exec -it killerducky-nginx sh
